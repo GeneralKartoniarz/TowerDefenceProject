@@ -1,8 +1,5 @@
 #include <SFML/Graphics.hpp>
-<<<<<<< Updated upstream
 #include "Monster.h"
-=======
->>>>>>> Stashed changes
 #include <iostream>
 #include <string>
 
