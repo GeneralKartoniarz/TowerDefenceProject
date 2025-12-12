@@ -1,4 +1,9 @@
 #include <SFML/Graphics.hpp>
+#include "Monster.h"
+#include <iostream>
+#include <string>
+
+using namespace std;
 
 int main()
 {
@@ -11,7 +16,6 @@ int main()
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
-
         window.clear();
         window.display();
     }
