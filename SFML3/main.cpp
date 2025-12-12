@@ -2,6 +2,7 @@
 
 int main()
 {
+    //test repo pomyœlny
     sf::RenderWindow window(sf::VideoMode({ 1920, 1080 }), "TEST");
     while (window.isOpen())
     {
@@ -12,8 +13,6 @@ int main()
         }
 
         window.clear();
-
-        //test git repo
         window.display();
     }
 }
