@@ -10,19 +10,19 @@ public:
 	
 	//gettery i settery
 	int getHP();
-	void setHP(int mHP);
+	void setHP(int hp);
 
 	float getSpeed();
-	void setSpeed(float mSpeed);
+	void setSpeed(float speed);
 
 	int getDamage();
-	void setDamage(int mDamage);
+	void setDamage(int damage);
 
 	int getGold();
-	void setGold(int mGold);
+	void setGold(int gold);
 
 	std::string getName();
-	void setName(std::string mName);
+	void setName(std::string name);
 
 	sf::Texture getTexture();
 	void setTexture(sf::Texture texture);
