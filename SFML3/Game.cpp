@@ -5,6 +5,7 @@
 #include <SFML/Audio.hpp>
 #include "States.h"
 #include "GameState.h"
+#include "MainMenuState.h"
 Game::Game()
 {
 	this->InitWindow();
@@ -54,13 +55,15 @@ void Game::Update(float dt)
     if(!this->state.empty()) {
         this->state.top()->Update(dt);
     }
-    if (state.top()->GetQuit() && state.top()->GetQuit()) {
+    if (state.top()->GetQuit()) {
         delete state.top();
         state.pop();
     }
+    //zamykanie gry
     if (state.empty()) {
         windowPtr->close();
     }
+
 }
 
 void Game::Render()
@@ -83,31 +86,9 @@ void Game::Run()
 
 void Game::InitStates()
 {
+    //TUTAJ UMIESZCZMAY STANY CZYTAJ SCENY JEST 3.13 OCZY MI WYCHODZ¥ Z ORBIT
     this->state.push(new GameState(this->windowPtr));
-}
-void Game::ChangeState(States* newState)
-{
-    if (!state.empty()) {
-        delete state.top();
-        state.pop();
-    }
-    state.push(newState);
-}
+    this->state.push(new MainMenuState(this->windowPtr));
 
-void Game::PushState(States* newState)
-{
-    state.push(newState);
-}
-
-void Game::PopState()
-{
-    if (!state.empty()) {
-        delete state.top();
-        state.pop();
-    }
-
-    if (state.empty()) {
-        windowPtr->close();
-    }
 }
 

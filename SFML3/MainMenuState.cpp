@@ -1,32 +1,29 @@
-#include "GameState.h"   
+#include "MainMenuState.h"
 #include "States.h"      
-#include <iostream>      
+#include <iostream>   
 
-using namespace std;  
+using namespace std;
 
-
-
-// Konstruktor GameState
+// Konstruktor MainMenuState
 //Kod umieszczony poni¿ej wykona siê RAZ
-GameState::GameState(sf::RenderWindow* windowPtr)
+MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     : States(windowPtr)
 {
 
 }
 
 // Destruktor GameState
-GameState::~GameState() {
+MainMenuState::~MainMenuState() {
 
 }
-
 // Funkcja wywo³ywana przy koñczeniu stanu
-void GameState::EndState()
+void MainMenuState::EndState()
 {
-    
+
 }
 
 // Sprawdza, czy stan powinien zostaæ zakoñczony
-void GameState::QuitCheck()
+void MainMenuState::QuitCheck()
 {
     this->CheckForQuit();
 }
@@ -34,13 +31,13 @@ void GameState::QuitCheck()
 // G³ówna funkcja logiki stanu gry
 // dt = delta time (czas jednej klatki)
 //Kod w tej funkcji wykona siê CO KLATKE
-void GameState::Update(float dt)
+void MainMenuState::Update(float dt)
 {
     this->QuitCheck();
 }
 
 // Funkcja renderuj¹ca stan gry
 //W tej funkcji jedynie RENDERUJEMY!!
-void GameState::Render(sf::RenderWindow* windowPtr)
+void MainMenuState::Render(sf::RenderWindow* windowPtr)
 {
 }
