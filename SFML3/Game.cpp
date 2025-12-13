@@ -3,6 +3,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
+#include "States.h"
 Game::Game()
 {
 	this->InitWindow();
@@ -29,6 +30,18 @@ void Game::UpdateEvent()
                 this->window->close();
         }
     }
+}
+
+void States::CheckForQuit()
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+        this->quit = true;
+    }
+}
+
+bool States::GetQuit()
+{
+    return quit;
 }
 
 void Game::Update()
