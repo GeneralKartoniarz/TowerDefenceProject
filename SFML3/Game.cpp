@@ -6,6 +6,7 @@
 #include "States.h"
 #include "GameState.h"
 #include "MainMenuState.h"
+#include <vector>
 Game::Game()
 {
 	this->InitWindow();
@@ -14,11 +15,8 @@ Game::Game()
 
 Game::~Game()
 {
-    while (!state.empty()) {
-        delete state.top();
-        state.pop();
-    }
-
+    for (auto* s : state)
+        delete s;
     delete windowPtr;
 
 }
@@ -53,11 +51,11 @@ void Game::Update(float dt)
 {
     this->UpdateEvent();
     if(!this->state.empty()) {
-        this->state.top()->Update(dt);
+        this->state[activeState]->Update(dt);
     }
-    if (state.top()->GetQuit()) {
-        delete state.top();
-        state.pop();
+    if (state[activeState]->GetQuit()) {
+        state[activeState]->quit = false;
+        activeState = (activeState + 1) % state.size();
     }
     //zamykanie gry
     if (state.empty()) {
@@ -70,7 +68,7 @@ void Game::Render()
 {
     this->windowPtr->clear();
     if(!this->state.empty()) {
-        this->state.top()->Render(this->windowPtr);
+        state[activeState]->Render(windowPtr);
     }
     this->windowPtr->display();
 }
@@ -87,8 +85,9 @@ void Game::Run()
 void Game::InitStates()
 {
     //TUTAJ UMIESZCZMAY STANY CZYTAJ SCENY JEST 3.13 OCZY MI WYCHODZ¥ Z ORBIT
-    this->state.push(new GameState(this->windowPtr));
-    this->state.push(new MainMenuState(this->windowPtr));
+    this->state.push_back(new GameState(this->windowPtr));
+    this->state.push_back(new MainMenuState(this->windowPtr));
+    activeState = 1;
 
 }
 

@@ -5,7 +5,7 @@
 #include <SFML/Audio.hpp>
 #include "States.h"
 #include "GameState.h"
-#include <stack>
+#include <vector>
 using namespace std;
 class Game
 {
@@ -31,6 +31,7 @@ private:
 	float dt;
 	sf::RenderWindow* windowPtr;
 	optional<sf::Event> ev;
-	stack<States*> state;
+	vector<States*> state;
+	int activeState;
 };
 
