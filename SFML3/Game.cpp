@@ -4,31 +4,34 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 #include "States.h"
+#include "GameState.h"
 Game::Game()
 {
 	this->InitWindow();
+    this->InitStates();
 }
 
 Game::~Game()
 {
-	delete this->window;
+	delete this->windowPtr;
+    if(!this->state.empty()) {
+        delete this->state.top();
+        this->state.pop();
+    }
+
 }
 
 void Game::InitWindow()
 {
-	this->window = new sf::RenderWindow(sf::VideoMode({1920,1080}), "TEST");
+	this->windowPtr = new sf::RenderWindow(sf::VideoMode({1920,1080}), "TEST");
 }
 
 void Game::UpdateEvent()
 {
-    while (this->window->isOpen())
+    while (ev = this->windowPtr->pollEvent())
     {
-
-        while (ev = this->window->pollEvent())
-        {
-            if (ev->is<sf::Event::Closed>())
-                this->window->close();
-        }
+        if (ev->is<sf::Event::Closed>())
+            windowPtr->close();
     }
 }
 
@@ -47,18 +50,62 @@ bool States::GetQuit()
 void Game::Update()
 {
     this->UpdateEvent();
+    if(!this->state.empty()) {
+        this->state.top()->Update();
+    }
+    if (state.top()->GetQuit()) {
+        delete state.top();
+        state.pop();
+    }
+    if (state.empty()) {
+        windowPtr->close();
+    }
 }
 
 void Game::Render()
 {
-    this->window->clear();
-    this->window->display();
+    this->windowPtr->clear();
+    if(!this->state.empty()) {
+        this->state.top()->Render(this->windowPtr);
+    }
+    this->windowPtr->display();
 }
 
 void Game::Run()
 {
-    while (this->window->isOpen()) {
+    while (this->windowPtr->isOpen()) {
         this->Update();
         this->Render();
     }
 }
+
+void Game::InitStates()
+{
+    this->state.push(new GameState(this->windowPtr));
+}
+void Game::ChangeState(States* newState)
+{
+    if (!state.empty()) {
+        delete state.top();
+        state.pop();
+    }
+    state.push(newState);
+}
+
+void Game::PushState(States* newState)
+{
+    state.push(newState);
+}
+
+void Game::PopState()
+{
+    if (!state.empty()) {
+        delete state.top();
+        state.pop();
+    }
+
+    if (state.empty()) {
+        windowPtr->close();
+    }
+}
+

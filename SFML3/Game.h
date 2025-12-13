@@ -3,6 +3,10 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
+#include "States.h"
+#include "GameState.h"
+#include <stack>
+using namespace std;
 class Game
 {
 public:
@@ -15,11 +19,16 @@ public:
 	void Update();
 	void Render();
 	void Run();
+	void InitStates();
+	void ChangeState(States* newState);
+	void PushState(States* newState);
+	void PopState();
 
 
 private:
 	//zmienne i wskaüniki
-	sf::RenderWindow* window;
-	std::optional<sf::Event> ev;
+	sf::RenderWindow* windowPtr;
+	optional<sf::Event> ev;
+	stack<States*> state;
 };
 
