@@ -16,7 +16,7 @@ public:
 	//metody
 	void InitWindow();
 	void UpdateEvent();
-	void Update();
+	void Update(float dt);
 	void Render();
 	void Run();
 	void InitStates();
@@ -27,6 +27,8 @@ public:
 
 private:
 	//zmienne i wskaüniki
+	sf::Clock dtClock;
+	float dt;
 	sf::RenderWindow* windowPtr;
 	optional<sf::Event> ev;
 	stack<States*> state;

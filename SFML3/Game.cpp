@@ -13,11 +13,12 @@ Game::Game()
 
 Game::~Game()
 {
-	delete this->windowPtr;
-    if(!this->state.empty()) {
-        delete this->state.top();
-        this->state.pop();
+    while (!state.empty()) {
+        delete state.top();
+        state.pop();
     }
+
+    delete windowPtr;
 
 }
 
@@ -47,13 +48,13 @@ bool States::GetQuit()
     return quit;
 }
 
-void Game::Update()
+void Game::Update(float dt)
 {
     this->UpdateEvent();
     if(!this->state.empty()) {
-        this->state.top()->Update();
+        this->state.top()->Update(dt);
     }
-    if (state.top()->GetQuit()) {
+    if (state.top()->GetQuit() && state.top()->GetQuit()) {
         delete state.top();
         state.pop();
     }
@@ -74,7 +75,8 @@ void Game::Render()
 void Game::Run()
 {
     while (this->windowPtr->isOpen()) {
-        this->Update();
+        this->dt = dtClock.restart().asSeconds();
+        this->Update(this ->dt);
         this->Render();
     }
 }

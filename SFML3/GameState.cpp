@@ -16,10 +16,11 @@ void GameState::QuitCheck()
 {
 	this->CheckForQuit();
 }
-void GameState::Update() {
+void GameState::Update(float dt){
 	this->QuitCheck();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+		cout << "chuj";
 }
 void GameState::Render(sf::RenderWindow* windowPtr) {
-	//test
-	//cout << this->windowPtr;
+
 }

@@ -9,7 +9,7 @@ public:
 
     void EndState();
     void QuitCheck();
-    void Update();
+    void Update(float dt);
     void Render(sf::RenderWindow* windowPtr);
 private:
 

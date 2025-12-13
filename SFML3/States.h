@@ -20,7 +20,7 @@ public:
 	void CheckForQuit();
 	bool GetQuit();
 	virtual void EndState() = 0;
-	virtual void Update() = 0;
+	virtual void Update(float dt) = 0;
 	virtual void Render(sf::RenderWindow* windowPtr) = 0;
 private:
 };
