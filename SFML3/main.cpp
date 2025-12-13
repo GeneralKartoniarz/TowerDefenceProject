@@ -6,6 +6,7 @@
 //Klasy
 #include "Monster.h"
 #include "Tower.h"
+#include "Game.h"
 //Funkcjonalnoœci
 #include <iostream>
 #include <string>
@@ -14,24 +15,7 @@ using namespace std;
 
 int main()
 {
-    //zmienne lokalne
-    float windowWidth = 1920.0f;
-    float windowHeight = 1080.0f;
-    
-    //Tworzenie okna gry
-    sf::RenderWindow window(sf::VideoMode({ windowWidth, windowHeight }), "TEST", sf::Style::Titlebar | sf::Style::Close);
+	Game game;
+	game.Run();
 
-
-    //G³ówna pêtla gry
-    while (window.isOpen())
-    {
-
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-                window.close();
-        }
-        window.clear(sf::Color::White);
-        window.display();
-    }
 }
