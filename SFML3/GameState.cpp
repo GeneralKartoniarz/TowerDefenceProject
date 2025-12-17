@@ -19,6 +19,9 @@ GameState::~GameState() {
 
 }
 
+void GameState::EndState() {
+
+}
 // Sprawdza, czy stan powinien zostaæ zakoñczony
 void GameState::QuitCheck()
 {
