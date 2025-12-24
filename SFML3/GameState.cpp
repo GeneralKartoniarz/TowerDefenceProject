@@ -34,6 +34,7 @@ void GameState::QuitCheck()
 void GameState::Update(float dt)
 {
     this->QuitCheck();
+    cout << "1";
 }
 
 // Funkcja renderuj¹ca stan gry

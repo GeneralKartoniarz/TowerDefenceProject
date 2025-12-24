@@ -7,6 +7,8 @@ public:
     MainMenuState(sf::RenderWindow* windowPtr);
     ~MainMenuState();
 
+
+
     void EndState();
     void QuitCheck();
     void Update(float dt);
