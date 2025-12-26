@@ -20,7 +20,6 @@ Button startBtn(fontMainMenu);
 Button quitBtn(fontMainMenu);
 Button optBtn(fontMainMenu);
 
-sf::RenderWindow* windowPtr;
 
 
 
