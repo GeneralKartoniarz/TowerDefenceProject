@@ -12,10 +12,15 @@ using namespace std;
 float mouseX;
 float mouseY;
 
+float screenWidth;
+float screenHeight;
+
 sf::Font font("comicFont.ttf");
 
 
 Button startBtn(font);
+Button quitBtn(font);
+Button optBtn(font);
 
 sf::RenderWindow* windowPtr;
 
@@ -26,8 +31,13 @@ sf::RenderWindow* windowPtr;
 MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     : States(windowPtr)
 {
-    windowPtr = this->windowPtr;
+    this->windowPtr = windowPtr;
     
+    screenHeight = windowPtr->getSize().y;
+    screenWidth = windowPtr->getSize().x;
+
+
+
 }
 
 // Destruktor GameState
@@ -55,6 +65,27 @@ void MainMenuState::Update(float dt)
     mouseX = sf::Mouse::getPosition(*windowPtr).x;
     mouseY = sf::Mouse::getPosition(*windowPtr).y;
 
+    startBtn.text.setString("Start");
+    startBtn.SetPosition(screenWidth / 2, screenHeight / 3);
+    if (startBtn.IsMouseOver(mouseX, mouseY))
+        startBtn.shape.setFillColor(sf::Color::Red);
+    else
+        startBtn.shape.setFillColor(sf::Color::Magenta);
+
+    optBtn.text.setString("Options");
+    optBtn.SetPosition(screenWidth / 2, screenHeight / 2);
+    if (optBtn.IsMouseOver(mouseX, mouseY))
+        optBtn.shape.setFillColor(sf::Color::Red);
+    else
+        optBtn.shape.setFillColor(sf::Color::Magenta);
+
+
+    quitBtn.text.setString("Exit");
+    quitBtn.SetPosition(screenWidth / 2, screenHeight - screenHeight / 3);
+    if (quitBtn.IsMouseOver(mouseX, mouseY))
+        quitBtn.shape.setFillColor(sf::Color::Red);
+    else
+        quitBtn.shape.setFillColor(sf::Color::Magenta);
 
 }
 
@@ -62,6 +93,10 @@ void MainMenuState::Update(float dt)
 //W tej funkcji jedynie RENDERUJEMY!!
 void MainMenuState::Render(sf::RenderWindow* windowPtr)
 {
+    windowPtr->clear();
     startBtn.Draw(*windowPtr);
+    quitBtn.Draw(*windowPtr);
+    optBtn.Draw(*windowPtr);
+    windowPtr->display();
 
 }

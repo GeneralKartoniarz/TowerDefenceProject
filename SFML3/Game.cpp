@@ -66,11 +66,9 @@ void Game::Update(float dt)
 
 void Game::Render()
 {
-    this->windowPtr->clear();
     if(!this->state.empty()) {
         state[activeState]->Render(windowPtr);
     }
-    this->windowPtr->display();
 }
 
 void Game::Run()
