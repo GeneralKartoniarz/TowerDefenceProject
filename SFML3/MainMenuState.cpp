@@ -9,18 +9,16 @@
 using namespace std;
 
 
-float mouseX;
-float mouseY;
-
-float screenWidth;
-float screenHeight;
-
-sf::Font font("comicFont.ttf");
 
 
-Button startBtn(font);
-Button quitBtn(font);
-Button optBtn(font);
+
+
+sf::Font fontMainMenu("comicFont.ttf");
+
+
+Button startBtn(fontMainMenu);
+Button quitBtn(fontMainMenu);
+Button optBtn(fontMainMenu);
 
 sf::RenderWindow* windowPtr;
 
@@ -32,9 +30,7 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     : States(windowPtr)
 {
     this->windowPtr = windowPtr;
-    
-    screenHeight = windowPtr->getSize().y;
-    screenWidth = windowPtr->getSize().x;
+
 
 
 
@@ -61,7 +57,14 @@ void MainMenuState::QuitCheck()
 //Kod w tej funkcji wykona siê CO KLATKE
 void MainMenuState::Update(float dt)
 {
+    float screenWidth;
+    float screenHeight;
+    screenHeight = windowPtr->getSize().y;
+    screenWidth = windowPtr->getSize().x;
+
     this->QuitCheck();
+    float mouseX;
+    float mouseY;
     mouseX = sf::Mouse::getPosition(*windowPtr).x;
     mouseY = sf::Mouse::getPosition(*windowPtr).y;
 
@@ -71,6 +74,11 @@ void MainMenuState::Update(float dt)
         startBtn.shape.setFillColor(sf::Color::Red);
     else
         startBtn.shape.setFillColor(sf::Color::Magenta);
+    if (startBtn.IsButtonClicked(mouseX, mouseY)) {
+        quit = true;
+    }
+
+
 
     optBtn.text.setString("Options");
     optBtn.SetPosition(screenWidth / 2, screenHeight / 2);
@@ -78,6 +86,9 @@ void MainMenuState::Update(float dt)
         optBtn.shape.setFillColor(sf::Color::Red);
     else
         optBtn.shape.setFillColor(sf::Color::Magenta);
+
+
+
 
 
     quitBtn.text.setString("Exit");
@@ -93,10 +104,8 @@ void MainMenuState::Update(float dt)
 //W tej funkcji jedynie RENDERUJEMY!!
 void MainMenuState::Render(sf::RenderWindow* windowPtr)
 {
-    windowPtr->clear();
     startBtn.Draw(*windowPtr);
     quitBtn.Draw(*windowPtr);
     optBtn.Draw(*windowPtr);
-    windowPtr->display();
 
 }

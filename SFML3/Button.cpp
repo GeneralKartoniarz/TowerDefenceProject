@@ -26,8 +26,6 @@ void Button::CenterText()
 {
 	sf::FloatRect tb = text.getLocalBounds();
 	text.setOrigin(tb.position + tb.size / 2.f);
-
-	// pozycja tekstu = pozycja przycisku
 	text.setPosition(shape.getPosition());
 }
 bool Button::IsMouseOver(float mouseX, float mouseY)
