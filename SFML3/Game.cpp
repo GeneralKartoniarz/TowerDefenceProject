@@ -37,9 +37,7 @@ void Game::UpdateEvent()
 
 void States::CheckForQuit()
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-        this->quit = true;
-    }
+
 }
 
 bool States::GetQuit()

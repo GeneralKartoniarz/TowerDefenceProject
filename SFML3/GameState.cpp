@@ -16,9 +16,6 @@ using namespace std;
 sf::Font fontGameState("comicFont.ttf");
 
 
-Button test(fontGameState);
-
-
 // Konstruktor GameState
 //Kod umieszczony poni¿ej wykona siê RAZ
 GameState::GameState(sf::RenderWindow* windowPtr)
@@ -45,20 +42,19 @@ void GameState::QuitCheck()
 //Kod w tej funkcji wykona siê CO KLATKE
 void GameState::Update(float dt)
 {
+    this->QuitCheck();
+
     float screenWidth;
     float screenHeight;
+
     screenHeight = windowPtr->getSize().y;
     screenWidth = windowPtr->getSize().x;
 
     float mouseX;
     float mouseY;
-    this->QuitCheck();
+
     mouseX = sf::Mouse::getPosition(*windowPtr).x;
     mouseY = sf::Mouse::getPosition(*windowPtr).y;
-    string tt = to_string(mouseX) + ", " + to_string(mouseY);
-    test.text.setString(tt);
-    test.SetPosition(screenWidth / 2, screenHeight / 3);
-    test.shape.setFillColor(sf::Color::Red);
     
 }
 
@@ -66,5 +62,4 @@ void GameState::Update(float dt)
 //W tej funkcji jedynie RENDERUJEMY!!
 void GameState::Render(sf::RenderWindow* windowPtr)
 {
-    test.Draw(*windowPtr);
 }
