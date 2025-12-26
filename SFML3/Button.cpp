@@ -49,3 +49,7 @@ void Button::SetPosition(float x, float y) {
 	shape.setPosition({ x,y });
 	CenterText();
 }
+void Button::UpdateHover(float mouseX, float mouseY)
+{
+	shape.setFillColor(IsMouseOver(mouseX, mouseY) ? hoverColor : normalColor);
+}

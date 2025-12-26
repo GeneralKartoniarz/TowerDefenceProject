@@ -8,43 +8,31 @@
 #include <SFML/Audio.hpp>
 using namespace std;
 
-
-
-
-
-
-sf::Font fontMainMenu("comicFont.ttf");
-
-
-Button startBtn(fontMainMenu);
-Button quitBtn(fontMainMenu);
-Button optBtn(fontMainMenu);
-
-Button selectMenuEasy(fontMainMenu);
-Button selectMenuNormal(fontMainMenu);
-Button selectMenuHard(fontMainMenu);
-
-Button selectMenuLevelOne(fontMainMenu);
-Button selectMenuLevelTwo(fontMainMenu);
-Button selectMenuLevelThree(fontMainMenu);
-
-Button backToMenu(fontMainMenu);
-
-bool levelSelectionOn = false;
-bool optionSelectionOn = false;
-
+int level = 1;
+int difficulty = 1;
 
 // Konstruktor MainMenuState
 //Kod umieszczony poni¿ej wykona siê RAZ
 MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
-    : States(windowPtr)
+    : States(windowPtr),
+    startBtn(fontMainMenu),
+    quitBtn(fontMainMenu),
+    optBtn(fontMainMenu),
+    selectMenuEasy(fontMainMenu),
+    selectMenuNormal(fontMainMenu),
+    selectMenuHard(fontMainMenu),
+    selectMenuLevelOne(fontMainMenu),
+    selectMenuLevelTwo(fontMainMenu),
+    selectMenuLevelThree(fontMainMenu),
+    backToMenu(fontMainMenu)
 {
+  
+    if (!fontMainMenu.openFromFile("comicFont.ttf")) {
+        cout << "Font sie zepsul";
+    }
     this->windowPtr = windowPtr;
-    float screenWidth;
-    float screenHeight;
-
-    screenHeight = windowPtr->getSize().y;
-    screenWidth = windowPtr->getSize().x;
+    this->screenHeight = windowPtr->getSize().y;
+    this->screenWidth = windowPtr->getSize().x;
 
     //Menu startowe
     startBtn.text.setString("Start");
@@ -87,11 +75,11 @@ MainMenuState::~MainMenuState() {
 
 }
 // Funkcja wywo³ywana przy koñczeniu stanu
+
 void MainMenuState::EndState()
 {
 
 }
-
 // Sprawdza, czy stan powinien zostaæ zakoñczony
 void MainMenuState::QuitCheck()
 {
@@ -104,62 +92,55 @@ void MainMenuState::QuitCheck()
 void MainMenuState::Update(float dt)
 {
     this->QuitCheck();
-
-    float screenWidth;
-    float screenHeight;
-
-    screenHeight = windowPtr->getSize().y;
-    screenWidth = windowPtr->getSize().x;
-
     float mouseX;
     float mouseY;
 
     mouseX = sf::Mouse::getPosition(*windowPtr).x;
     mouseY = sf::Mouse::getPosition(*windowPtr).y;
-    //Przycisk Start
-    if (startBtn.IsMouseOver(mouseX, mouseY))
-        startBtn.shape.setFillColor(sf::Color::Red);
-    else
-        startBtn.shape.setFillColor(sf::Color::Magenta);
-    if (startBtn.IsButtonClicked(mouseX, mouseY)) {
-        levelSelectionOn = true;
-    }
-    //Przycisk opcji
-    if (optBtn.IsMouseOver(mouseX, mouseY))
-        optBtn.shape.setFillColor(sf::Color::Red);
-    else
-        optBtn.shape.setFillColor(sf::Color::Magenta);
-    if (optBtn.IsButtonClicked(mouseX, mouseY)) {
-        optionSelectionOn = true;
-    }
 
-    //Przycisk Wyjœcia
-    if (quitBtn.IsMouseOver(mouseX, mouseY))
-        quitBtn.shape.setFillColor(sf::Color::Red);
-    else
-        quitBtn.shape.setFillColor(sf::Color::Magenta);
-    if (quitBtn.IsButtonClicked(mouseX,mouseY)) {
-        windowPtr->close();
+    if (menuState == MenuState::Main) {
+        //Przycisk Start
+        startBtn.UpdateHover(mouseX, mouseY);
+        if (startBtn.IsButtonClicked(mouseX, mouseY)) {
+            menuState = MenuState::LevelSelect;
+        }
+        //Przycisk opcji
+        optBtn.UpdateHover(mouseX, mouseY);
+        if (optBtn.IsButtonClicked(mouseX, mouseY)) {
+            menuState = MenuState::Options;
+        }
+
+        //Przycisk Wyjœcia
+        quitBtn.UpdateHover(mouseX, mouseY);
+        if (quitBtn.IsButtonClicked(mouseX, mouseY)) {
+            windowPtr->close();
+        }
     }
-
-    //Wybór poziomów
-    if (levelSelectionOn) {
-
+    if (menuState == MenuState::LevelSelect) {
+        backToMenu.UpdateHover(mouseX, mouseY);
+        if (backToMenu.IsButtonClicked(mouseX, mouseY)) {
+            menuState = MenuState::Main;
+        }
     }
 
 
+    if (menuState == MenuState::Options) {
+        backToMenu.UpdateHover(mouseX, mouseY);
+        if (backToMenu.IsButtonClicked(mouseX, mouseY)) {
+            menuState = MenuState::Main;
+        }
+    }
 }
-
 // Funkcja renderuj¹ca stan gry
 //W tej funkcji jedynie RENDERUJEMY!!
 void MainMenuState::Render(sf::RenderWindow* windowPtr)
 {
-    if (!levelSelectionOn && !optionSelectionOn) {
+    if (menuState == MenuState::Main) {
         startBtn.Draw(*windowPtr);
         quitBtn.Draw(*windowPtr);
         optBtn.Draw(*windowPtr);
     }
-    if (levelSelectionOn) {
+    if (menuState == MenuState::LevelSelect) {
         selectMenuEasy.Draw(*windowPtr);
         selectMenuNormal.Draw(*windowPtr);
         selectMenuHard.Draw(*windowPtr);
@@ -167,8 +148,11 @@ void MainMenuState::Render(sf::RenderWindow* windowPtr)
         selectMenuLevelOne.Draw(*windowPtr);
         selectMenuLevelTwo.Draw(*windowPtr);
         selectMenuLevelThree.Draw(*windowPtr);
-    
         backToMenu.Draw(*windowPtr);
+    }
+    if (menuState == MenuState::Options) {
+        backToMenu.Draw(*windowPtr);
+
     }
 
 }
