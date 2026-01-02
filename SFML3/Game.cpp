@@ -9,6 +9,7 @@
 #include <vector>
 Game::Game()
 {
+    //Test
 	this->InitWindow();
     this->InitStates();
 }
