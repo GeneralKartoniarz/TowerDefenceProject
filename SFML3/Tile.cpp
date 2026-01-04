@@ -6,13 +6,19 @@
 void Tile::Draw(sf::RenderWindow& window) {
 	window.draw(shape);
 }
-Tile::Tile(sf::Vector2f position, float size)
+Tile::Tile(sf::Vector2f position, float size, TileState state)
 	: size(size)
 {
 	shape.setSize({ size, size });
 	shape.setOrigin({ size / 2.f, size / 2.f });
 	shape.setPosition(position);
-	shape.setFillColor(normalColor);
+	if (state == TileState::Placement)
+		shape.setFillColor(normalColor);
+	else if (state == TileState::Path)
+		shape.setFillColor(sf::Color::White);
+	else
+		shape.setFillColor(sf::Color::Red);
+
 }
 
 Tile::~Tile()

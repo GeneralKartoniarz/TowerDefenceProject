@@ -2,6 +2,8 @@
 #include "States.h"           
 #include "Tile.h"           
 #include "Button.h"      
+#include "Monster.h"      
+#include "Tower.h"      
 #include <iostream>   
 #include <string>   
 #include <SFML/Graphics.hpp>
@@ -9,12 +11,15 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 using namespace std;  
 sf::Font fontGameState("comicFont.ttf");
 
 GameState::GameState(sf::RenderWindow* windowPtr)
     : States(windowPtr)
 {
+    srand(time(0));
     this->windowPtr = windowPtr;
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
@@ -28,8 +33,9 @@ GameState::GameState(sf::RenderWindow* windowPtr)
         for (int j = 0; j < columns; j++)
         {
             sf::Vector2f position(offset.x + j * (tileSize + spacing), offset.y + i * (tileSize + spacing));
-            tiles.emplace_back(position, tileSize);
+            tiles.emplace_back(position, tileSize, Tile::TileState::Placement);
         }
+
     }
 }
 
@@ -58,14 +64,7 @@ void GameState::Update(float dt)
 
     mouseX = sf::Mouse::getPosition(*windowPtr).x;
     mouseY = sf::Mouse::getPosition(*windowPtr).y;
-    for (auto& tile : tiles) {
-        if (tile.IsMouseOver(mouseX, mouseY) && tile.shape.getFillColor() != sf::Color::White)
-            tile.shape.setFillColor(sf::Color::Red);
-        else if(tile.shape.getFillColor() != sf::Color::White)
-            tile.shape.setFillColor(sf::Color::Blue);
-        if(tile.IsButtonClicked(mouseX,mouseY))
-            tile.shape.setFillColor(sf::Color::White);
-    }
+
 }
 
 void GameState::Render(sf::RenderWindow* windowPtr)

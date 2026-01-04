@@ -9,17 +9,18 @@
 class Tile
 {
 public:
+	enum class TileState
+	{
+		Path,
+		Placement,
+		Locked
+	};
 	sf::RectangleShape shape;
 	float size = 50.f;
 	sf::Color normalColor = sf::Color::Blue;
-	enum tileState
-	{
-		path,
-		placement,
-		locked
-	};
 
-	Tile(sf::Vector2f position, float size);
+	TileState state;
+	Tile(sf::Vector2f position, float size,TileState state);
 	~Tile();
 
 	void SetPosition(float x, float y);
