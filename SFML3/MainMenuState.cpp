@@ -78,7 +78,7 @@ MainMenuState::~MainMenuState() {
 
 void MainMenuState::EndState()
 {
-
+    cout << "Wybrano poziom";
 }
 // Sprawdza, czy stan powinien zostaæ zakoñczony
 void MainMenuState::QuitCheck()
@@ -117,6 +117,39 @@ void MainMenuState::Update(float dt)
         }
     }
     if (menuState == MenuState::LevelSelect) {
+        if (selectMenuEasy.IsButtonClicked(mouseX, mouseY)) {
+            difficulty = 1;
+            selectMenuEasy.shape.setFillColor(sf::Color::Red);
+            selectMenuNormal.shape.setFillColor(sf::Color::Blue);
+            selectMenuHard.shape.setFillColor(sf::Color::Blue);
+        }
+        if (selectMenuNormal.IsButtonClicked(mouseX, mouseY)) {
+            difficulty = 2;
+            selectMenuNormal.shape.setFillColor(sf::Color::Red);
+            selectMenuEasy.shape.setFillColor(sf::Color::Blue);
+            selectMenuHard.shape.setFillColor(sf::Color::Blue);
+        }
+        if (selectMenuHard.IsButtonClicked(mouseX, mouseY)) {
+            difficulty = 3;
+            selectMenuHard.shape.setFillColor(sf::Color::Red);
+            selectMenuEasy.shape.setFillColor(sf::Color::Blue);
+            selectMenuNormal.shape.setFillColor(sf::Color::Blue);
+        }
+        if (selectMenuLevelOne.IsButtonClicked(mouseX, mouseY)) {
+            level = 1;
+            this->quit = true;
+        }
+
+        if (selectMenuLevelTwo.IsButtonClicked(mouseX, mouseY)) {
+            level = 2;
+            this->quit = true;
+        }
+
+        if (selectMenuLevelThree.IsButtonClicked(mouseX, mouseY)) {
+            level = 3;
+            this->quit = true;
+        }
+
         backToMenu.UpdateHover(mouseX, mouseY);
         if (backToMenu.IsButtonClicked(mouseX, mouseY)) {
             menuState = MenuState::Main;

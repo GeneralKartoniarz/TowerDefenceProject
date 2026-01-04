@@ -135,6 +135,7 @@
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="States.cpp" />
+    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Tower.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +145,7 @@
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="States.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="Tower.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
