@@ -84,6 +84,7 @@ void Game::Run()
 void Game::InitStates()
 {
     //TUTAJ UMIESZCZMAY STANY CZYTAJ SCENY JEST 3.13 OCZY MI WYCHODZ¥ Z ORBIT
+    state.clear();
     this->state.push_back(new GameState(this->windowPtr));
     this->state.push_back(new MainMenuState(this->windowPtr));
     activeState = 1;

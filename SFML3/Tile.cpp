@@ -9,6 +9,7 @@ void Tile::Draw(sf::RenderWindow& window) {
 Tile::Tile(sf::Vector2f position, float size, TileState state)
 	: size(size)
 {
+	this->state = state;
 	shape.setSize({ size, size });
 	shape.setOrigin({ size / 2.f, size / 2.f });
 	shape.setPosition(position);
