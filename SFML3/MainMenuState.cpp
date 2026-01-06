@@ -11,8 +11,6 @@ using namespace std;
 int level = 1;
 int difficulty = 1;
 
-// Konstruktor MainMenuState
-//Kod umieszczony poni¿ej wykona siê RAZ
 MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     : States(windowPtr),
     startBtn(fontMainMenu),
@@ -34,7 +32,6 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
 
-    //Menu startowe
     startBtn.text.setString("Start");
     startBtn.SetPosition(screenWidth / 2, screenHeight / 3);
 
@@ -44,7 +41,6 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     quitBtn.text.setString("Exit");
     quitBtn.SetPosition(screenWidth / 2, screenHeight - screenHeight / 3);
 
-    //Wybór poziomów
     selectMenuEasy.shape.setFillColor(sf::Color::Blue);
     selectMenuEasy.text.setString("Easy");
     selectMenuEasy.SetPosition(screenWidth / 2, screenHeight - screenHeight * 0.7);
@@ -70,25 +66,20 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     backToMenu.SetPosition(backToMenu.shape.getSize().x, backToMenu.shape.getSize().y);
 }
 
-// Destruktor GameState
 MainMenuState::~MainMenuState() {
 
 }
-// Funkcja wywo³ywana przy koñczeniu stanu
 
 void MainMenuState::EndState()
 {
     cout << "Wybrano poziom";
 }
-// Sprawdza, czy stan powinien zostaæ zakoñczony
+
 void MainMenuState::QuitCheck()
 {
     this->CheckForQuit();
 }
 
-// G³ówna funkcja logiki stanu gry
-// dt = delta time (czas jednej klatki)
-//Kod w tej funkcji wykona siê CO KLATKE
 void MainMenuState::Update(float dt)
 {
     this->QuitCheck();
@@ -99,18 +90,18 @@ void MainMenuState::Update(float dt)
     mouseY = sf::Mouse::getPosition(*windowPtr).y;
 
     if (menuState == MenuState::Main) {
-        //Przycisk Start
+
         startBtn.UpdateHover(mouseX, mouseY);
         if (startBtn.IsButtonClicked(mouseX, mouseY)) {
             menuState = MenuState::LevelSelect;
         }
-        //Przycisk opcji
+
         optBtn.UpdateHover(mouseX, mouseY);
         if (optBtn.IsButtonClicked(mouseX, mouseY)) {
             menuState = MenuState::Options;
         }
 
-        //Przycisk Wyjœcia
+
         quitBtn.UpdateHover(mouseX, mouseY);
         if (quitBtn.IsButtonClicked(mouseX, mouseY)) {
             windowPtr->close();
@@ -164,8 +155,7 @@ void MainMenuState::Update(float dt)
         }
     }
 }
-// Funkcja renderuj¹ca stan gry
-//W tej funkcji jedynie RENDERUJEMY!!
+
 void MainMenuState::Render(sf::RenderWindow* windowPtr)
 {
     if (menuState == MenuState::Main) {

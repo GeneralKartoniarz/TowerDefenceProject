@@ -6,6 +6,15 @@
 void Tile::Draw(sf::RenderWindow& window) {
 	window.draw(shape);
 }
+void Tile::Refresh()
+{
+	if (this->state == TileState::Placement)
+		this->shape.setFillColor(normalColor);
+	else if (this->state == TileState::Path)
+		this->shape.setFillColor(sf::Color(186, 153, 99));
+	else
+		this->shape.setFillColor(sf::Color(201, 104, 77));
+}
 Tile::Tile(sf::Vector2f position, float size, TileState state)
 	: size(size)
 {
@@ -13,12 +22,7 @@ Tile::Tile(sf::Vector2f position, float size, TileState state)
 	shape.setSize({ size, size });
 	shape.setOrigin({ size / 2.f, size / 2.f });
 	shape.setPosition(position);
-	if (state == TileState::Placement)
-		shape.setFillColor(normalColor);
-	else if (state == TileState::Path)
-		shape.setFillColor(sf::Color::White);
-	else
-		shape.setFillColor(sf::Color::Red);
+	Refresh();
 
 }
 

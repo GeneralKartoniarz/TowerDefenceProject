@@ -144,9 +144,18 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Tower.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SFML3.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="mapatest.txt" />
+    <Text Include="map_1.txt" />
+    <Text Include="map_2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -23,7 +23,7 @@ public:
 
     vector<Tile> tiles;
     vector<Button> buttons;
-
+    vector<int> map;
     sf::Font fontGameState;
 
     void EndState();

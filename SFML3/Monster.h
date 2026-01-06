@@ -1,12 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
-
+using namespace std;
 class Monster
 {
 public:
 	//konstruktor
-	Monster(int hp, float speed, int damage, int gold, std::string name ,sf::Texture texture);
+	Monster(int hp, float speed, int damage, int gold, string name ,sf::Texture texture);
 	
 	//gettery i settery
 	int getHP();
@@ -21,8 +21,8 @@ public:
 	int getGold();
 	void setGold(int gold);
 
-	std::string getName();
-	void setName(std::string name);
+	string getName();
+	void setName(string name);
 
 	sf::Texture getTexture();
 	void setTexture(sf::Texture texture);
@@ -35,7 +35,7 @@ private:
 	float mSpeed;
 	int mDamage;
 	int mGold;
-	std::string mName;
+	string mName;
 	sf::Texture mTexture;
 };
 

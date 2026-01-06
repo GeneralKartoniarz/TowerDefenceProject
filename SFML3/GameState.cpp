@@ -10,6 +10,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
+#include <fstream>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
@@ -18,12 +19,19 @@ using namespace std;
 GameState::GameState(sf::RenderWindow* windowPtr)
     : States(windowPtr)
 {
-    
+    ifstream mapFile; 
+    mapFile.open("mapatest.txt");
+    string mapString;
+    string tempString;
+    while (getline(mapFile, tempString)) {
+        mapString += tempString;
+    }
+    for (int i = 0; i < mapString.length(); i++)
+    {
+        map.push_back(mapString.at(i));
+    }
     if (!fontGameState.openFromFile("comicFont.ttf")) {
         cout << "Font sie zepsul";
-    }
-    else {
-        fontGameState.openFromFile("comicFont.ttf");
     }
     srand(time(0));
     this->windowPtr = windowPtr;
@@ -42,16 +50,29 @@ GameState::GameState(sf::RenderWindow* windowPtr)
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < columns; j++)
-       {
-           sf::Vector2f position(offset.x + j * (tileSize + spacing), offset.y + i * (tileSize + spacing));
-           tiles.emplace_back(position, tileSize, Tile::TileState::Placement);
-       }
+        {
+            int currentTile = i * columns + j;
+
+            sf::Vector2f position(offset.x + j * (tileSize + spacing),
+                offset.y + i * (tileSize + spacing));
+
+            Tile::TileState state;
+            char type = mapString[currentTile];
+
+            if (type == '1')      
+                state = Tile::TileState::Path;
+            else if (type == '2') 
+                state = Tile::TileState::Locked;
+            else                  
+                state = Tile::TileState::Placement;
+            tiles.emplace_back(position, tileSize, state);
+            tiles.back().Refresh();
+        }
 
     }
     int buttonCount = 6;
     float buttonSpacing = 20.f;
     float topMargin = 15.f;
-
     buttons.clear();
     buttons.reserve(buttonCount);
 
@@ -73,16 +94,14 @@ GameState::GameState(sf::RenderWindow* windowPtr)
         buttons[i].defText = to_string(i);
         buttons[i].text.setString(buttons[i].defText);
 
-        buttons[i].normalColor = sf::Color::Magenta;
+        buttons[i].normalColor = sf::Color(255, 222, 89);
         buttons[i].hoverColor = sf::Color(255, 200, 0);
         buttons[i].shape.setFillColor(buttons[i].normalColor);
 
         float x = startX + i * (buttonWidth + buttonSpacing);
         buttons[i].SetPosition(x, y);
     }
-
-
-
+    mapFile.close();
 }
 
 GameState::~GameState() {
@@ -113,15 +132,15 @@ void GameState::Update(float dt)
             tiles[i].shape.setFillColor(sf::Color::Cyan);
         }
         else if(i != selectedTile && tiles[i].state == Tile::TileState::Placement){
-            tiles[i].shape.setFillColor(sf::Color::Blue);
+            tiles[i].shape.setFillColor(tiles[i].normalColor);
         }
         if (tiles[i].IsButtonClicked(mouseX, mouseY) && tiles[i].state == Tile::TileState::Placement && selectedTile != i) {
             selectedTile = i;
             isTileSelected = true;
-            tiles[i].shape.setFillColor(sf::Color::Red);
+            tiles[i].shape.setFillColor(sf::Color(156, 242, 116));
         }
         else if(tiles[i].IsButtonClicked(mouseX, mouseY) && selectedTile == i && tiles[i].state == Tile::TileState::Placement){
-            tiles[i].shape.setFillColor(sf::Color::Blue);
+            tiles[i].shape.setFillColor(tiles[i].normalColor);
             isTileSelected = false;
             selectedTile = -1;
         }

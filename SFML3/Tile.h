@@ -17,7 +17,7 @@ public:
 	};
 	sf::RectangleShape shape;
 	float size = 50.f;
-	sf::Color normalColor = sf::Color::Blue;
+	sf::Color normalColor = sf::Color(45, 191, 0);
 
 	TileState state;
 	Tile(sf::Vector2f position, float size,TileState state);
@@ -27,6 +27,7 @@ public:
 	bool IsMouseOver(float mouseX, float mouseY);
 	bool IsButtonClicked(float mouseX, float mouseY);
 	void Draw(sf::RenderWindow& window);
+	void Refresh();
 private:
 };
 

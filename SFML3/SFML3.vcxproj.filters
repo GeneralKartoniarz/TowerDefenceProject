@@ -68,5 +68,24 @@
     <ClInclude Include="Tile.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SFML3.rc">
+      <Filter>Pliki zasobów</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="mapatest.txt">
+      <Filter>Pliki źródłowe</Filter>
+    </Text>
+    <Text Include="map_1.txt">
+      <Filter>Pliki źródłowe</Filter>
+    </Text>
+    <Text Include="map_2.txt">
+      <Filter>Pliki źródłowe</Filter>
+    </Text>
   </ItemGroup>
 </Project>
