@@ -76,13 +76,47 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
         }
     }
 
-    // 4. Wyznaczanie punktów œcie¿ki dla potworów
+// 4. Wyznaczanie punktów œcie¿ki dla potworów (Path Following)
+//Notatka zgadza sie ukrad³em ze StackOverflow ale tylko g³upi by nie skorzysta³ + AI nie bêdzie mi pisaæ kodu ufam tylko ludziom/programist¹ z du¿ym sta¿em
+//Powodzenia w sprawdzaniu i przepraszam za ba³agan w kodzie <3
     pathPoints.clear();
-    for (int i = 0; i < tiles.size(); i++)
-    {
-        if (tiles[i].state == Tile::TileState::Path)
-        {
-            pathPoints.push_back(tiles[i].shape.getPosition());
+
+    int startIndex = -1;
+    for (int i = 0; i < map.size(); i++) {
+        if (map[i] == '1') {
+            startIndex = i;
+            break;
+        }
+    }
+
+    if (startIndex != -1) {
+        int current = startIndex;
+        int previous = -1;
+        bool endOfPath = false;
+
+        while (!endOfPath) {
+            pathPoints.push_back(tiles[current].shape.getPosition());
+
+            bool foundNext = false;
+            const int dirs[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+
+            for (auto& d : dirs) {
+                int nx = (current % columns) + d[0];
+                int ny = (current / columns) + d[1];
+                int next = ny * columns + nx;
+                if (nx >= 0 && nx < columns && ny >= 0 && ny < rows) {
+                    if (map[next] == '1' && next != previous) {
+                        previous = current;
+                        current = next;
+                        foundNext = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!foundNext) {
+                endOfPath = true;
+            }
         }
     }
 

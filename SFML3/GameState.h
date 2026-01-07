@@ -65,7 +65,7 @@ public:
     void QuitCheck();
     void Update(float dt) override;
     void Render(sf::RenderWindow* windowPtr) override;
-
+    int GetNeighbor(int index, int dx, int dy, int cols);
 private:
     // Sekcja prywatna (opcjonalnie do dodania metody pomocnicze, np. LoadMap)
 };
