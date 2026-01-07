@@ -2,6 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include "States.h"
 #include "Button.h"
+#include <string>
+#include<iostream>
+#include<fstream>
+using namespace std;
 class MainMenuState :
     public States
 {
@@ -12,6 +16,7 @@ public:
     void QuitCheck();
     void Update(float dt);
     void Render(sf::RenderWindow* windowPtr);
+    void CopyMap(string source, string dest);
    
 private:
     float screenWidth;

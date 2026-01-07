@@ -1,4 +1,5 @@
 #include "GameState.h"   
+#include "MainMenuState.h"   
 #include "States.h"           
 #include "Tile.h"           
 #include "Button.h"      
@@ -16,11 +17,11 @@
 #include <ctime>
 using namespace std;  
 
-GameState::GameState(sf::RenderWindow* windowPtr)
-    : States(windowPtr)
+GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
+    : States(windowPtr),hpText(fontGameState),goldText(fontGameState),turnText(fontGameState)
 {
     ifstream mapFile; 
-    mapFile.open("mapatest.txt");
+    mapFile.open("map.txt");
     string mapString;
     string tempString;
     while (getline(mapFile, tempString)) {
@@ -37,7 +38,8 @@ GameState::GameState(sf::RenderWindow* windowPtr)
     this->windowPtr = windowPtr;
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
-    
+    this->difficulty = difficulty;
+
     tiles.clear();
     tiles.reserve(columns * rows);
     
@@ -69,6 +71,15 @@ GameState::GameState(sf::RenderWindow* windowPtr)
             tiles.back().Refresh();
         }
 
+    }
+    pathPoints.clear();
+
+    for (int i = 0; i < tiles.size(); i++)
+    {
+        if (tiles[i].state == Tile::TileState::Path)
+        {
+            pathPoints.push_back(tiles[i].shape.getPosition());
+        }
     }
     int buttonCount = 6;
     float buttonSpacing = 20.f;
@@ -102,6 +113,49 @@ GameState::GameState(sf::RenderWindow* windowPtr)
         buttons[i].SetPosition(x, y);
     }
     mapFile.close();
+
+    float boxWidth = 160.f;
+    float boxHeight = 40.f;
+    float margin = 20.f;
+
+   
+    hpBox.setSize({ boxWidth, boxHeight });
+    hpBox.setFillColor(sf::Color(40, 40, 40));
+    hpBox.setOutlineThickness(2.f);
+    hpBox.setOutlineColor(sf::Color::White);
+    hpBox.setPosition({ margin, margin });
+
+    
+    goldBox = hpBox;
+    goldBox.setPosition({ margin, margin + boxHeight + 5 });
+
+    turnBox = hpBox;
+    turnBox.setPosition({ margin, margin + 2 * (boxHeight + 5) });
+
+    hpText.setFont(fontGameState);
+    goldText.setFont(fontGameState);
+    turnText.setFont(fontGameState);
+
+
+
+    hpText.setCharacterSize(18);
+    goldText.setCharacterSize(18);
+    turnText.setCharacterSize(18);
+
+    hpText.setFillColor(sf::Color::White);
+    goldText.setFillColor(sf::Color::White);
+    turnText.setFillColor(sf::Color::White);
+
+    hpText.setPosition(hpBox.getPosition() + sf::Vector2f(8, 8));
+    goldText.setPosition(goldBox.getPosition() + sf::Vector2f(8, 8));
+    turnText.setPosition(turnBox.getPosition() + sf::Vector2f(8, 8));
+
+
+
+
+
+
+
 }
 
 GameState::~GameState() {
@@ -127,6 +181,34 @@ void GameState::Update(float dt)
     float mouseY;
     mouseX = sf::Mouse::getPosition(*windowPtr).x;
     mouseY = sf::Mouse::getPosition(*windowPtr).y;
+
+    hpText.setString("HP: " + to_string(playerHp));
+    goldText.setString("GOLD: " + to_string(playerGold));
+    turnText.setString("WAVE: " + to_string(currentWave) + " / " + to_string(waves));
+
+    spawnTimer += dt;
+
+    if (spawnTimer >= spawnDelay && monsters.size() < monsterPerWave)
+    {
+        spawnTimer = 0.f;
+
+        if (!pathPoints.empty())
+        {
+            monsters.emplace_back(pathPoints[0]);
+
+        }
+    }
+    for (int i = monsters.size() - 1; i >= 0; i--)
+    {
+        monsters[i].Update(dt, pathPoints);
+
+        if (monsters[i].reachedEnd)
+        {
+            playerHp -= monsters[i].mDamage;
+            monsters.erase(monsters.begin() + i);
+        }
+    }
+
     for (int i = 0; i < tiles.size(); i++) {
         if (tiles[i].IsMouseOver(mouseX, mouseY) && i != selectedTile && tiles[i].state ==  Tile::TileState::Placement) {
             tiles[i].shape.setFillColor(sf::Color::Cyan);
@@ -148,6 +230,11 @@ void GameState::Update(float dt)
     for (int i = 0; i < buttons.size(); i++) {
         buttons[i].UpdateHover(mouseX, mouseY);
     }
+    if (playerHp <= 0) {
+        this->nextState = new MainMenuState(this->windowPtr);
+        quit = true;
+    }
+
 }
 
 void GameState::Render(sf::RenderWindow* windowPtr)
@@ -156,4 +243,14 @@ void GameState::Render(sf::RenderWindow* windowPtr)
         tile.Draw(*windowPtr);
     for (auto& button : buttons)
         button.Draw(*windowPtr);
+    for (auto& monster : monsters)
+        monster.Draw(*windowPtr);
+
+    windowPtr->draw(hpBox);
+    windowPtr->draw(goldBox);
+    windowPtr->draw(turnBox);
+
+    windowPtr->draw(hpText);
+    windowPtr->draw(goldText);
+    windowPtr->draw(turnText);
 }

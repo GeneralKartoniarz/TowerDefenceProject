@@ -16,9 +16,6 @@ Game::Game()
 
 Game::~Game()
 {
-    for (auto* s : state)
-        delete s;
-    delete windowPtr;
 
 }
 
@@ -48,16 +45,25 @@ bool States::GetQuit()
 
 void Game::Update(float dt)
 {
-    this->UpdateEvent();
-    if(!this->state.empty()) {
-        this->state[activeState]->Update(dt);
+    UpdateEvent();
+
+    if (!states.empty())
+    {
+        states.back()->Update(dt);
+
+        if (states.back()->GetQuit())
+        {
+            States* next = states.back()->nextState;
+
+            delete states.back();
+            states.pop_back();
+
+            if (next)
+                states.push_back(next);
+        }
     }
-    if (state[activeState]->GetQuit()) {
-        state[activeState]->quit = false;
-        activeState = (activeState + 1) % state.size();
-    }
-    //zamykanie gry
-    if (state.empty()) {
+    else
+    {
         windowPtr->close();
     }
 
@@ -65,10 +71,11 @@ void Game::Update(float dt)
 
 void Game::Render()
 {
-    if(!this->state.empty()) {
-        this->state[activeState]->windowPtr->clear();
-        state[activeState]->Render(windowPtr);
-        this->state[activeState]->windowPtr->display();
+    if (!states.empty())
+    {
+        windowPtr->clear();
+        states.back()->Render(windowPtr);
+        windowPtr->display();
     }
 }
 
@@ -84,9 +91,8 @@ void Game::Run()
 void Game::InitStates()
 {
     //TUTAJ UMIESZCZMAY STANY CZYTAJ SCENY JEST 3.13 OCZY MI WYCHODZ¥ Z ORBIT
-    state.clear();
-    this->state.push_back(new GameState(this->windowPtr));
-    this->state.push_back(new MainMenuState(this->windowPtr));
+    states.clear();
+    this->states.push_back(new MainMenuState(this->windowPtr));
     activeState = 1;
 
 }

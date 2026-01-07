@@ -1,41 +1,22 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <string>
-using namespace std;
+#include <vector>
+
 class Monster
 {
 public:
-	//konstruktor
-	Monster(int hp, float speed, int damage, int gold, string name ,sf::Texture texture);
-	
-	//gettery i settery
-	int getHP();
-	void setHP(int hp);
+    sf::RectangleShape shape;
 
-	float getSpeed();
-	void setSpeed(float speed);
+    int mHP;
+    int mDamage;
+    int mGold;
+    float mSpeed;
 
-	int getDamage();
-	void setDamage(int damage);
+    int pathIndex = 0;
+    bool reachedEnd = false;
 
-	int getGold();
-	void setGold(int gold);
+    Monster(sf::Vector2f startPos);
 
-	string getName();
-	void setName(string name);
-
-	sf::Texture getTexture();
-	void setTexture(sf::Texture texture);
-
-
-private:
-	//w³asnoœci objektu
-	
-	int mHP;
-	float mSpeed;
-	int mDamage;
-	int mGold;
-	string mName;
-	sf::Texture mTexture;
+    void Update(float dt, const std::vector<sf::Vector2f>& path);
+    void Draw(sf::RenderWindow& window);
 };
-

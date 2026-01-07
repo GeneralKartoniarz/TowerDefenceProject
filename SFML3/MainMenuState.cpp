@@ -1,4 +1,5 @@
 #include "MainMenuState.h"
+#include "GameState.h"
 #include "States.h"      
 #include "Button.h"      
 #include <iostream>   
@@ -6,9 +7,10 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
+#include <fstream>
+#include <string>
 using namespace std;
 
-int level = 1;
 int difficulty = 1;
 
 MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
@@ -127,18 +129,21 @@ void MainMenuState::Update(float dt)
             selectMenuNormal.shape.setFillColor(sf::Color::Blue);
         }
         if (selectMenuLevelOne.IsButtonClicked(mouseX, mouseY)) {
-            level = 1;
-            this->quit = true;
+            CopyMap("map_1.txt", "map.txt");
+            nextState = new GameState(windowPtr, 1);
+            quit = true;
         }
 
         if (selectMenuLevelTwo.IsButtonClicked(mouseX, mouseY)) {
-            level = 2;
-            this->quit = true;
+            CopyMap("map_2.txt", "map.txt");
+            nextState = new GameState(windowPtr, 2);
+            quit = true;
         }
 
         if (selectMenuLevelThree.IsButtonClicked(mouseX, mouseY)) {
-            level = 3;
-            this->quit = true;
+            CopyMap("map_3.txt", "map.txt");
+            nextState = new GameState(windowPtr, 3);
+            quit = true;
         }
 
         backToMenu.UpdateHover(mouseX, mouseY);
@@ -178,4 +183,13 @@ void MainMenuState::Render(sf::RenderWindow* windowPtr)
 
     }
 
+}
+
+void MainMenuState::CopyMap(string source, string dest)
+{
+    ifstream sourceFile(source);
+    ofstream destFile(dest, ios::trunc);
+    destFile << sourceFile.rdbuf();
+    sourceFile.close();
+    destFile.close();
 }

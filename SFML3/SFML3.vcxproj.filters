@@ -87,5 +87,11 @@
     <Text Include="map_2.txt">
       <Filter>Pliki źródłowe</Filter>
     </Text>
+    <Text Include="map_3.txt">
+      <Filter>Pliki źródłowe</Filter>
+    </Text>
+    <Text Include="map.txt">
+      <Filter>Pliki źródłowe</Filter>
+    </Text>
   </ItemGroup>
 </Project>

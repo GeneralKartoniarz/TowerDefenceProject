@@ -153,9 +153,11 @@
     <ResourceCompile Include="SFML3.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="map.txt" />
     <Text Include="mapatest.txt" />
     <Text Include="map_1.txt" />
     <Text Include="map_2.txt" />
+    <Text Include="map_3.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

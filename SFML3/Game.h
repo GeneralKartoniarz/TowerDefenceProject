@@ -20,9 +20,6 @@ public:
 	void Render();
 	void Run();
 	void InitStates();
-	void ChangeState(States* newState);
-	void PushState(States* newState);
-	void PopState();
 
 
 private:
@@ -31,7 +28,7 @@ private:
 	float dt;
 	sf::RenderWindow* windowPtr;
 	optional<sf::Event> ev;
-	vector<States*> state;
+	vector<States*> states;;
 	int activeState;
 };
 

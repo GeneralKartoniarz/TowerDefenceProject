@@ -1,57 +1,44 @@
 #include "Monster.h"
+#include <cmath>
+#include <vector>
+Monster::Monster(sf::Vector2f startPos)
+{
+    mHP = 100;
+    mDamage = 5;
+    mGold = 10;
+    mSpeed = 500.f;
 
-Monster::Monster(int hp, float speed, int damage, int gold, std::string name, sf::Texture texture) {
-	mHP = hp;
-	mSpeed = speed;
-	mDamage = damage;
-	mGold = gold;
-	mName = name;
-	mTexture = texture;
-}
-int Monster::getHP() {
-    return mHP;
-}
-
-void Monster::setHP(int hp) {
-    mHP = hp;
+    shape.setSize({ 50.f, 50.f });
+    shape.setOrigin(shape.getSize() / 2.f);
+    shape.setFillColor(sf::Color::Red);
+    shape.setPosition(startPos);
 }
 
-float Monster::getSpeed() {
-    return mSpeed;
+void Monster::Update(float dt, const std::vector<sf::Vector2f>& path)
+{
+    if (pathIndex >= path.size())
+    {
+        reachedEnd = true;
+        return;
+    }
+
+    sf::Vector2f target = path[pathIndex];
+    sf::Vector2f pos = shape.getPosition();
+    sf::Vector2f dir = target - pos;
+
+    float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+
+    if (length < 2.f)
+    {
+        pathIndex++;
+    }
+    else
+    {
+        shape.move((dir / length) * mSpeed * dt);
+    }
 }
 
-void Monster::setSpeed(float speed) {
-    mSpeed = speed;
-}
-
-int Monster::getDamage() {
-    return mDamage;
-}
-
-void Monster::setDamage(int damage) {
-    mDamage = damage;
-}
-
-int Monster::getGold() {
-    return mGold;
-}
-
-void Monster::setGold(int gold) {
-    mGold = gold;
-}
-
-std::string Monster::getName() {
-    return mName;
-}
-
-void Monster::setName(std::string name) {
-    mName = name;
-}
-
-sf::Texture Monster::getTexture() {
-    return mTexture;
-}
-
-void Monster::setTexture(sf::Texture texture) {
-    mTexture = texture;  
+void Monster::Draw(sf::RenderWindow& window)
+{
+    window.draw(shape);
 }

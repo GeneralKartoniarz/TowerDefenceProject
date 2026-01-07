@@ -11,6 +11,7 @@
 class States
 {
 public:
+	States* nextState = nullptr;
 	sf::RenderWindow* windowPtr;
 	States(sf::RenderWindow* windowPtr);
 	virtual ~States();
