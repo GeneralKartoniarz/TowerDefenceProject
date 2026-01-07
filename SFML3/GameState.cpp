@@ -88,7 +88,6 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
             break;
         }
     }
-
     if (startIndex != -1) {
         int current = startIndex;
         int previous = -1;

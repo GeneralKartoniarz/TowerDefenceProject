@@ -28,7 +28,7 @@ public:
     // --- Statystyki Gracza i Rozgrywki ---
     int difficulty;
     int playerGold = 2000;
-    int playerHp = 10000;
+    int playerHp = 200;
     int currentWave = 1;
     int waves = 50;
 
@@ -65,7 +65,6 @@ public:
     void QuitCheck();
     void Update(float dt) override;
     void Render(sf::RenderWindow* windowPtr) override;
-    int GetNeighbor(int index, int dx, int dy, int cols);
 private:
     // Sekcja prywatna (opcjonalnie do dodania metody pomocnicze, np. LoadMap)
 };
