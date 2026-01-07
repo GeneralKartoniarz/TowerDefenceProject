@@ -7,23 +7,44 @@
 #include "GameState.h"
 #include "MainMenuState.h"
 #include <vector>
+
+// --- KONSTRUKTOR I DESTRUKTOR ---
 Game::Game()
 {
-    //Test
-	this->InitWindow();
+    this->InitWindow();
     this->InitStates();
 }
 
 Game::~Game()
 {
-
+    // Tutaj w przysz³oœci warto dodaæ czyszczenie wektora states, jeœli nie jest pusty
 }
 
+// --- INICJALIZACJA ---
 void Game::InitWindow()
 {
-	this->windowPtr = new sf::RenderWindow(sf::VideoMode({1920,1080}), "TEST");
+    this->windowPtr = new sf::RenderWindow(sf::VideoMode({ 1920, 1080 }), "TEST");
 }
 
+void Game::InitStates()
+{
+    // TUTAJ UMIESZCZMAY STANY CZYTAJ SCENY JEST 3.13 OCZY MI WYCHODZ¥ Z ORBIT
+    states.clear();
+    this->states.push_back(new MainMenuState(this->windowPtr));
+    activeState = 1;
+}
+
+// --- PÊTLA G£ÓWNA I STEROWANIE ---
+void Game::Run()
+{
+    while (this->windowPtr->isOpen()) {
+        this->dt = dtClock.restart().asSeconds(); // Obliczanie czasu klatki
+        this->Update(this->dt);
+        this->Render();
+    }
+}
+
+// --- AKTUALIZACJA LOGIKI ---
 void Game::UpdateEvent()
 {
     while (ev = this->windowPtr->pollEvent())
@@ -31,16 +52,6 @@ void Game::UpdateEvent()
         if (ev->is<sf::Event::Closed>())
             windowPtr->close();
     }
-}
-
-void States::CheckForQuit()
-{
-
-}
-
-bool States::GetQuit()
-{
-    return quit;
 }
 
 void Game::Update(float dt)
@@ -51,6 +62,7 @@ void Game::Update(float dt)
     {
         states.back()->Update(dt);
 
+        // Mechanizm zmiany/zamykania stanów
         if (states.back()->GetQuit())
         {
             States* next = states.back()->nextState;
@@ -64,36 +76,29 @@ void Game::Update(float dt)
     }
     else
     {
+        // Zamknij aplikacjê, jeœli nie ma ju¿ ¿adnych stanów
         windowPtr->close();
     }
-
 }
 
+// --- RENDEROWANIE ---
 void Game::Render()
 {
     if (!states.empty())
     {
         windowPtr->clear();
-        states.back()->Render(windowPtr);
+        states.back()->Render(windowPtr); // Rysuje tylko aktualny stan na wierzchu
         windowPtr->display();
     }
 }
 
-void Game::Run()
+// --- IMPLEMENTACJA KLASY BAZOWEJ STATES ---
+// (Te metody znajduj¹ siê w pliku Game.cpp zgodnie z Twoim kodem)
+void States::CheckForQuit()
 {
-    while (this->windowPtr->isOpen()) {
-        this->dt = dtClock.restart().asSeconds();
-        this->Update(this ->dt);
-        this->Render();
-    }
 }
 
-void Game::InitStates()
+bool States::GetQuit()
 {
-    //TUTAJ UMIESZCZMAY STANY CZYTAJ SCENY JEST 3.13 OCZY MI WYCHODZ¥ Z ORBIT
-    states.clear();
-    this->states.push_back(new MainMenuState(this->windowPtr));
-    activeState = 1;
-
+    return quit;
 }
-

@@ -15,12 +15,15 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-using namespace std;  
 
+using namespace std;
+
+// --- KONSTRUKTOR ---
 GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
-    : States(windowPtr),hpText(fontGameState),goldText(fontGameState),turnText(fontGameState)
+    : States(windowPtr), hpText(fontGameState), goldText(fontGameState), turnText(fontGameState)
 {
-    ifstream mapFile; 
+    // 1. £adowanie mapy z pliku tekstowego
+    ifstream mapFile;
     mapFile.open("map.txt");
     string mapString;
     string tempString;
@@ -31,6 +34,8 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     {
         map.push_back(mapString.at(i));
     }
+
+    // 2. Inicjalizacja zasobów i zmiennych okna
     if (!fontGameState.openFromFile("comicFont.ttf")) {
         cout << "Font sie zepsul";
     }
@@ -40,40 +45,39 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     this->screenWidth = windowPtr->getSize().x;
     this->difficulty = difficulty;
 
+    // 3. Tworzenie siatki kafelków (Grid)
     tiles.clear();
     tiles.reserve(columns * rows);
-    
+
     float gridWidth = columns * tileSize + (columns - 1) * spacing;
-    
     float gridHeight = rows * tileSize + (rows - 1) * spacing;
-    
-    sf::Vector2f offset((screenWidth - gridWidth) / 2.f + tileSize / 2.f, screenHeight - gridHeight + tileSize / 2.f-40);
-    
+
+    sf::Vector2f offset((screenWidth - gridWidth) / 2.f + tileSize / 2.f, screenHeight - gridHeight + tileSize / 2.f - 40);
+
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < columns; j++)
         {
             int currentTile = i * columns + j;
-
-            sf::Vector2f position(offset.x + j * (tileSize + spacing),
-                offset.y + i * (tileSize + spacing));
+            sf::Vector2f position(offset.x + j * (tileSize + spacing), offset.y + i * (tileSize + spacing));
 
             Tile::TileState state;
             char type = mapString[currentTile];
 
-            if (type == '1')      
+            if (type == '1')
                 state = Tile::TileState::Path;
-            else if (type == '2') 
+            else if (type == '2')
                 state = Tile::TileState::Locked;
-            else                  
+            else
                 state = Tile::TileState::Placement;
+
             tiles.emplace_back(position, tileSize, state);
             tiles.back().Refresh();
         }
-
     }
-    pathPoints.clear();
 
+    // 4. Wyznaczanie punktów œcie¿ki dla potworów
+    pathPoints.clear();
     for (int i = 0; i < tiles.size(); i++)
     {
         if (tiles[i].state == Tile::TileState::Path)
@@ -81,6 +85,8 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
             pathPoints.push_back(tiles[i].shape.getPosition());
         }
     }
+
+    // 5. Inicjalizacja przycisków interfejsu (Sklep/Menu)
     int buttonCount = 6;
     float buttonSpacing = 20.f;
     float topMargin = 15.f;
@@ -94,9 +100,7 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
 
     float buttonWidth = buttons[0].shape.getSize().x;
     float buttonHeight = buttons[0].shape.getSize().y;
-
     float totalWidth = buttonCount * buttonWidth + (buttonCount - 1) * buttonSpacing;
-
     float startX = (screenWidth - totalWidth) / 2.f + buttonWidth / 2.f;
     float y = topMargin + buttonHeight / 2.f;
 
@@ -104,7 +108,6 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     {
         buttons[i].defText = to_string(i);
         buttons[i].text.setString(buttons[i].defText);
-
         buttons[i].normalColor = sf::Color(255, 222, 89);
         buttons[i].hoverColor = sf::Color(255, 200, 0);
         buttons[i].shape.setFillColor(buttons[i].normalColor);
@@ -114,18 +117,17 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     }
     mapFile.close();
 
+    // 6. Konfiguracja ramek statystyk (HP, Gold, Wave)
     float boxWidth = 160.f;
     float boxHeight = 40.f;
     float margin = 20.f;
 
-   
     hpBox.setSize({ boxWidth, boxHeight });
     hpBox.setFillColor(sf::Color(40, 40, 40));
     hpBox.setOutlineThickness(2.f);
     hpBox.setOutlineColor(sf::Color::White);
     hpBox.setPosition({ margin, margin });
 
-    
     goldBox = hpBox;
     goldBox.setPosition({ margin, margin + boxHeight + 5 });
 
@@ -135,8 +137,6 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     hpText.setFont(fontGameState);
     goldText.setFont(fontGameState);
     turnText.setFont(fontGameState);
-
-
 
     hpText.setCharacterSize(18);
     goldText.setCharacterSize(18);
@@ -149,59 +149,47 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     hpText.setPosition(hpBox.getPosition() + sf::Vector2f(8, 8));
     goldText.setPosition(goldBox.getPosition() + sf::Vector2f(8, 8));
     turnText.setPosition(turnBox.getPosition() + sf::Vector2f(8, 8));
-
-
-
-
-
-
-
 }
 
-GameState::~GameState() {
+GameState::~GameState() {}
 
-}
-
-void GameState::EndState() {
-
-}
+void GameState::EndState() {}
 
 void GameState::QuitCheck()
 {
     this->CheckForQuit();
 }
 
+// --- AKTUALIZACJA LOGIKI ---
 void GameState::Update(float dt)
 {
     this->QuitCheck();
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
 
-    float mouseX;
-    float mouseY;
-    mouseX = sf::Mouse::getPosition(*windowPtr).x;
-    mouseY = sf::Mouse::getPosition(*windowPtr).y;
+    float mouseX = sf::Mouse::getPosition(*windowPtr).x;
+    float mouseY = sf::Mouse::getPosition(*windowPtr).y;
 
+    // Aktualizacja tekstów UI
     hpText.setString("HP: " + to_string(playerHp));
     goldText.setString("GOLD: " + to_string(playerGold));
     turnText.setString("WAVE: " + to_string(currentWave) + " / " + to_string(waves));
 
+    // System spawnowania potworów
     spawnTimer += dt;
-
     if (spawnTimer >= spawnDelay && monsters.size() < monsterPerWave)
     {
         spawnTimer = 0.f;
-
         if (!pathPoints.empty())
         {
             monsters.emplace_back(pathPoints[0]);
-
         }
     }
+
+    // Aktualizacja potworów i usuwanie tych, które dosz³y do koñca
     for (int i = monsters.size() - 1; i >= 0; i--)
     {
         monsters[i].Update(dt, pathPoints);
-
         if (monsters[i].reachedEnd)
         {
             playerHp -= monsters[i].mDamage;
@@ -209,36 +197,43 @@ void GameState::Update(float dt)
         }
     }
 
+    // Logika wyboru kafelków (Hover i Click)
     for (int i = 0; i < tiles.size(); i++) {
-        if (tiles[i].IsMouseOver(mouseX, mouseY) && i != selectedTile && tiles[i].state ==  Tile::TileState::Placement) {
+        if (tiles[i].IsMouseOver(mouseX, mouseY) && i != selectedTile && tiles[i].state == Tile::TileState::Placement) {
             tiles[i].shape.setFillColor(sf::Color::Cyan);
         }
-        else if(i != selectedTile && tiles[i].state == Tile::TileState::Placement){
+        else if (i != selectedTile && tiles[i].state == Tile::TileState::Placement) {
             tiles[i].shape.setFillColor(tiles[i].normalColor);
         }
+
         if (tiles[i].IsButtonClicked(mouseX, mouseY) && tiles[i].state == Tile::TileState::Placement && selectedTile != i) {
             selectedTile = i;
             isTileSelected = true;
             tiles[i].shape.setFillColor(sf::Color(156, 242, 116));
         }
-        else if(tiles[i].IsButtonClicked(mouseX, mouseY) && selectedTile == i && tiles[i].state == Tile::TileState::Placement){
+        else if (tiles[i].IsButtonClicked(mouseX, mouseY) && selectedTile == i && tiles[i].state == Tile::TileState::Placement) {
             tiles[i].shape.setFillColor(tiles[i].normalColor);
             isTileSelected = false;
             selectedTile = -1;
         }
     }
+
+    // Aktualizacja przycisków
     for (int i = 0; i < buttons.size(); i++) {
         buttons[i].UpdateHover(mouseX, mouseY);
     }
+
+    // Warunek przegranej
     if (playerHp <= 0) {
         this->nextState = new MainMenuState(this->windowPtr);
         quit = true;
     }
-
 }
 
+// --- RENDEROWANIE ---
 void GameState::Render(sf::RenderWindow* windowPtr)
 {
+    // Rysowanie obiektów œwiata
     for (auto& tile : tiles)
         tile.Draw(*windowPtr);
     for (auto& button : buttons)
@@ -246,6 +241,7 @@ void GameState::Render(sf::RenderWindow* windowPtr)
     for (auto& monster : monsters)
         monster.Draw(*windowPtr);
 
+    // Rysowanie UI (na wierzchu)
     windowPtr->draw(hpBox);
     windowPtr->draw(goldBox);
     windowPtr->draw(turnBox);

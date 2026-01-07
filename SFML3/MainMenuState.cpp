@@ -9,10 +9,13 @@
 #include <SFML/Audio.hpp>
 #include <fstream>
 #include <string>
+
 using namespace std;
 
+// Zmienna globalna kontroluj¹ca trudnoœæ
 int difficulty = 1;
 
+// --- KONSTRUKTOR ---
 MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     : States(windowPtr),
     startBtn(fontMainMenu),
@@ -26,14 +29,16 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     selectMenuLevelThree(fontMainMenu),
     backToMenu(fontMainMenu)
 {
-  
+    // £adowanie zasobów
     if (!fontMainMenu.openFromFile("comicFont.ttf")) {
         cout << "Font sie zepsul";
     }
+
     this->windowPtr = windowPtr;
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
 
+    // Inicjalizacja: Menu G³ówne
     startBtn.text.setString("Start");
     startBtn.SetPosition(screenWidth / 2, screenHeight / 3);
 
@@ -43,34 +48,39 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     quitBtn.text.setString("Exit");
     quitBtn.SetPosition(screenWidth / 2, screenHeight - screenHeight / 3);
 
+    // Inicjalizacja: Wybór poziomu trudnoœci
     selectMenuEasy.shape.setFillColor(sf::Color::Blue);
     selectMenuEasy.text.setString("Easy");
     selectMenuEasy.SetPosition(screenWidth / 2, screenHeight - screenHeight * 0.7);
+
     selectMenuNormal.shape.setFillColor(sf::Color::Blue);
     selectMenuNormal.text.setString("Medium");
     selectMenuNormal.SetPosition(screenWidth / 2, screenHeight - screenHeight * 0.5);
+
     selectMenuHard.shape.setFillColor(sf::Color::Blue);
     selectMenuHard.text.setString("Hard");
     selectMenuHard.SetPosition(screenWidth / 2, screenHeight - screenHeight * 0.3);
 
+    // Inicjalizacja: Wybór konkretnego poziomu (Mapy)
     selectMenuLevelOne.shape.setFillColor(sf::Color::Blue);
     selectMenuLevelOne.text.setString("1");
     selectMenuLevelOne.SetPosition(screenWidth - screenWidth * 0.7, screenHeight - screenHeight * 0.9);
+
     selectMenuLevelTwo.shape.setFillColor(sf::Color::Blue);
     selectMenuLevelTwo.text.setString("2");
     selectMenuLevelTwo.SetPosition(screenWidth - screenWidth * 0.5, screenHeight - screenHeight * 0.9);
+
     selectMenuLevelThree.shape.setFillColor(sf::Color::Blue);
     selectMenuLevelThree.text.setString("3");
     selectMenuLevelThree.SetPosition(screenWidth - screenWidth * 0.3, screenHeight - screenHeight * 0.9);
 
+    // Inicjalizacja: Przycisk powrotu
     backToMenu.shape.setFillColor(sf::Color::Blue);
     backToMenu.text.setString("<-");
     backToMenu.SetPosition(backToMenu.shape.getSize().x, backToMenu.shape.getSize().y);
 }
 
-MainMenuState::~MainMenuState() {
-
-}
+MainMenuState::~MainMenuState() {}
 
 void MainMenuState::EndState()
 {
@@ -82,17 +92,15 @@ void MainMenuState::QuitCheck()
     this->CheckForQuit();
 }
 
+// --- AKTUALIZACJA LOGIKI ---
 void MainMenuState::Update(float dt)
 {
     this->QuitCheck();
-    float mouseX;
-    float mouseY;
+    float mouseX = sf::Mouse::getPosition(*windowPtr).x;
+    float mouseY = sf::Mouse::getPosition(*windowPtr).y;
 
-    mouseX = sf::Mouse::getPosition(*windowPtr).x;
-    mouseY = sf::Mouse::getPosition(*windowPtr).y;
-
+    // Logika Menu G³ównego
     if (menuState == MenuState::Main) {
-
         startBtn.UpdateHover(mouseX, mouseY);
         if (startBtn.IsButtonClicked(mouseX, mouseY)) {
             menuState = MenuState::LevelSelect;
@@ -103,13 +111,15 @@ void MainMenuState::Update(float dt)
             menuState = MenuState::Options;
         }
 
-
         quitBtn.UpdateHover(mouseX, mouseY);
         if (quitBtn.IsButtonClicked(mouseX, mouseY)) {
             windowPtr->close();
         }
     }
+
+    // Logika Wyboru Poziomu i Trudnoœci
     if (menuState == MenuState::LevelSelect) {
+        // Obs³uga trudnoœci
         if (selectMenuEasy.IsButtonClicked(mouseX, mouseY)) {
             difficulty = 1;
             selectMenuEasy.shape.setFillColor(sf::Color::Red);
@@ -128,18 +138,18 @@ void MainMenuState::Update(float dt)
             selectMenuEasy.shape.setFillColor(sf::Color::Blue);
             selectMenuNormal.shape.setFillColor(sf::Color::Blue);
         }
+
+        // Obs³uga wyboru mapy i przejœcie do GameState
         if (selectMenuLevelOne.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_1.txt", "map.txt");
             nextState = new GameState(windowPtr, 1);
             quit = true;
         }
-
         if (selectMenuLevelTwo.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_2.txt", "map.txt");
             nextState = new GameState(windowPtr, 2);
             quit = true;
         }
-
         if (selectMenuLevelThree.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_3.txt", "map.txt");
             nextState = new GameState(windowPtr, 3);
@@ -152,7 +162,7 @@ void MainMenuState::Update(float dt)
         }
     }
 
-
+    // Logika Opcji
     if (menuState == MenuState::Options) {
         backToMenu.UpdateHover(mouseX, mouseY);
         if (backToMenu.IsButtonClicked(mouseX, mouseY)) {
@@ -161,6 +171,7 @@ void MainMenuState::Update(float dt)
     }
 }
 
+// --- RENDEROWANIE ---
 void MainMenuState::Render(sf::RenderWindow* windowPtr)
 {
     if (menuState == MenuState::Main) {
@@ -168,7 +179,7 @@ void MainMenuState::Render(sf::RenderWindow* windowPtr)
         quitBtn.Draw(*windowPtr);
         optBtn.Draw(*windowPtr);
     }
-    if (menuState == MenuState::LevelSelect) {
+    else if (menuState == MenuState::LevelSelect) {
         selectMenuEasy.Draw(*windowPtr);
         selectMenuNormal.Draw(*windowPtr);
         selectMenuHard.Draw(*windowPtr);
@@ -178,13 +189,12 @@ void MainMenuState::Render(sf::RenderWindow* windowPtr)
         selectMenuLevelThree.Draw(*windowPtr);
         backToMenu.Draw(*windowPtr);
     }
-    if (menuState == MenuState::Options) {
+    else if (menuState == MenuState::Options) {
         backToMenu.Draw(*windowPtr);
-
     }
-
 }
 
+// --- METODY POMOCNICZE ---
 void MainMenuState::CopyMap(string source, string dest)
 {
     ifstream sourceFile(source);
