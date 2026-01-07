@@ -9,7 +9,7 @@ Monster::Monster(sf::Vector2f startPos)
     mHP = 100;
     mDamage = 5;
     mGold = 10;
-    mSpeed = 500.f;
+    mSpeed = 1500.f;
 
     shape.setSize({ 50.f, 50.f });
     shape.setOrigin(shape.getSize() / 2.f);

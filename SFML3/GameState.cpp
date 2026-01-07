@@ -177,12 +177,13 @@ void GameState::Update(float dt)
 
     // System spawnowania potworów
     spawnTimer += dt;
-    if (spawnTimer >= spawnDelay && monsters.size() < monsterPerWave)
+    if (spawnTimer >= spawnDelay && monstersSpawnedThisWave < monsterPerWave)
     {
         spawnTimer = 0.f;
         if (!pathPoints.empty())
         {
             monsters.emplace_back(pathPoints[0]);
+            monstersSpawnedThisWave++;
         }
     }
 
@@ -196,7 +197,14 @@ void GameState::Update(float dt)
             monsters.erase(monsters.begin() + i);
         }
     }
-
+    // Aktualizacja danej fali
+    if (monstersSpawnedThisWave >= monsterPerWave && monsters.empty())
+    {
+        currentWave++;
+        playerGold += 500;
+        monstersSpawnedThisWave = 0;
+        monsterPerWave *= (currentWave+difficulty);
+    }
     // Logika wyboru kafelków (Hover i Click)
     for (int i = 0; i < tiles.size(); i++) {
         if (tiles[i].IsMouseOver(mouseX, mouseY) && i != selectedTile && tiles[i].state == Tile::TileState::Placement) {

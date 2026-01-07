@@ -28,8 +28,7 @@ public:
     // --- Statystyki Gracza i Rozgrywki ---
     int difficulty;
     int playerGold = 2000;
-    int playerHp = 100;
-    int currentTurn = 1;
+    int playerHp = 10000;
     int currentWave = 1;
     int waves = 50;
 
@@ -38,8 +37,9 @@ public:
     int selectedTower;
     bool isTileSelected = false;
     int monsterPerWave = 20;
+    int monstersSpawnedThisWave = 0;
     float spawnTimer = 0.f;
-    float spawnDelay = .5f;
+    float spawnDelay = .2f;
 
     // --- Kontenery Danych ---
     vector<Tile> tiles;             // Kafle mapy
