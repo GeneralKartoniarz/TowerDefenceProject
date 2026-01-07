@@ -1,31 +1,40 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
 #include <vector>
 
+// --- KLASA BAZOWA POTWORA (ABSTRAKCYJNA) ---
+// Odpowiada za wspóln¹ logikê ruchu i podstawowe statystyki
 class Monster
 {
 public:
-    // --- Konstruktor ---
-    Monster(sf::Vector2f startPos);
+    // --- Destruktor wirtualny ---
+    // Wymagany przy dziedziczeniu (unique_ptr, delete przez wskaŸnik)
+    virtual ~Monster() = default;
 
     // --- Statystyki potwora ---
-    int mHP;                        // Punkty ¿ycia
-    int mDamage;                    // Obra¿enia zadawane bazie
-    int mGold;                      // Nagroda za pokonanie
-    float mSpeed;                   // Prêdkoœæ ruchu
+    int mMaxHP;         // Maksymalne punkty ¿ycia
+    int mHP;            // Punkty ¿ycia
+    int mDamage;        // Obra¿enia zadawane bazie
+    int mGold;          // Z³oto za zabicie
+    float mSpeed;       // Prêdkoœæ poruszania
 
-    // --- Logika œcie¿ki i ruchu ---
-    int pathIndex = 0;              // Aktualny punkt kontrolny na œcie¿ce
-    bool reachedEnd = false;        // Czy potwór dotar³ do koñca mapy
+    // --- Logika œcie¿ki ---
+    int pathIndex = 0;  // Aktualny punkt na œcie¿ce
+    bool reachedEnd = false; // Czy dotar³ do koñca mapy
 
     // --- Grafika ---
-    sf::RectangleShape shape;       // Wizualna reprezentacja potwora
-
+    sf::RectangleShape shape; // Reprezentacja wizualna potwora
+    sf::RectangleShape hpBarBackground;
+    sf::RectangleShape hpBarFill;
     // --- Metody g³ówne ---
-    // Aktualizuje pozycjê potwora wzglêdem listy punktów (path)
-    void Update(float dt, const std::vector<sf::Vector2f>& path);
+    // Aktualizuje ruch potwora po œcie¿ce
+    virtual void Update(float dt, const std::vector<sf::Vector2f>& path);
 
     // Rysuje potwora w oknie gry
-    void Draw(sf::RenderWindow& window);
+    virtual void Draw(sf::RenderWindow& window);
+    virtual void ChangeHpBar();
+protected:
+    // --- Konstruktor chroniony ---
+    // Zapobiega tworzeniu obiektu Monster bezpoœrednio
+    Monster(sf::Vector2f startPos);
 };

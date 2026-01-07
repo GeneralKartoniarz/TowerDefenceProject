@@ -4,6 +4,9 @@
 #include "Tile.h"           
 #include "Button.h"      
 #include "Monster.h"      
+#include "BasicMonster.h"      
+#include "FastMonster.h"      
+#include "TankMonster.h"      
 #include "Tower.h"      
 #include <iostream>   
 #include <string>   
@@ -15,7 +18,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-
+#include <memory>
 using namespace std;
 
 // --- KONSTRUKTOR ---
@@ -215,7 +218,14 @@ void GameState::Update(float dt)
         spawnTimer = 0.f;
         if (!pathPoints.empty())
         {
-            monsters.emplace_back(pathPoints[0]);
+            int r = rand() % 3;
+            if (r == 0)
+                monsters.push_back(std::make_unique<BasicMonster>(pathPoints[0]));
+            else if (r == 1)
+                monsters.push_back(std::make_unique<FastMonster>(pathPoints[0]));
+            else
+                monsters.push_back(std::make_unique<TankMonster>(pathPoints[0]));
+
             monstersSpawnedThisWave++;
         }
     }
@@ -223,10 +233,12 @@ void GameState::Update(float dt)
     // Aktualizacja potworów i usuwanie tych, które dosz³y do koñca
     for (int i = monsters.size() - 1; i >= 0; i--)
     {
-        monsters[i].Update(dt, pathPoints);
-        if (monsters[i].reachedEnd)
+        monsters[i]->Update(dt, pathPoints);
+
+        // Jeœli potwór dotar³ do koñca œcie¿ki
+        if (monsters[i]->reachedEnd)
         {
-            playerHp -= monsters[i].mDamage;
+            playerHp -= monsters[i]->mDamage;
             monsters.erase(monsters.begin() + i);
         }
     }
@@ -280,7 +292,7 @@ void GameState::Render(sf::RenderWindow* windowPtr)
     for (auto& button : buttons)
         button.Draw(*windowPtr);
     for (auto& monster : monsters)
-        monster.Draw(*windowPtr);
+        monster->Draw(*windowPtr);
 
     // Rysowanie UI (na wierzchu)
     windowPtr->draw(hpBox);

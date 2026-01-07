@@ -1,55 +1,81 @@
 #include "Monster.h"
 #include <cmath>
-#include <vector>
-using namespace std;
-// --- Konstruktor ---
-// Ustawia bazowe statystyki potwora oraz inicjalizuje jego wygl¹d i pozycjê startow¹
+
+// --- KONSTRUKTOR BAZOWY ---
+// Inicjalizuje wspólne elementy graficzne potwora
 Monster::Monster(sf::Vector2f startPos)
 {
-    mHP = 100;
+    // --- Statystyki ---
+    mMaxHP = 100;
+    mHP = mMaxHP;
     mDamage = 5;
     mGold = 10;
-    mSpeed = 1500.f;
+    mSpeed = 150.f;
 
+    // --- Wygl¹d potwora ---
     shape.setSize({ 50.f, 50.f });
     shape.setOrigin(shape.getSize() / 2.f);
     shape.setFillColor(sf::Color::Red);
     shape.setPosition(startPos);
+
+    // --- T³o paska HP ---
+    hpBarBackground.setSize({ 40.f, 6.f });
+    hpBarBackground.setFillColor(sf::Color(50, 50, 50));
+    hpBarBackground.setOrigin({ hpBarBackground.getSize().x / 2.f, 0.f });
+
+    // --- Wype³nienie paska HP ---
+    hpBarFill.setSize({ 40.f, 6.f });
+    hpBarFill.setFillColor(sf::Color::Green);
+    hpBarFill.setOrigin({hpBarFill.getSize().x / 2.f, 0.f});
 }
 
-// --- Logika Aktualizacji ---
-// Obs³uguje ruch potwora po œcie¿ce oraz sprawdzanie punktów kontrolnych (waypoints)
-void Monster::Update(float dt, const vector<sf::Vector2f>& path)
+// --- AKTUALIZACJA LOGIKI ---
+// Odpowiada za poruszanie siê potwora po œcie¿ce
+void Monster::Update(float dt, const std::vector<sf::Vector2f>& path)
 {
-    // Sprawdzenie, czy potwór przeszed³ ju¿ ca³¹ œcie¿kê
+    // Sprawdzenie czy potwór dotar³ do koñca œcie¿ki
     if (pathIndex >= path.size())
     {
         reachedEnd = true;
         return;
     }
 
+    // Wyznaczenie celu i kierunku ruchu
     sf::Vector2f target = path[pathIndex];
     sf::Vector2f pos = shape.getPosition();
     sf::Vector2f dir = target - pos;
 
-    // Obliczanie odleg³oœci do celu (twierdzenie Pitagorasa)
-    float length = sqrt(dir.x * dir.x + dir.y * dir.y);
+    // Obliczenie d³ugoœci wektora (odleg³oœci do celu)
+    float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 
-    // Jeœli potwór jest wystarczaj¹co blisko punktu, prze³¹cza siê na kolejny cel
+    // Jeœli potwór jest bardzo blisko punktu – przechodzi do nastêpnego
     if (length < 2.f)
     {
         pathIndex++;
     }
     else
     {
-        // Ruch w stronê celu z uwzglêdnieniem czasu klatki (dt)
+        // Ruch potwora z uwzglêdnieniem czasu klatki (dt)
         shape.move((dir / length) * mSpeed * dt);
     }
+    ChangeHpBar();
+}
+void Monster::ChangeHpBar()
+{
+    float hpPercent = (float)(mHP) / (float)mMaxHP;
+
+    hpBarFill.setSize({ 40.f * hpPercent, 6.f });
+
+    sf::Vector2f pos = shape.getPosition();
+    hpBarBackground.setPosition({ pos.x, pos.y - 40.f });
+    hpBarFill.setPosition({pos.x - (40.f - hpBarFill.getSize().x) / 2.f, pos.y - 40.f});
 }
 
-// --- Renderowanie ---
-// Rysuje potwora w oknie gry
+// --- RENDEROWANIE ---
+// Rysuje potwora na ekranie
 void Monster::Draw(sf::RenderWindow& window)
 {
     window.draw(shape);
+    window.draw(hpBarBackground);
+    window.draw(hpBarFill);
 }

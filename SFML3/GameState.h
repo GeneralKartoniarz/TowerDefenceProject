@@ -7,7 +7,7 @@
 #include "Monster.h"
 
 #include <vector>
-
+#include <memory>
 using namespace std;
 
 class GameState : public States
@@ -44,7 +44,7 @@ public:
     // --- Kontenery Danych ---
     vector<Tile> tiles;             // Kafle mapy
     vector<Button> buttons;         // Przyciski interfejsu
-    vector<Monster> monsters;       // Aktywne potwory
+    vector<unique_ptr<Monster>> monsters; // Aktywne potwory
     vector<Tower> towers;           // Postawione wie¿e
     vector<int> map;                // Dane surowe mapy
     vector<sf::Vector2f> pathPoints; // Punkty œcie¿ki dla potworów
