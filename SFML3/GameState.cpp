@@ -218,14 +218,14 @@ void GameState::Update(float dt)
         spawnTimer = 0.f;
         if (!pathPoints.empty())
         {
-            int r = rand() % 3;
-            if (r == 0)
-                monsters.push_back(std::make_unique<BasicMonster>(pathPoints[0]));
-            else if (r == 1)
-                monsters.push_back(std::make_unique<FastMonster>(pathPoints[0]));
+            int temp = rand() % 3;
+            if (temp == 0)
+                monsters.push_back(make_unique<BasicMonster>(pathPoints[0]));
+            else if (temp == 1)
+                monsters.push_back(make_unique<FastMonster>(pathPoints[0]));
             else
-                monsters.push_back(std::make_unique<TankMonster>(pathPoints[0]));
-
+                monsters.push_back(make_unique<TankMonster>(pathPoints[0]));
+            monsters[monstersSpawnedThisWave]->mSpeed *= difficulty;
             monstersSpawnedThisWave++;
         }
     }
@@ -233,12 +233,18 @@ void GameState::Update(float dt)
     // Aktualizacja potworów i usuwanie tych, które dosz³y do koñca
     for (int i = monsters.size() - 1; i >= 0; i--)
     {
+
         monsters[i]->Update(dt, pathPoints);
 
         // Jeœli potwór dotar³ do koñca œcie¿ki
         if (monsters[i]->reachedEnd)
         {
             playerHp -= monsters[i]->mDamage;
+            monsters.erase(monsters.begin() + i);
+        }
+        else if (monsters[i]->isDead)
+        {
+            playerGold += monsters[i]->mGold;
             monsters.erase(monsters.begin() + i);
         }
     }

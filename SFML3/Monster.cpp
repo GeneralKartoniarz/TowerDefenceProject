@@ -1,6 +1,7 @@
 #include "Monster.h"
 #include <cmath>
-
+#include <iostream>
+using namespace std;
 // --- KONSTRUKTOR BAZOWY ---
 // Inicjalizuje wspólne elementy graficzne potwora
 Monster::Monster(sf::Vector2f startPos)
@@ -31,8 +32,10 @@ Monster::Monster(sf::Vector2f startPos)
 
 // --- AKTUALIZACJA LOGIKI ---
 // Odpowiada za poruszanie siê potwora po œcie¿ce
-void Monster::Update(float dt, const std::vector<sf::Vector2f>& path)
+void Monster::Update(float dt, const vector<sf::Vector2f>& path)
 {
+    if (mHP <= 0)
+        isDead = true;
     // Sprawdzenie czy potwór dotar³ do koñca œcie¿ki
     if (pathIndex >= path.size())
     {
@@ -46,7 +49,7 @@ void Monster::Update(float dt, const std::vector<sf::Vector2f>& path)
     sf::Vector2f dir = target - pos;
 
     // Obliczenie d³ugoœci wektora (odleg³oœci do celu)
-    float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    float length = sqrt(dir.x * dir.x + dir.y * dir.y);
 
     // Jeœli potwór jest bardzo blisko punktu – przechodzi do nastêpnego
     if (length < 2.f)
