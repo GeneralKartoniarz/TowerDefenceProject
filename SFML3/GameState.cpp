@@ -236,7 +236,7 @@ void GameState::Update(float dt)
         currentWave++;
         playerGold += 500;
         monstersSpawnedThisWave = 0;
-        monsterPerWave *= (currentWave+difficulty);
+        monsterPerWave += (currentWave*difficulty);
     }
     // Logika wyboru kafelków (Hover i Click)
     for (int i = 0; i < tiles.size(); i++) {
