@@ -3,6 +3,7 @@
 #include "States.h"           
 #include "Tile.h"           
 #include "Button.h"      
+#include "Bullet.h"      
 #include "Monster.h"      
 #include "BasicMonster.h"      
 #include "BasicTower.h"            
@@ -52,7 +53,7 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     // 3. Tworzenie siatki kafelków (Grid)
     tiles.clear();
     tiles.reserve(columns * rows);
-
+    bullets.clear();
     float gridWidth = columns * tileSize + (columns - 1) * spacing;
     float gridHeight = rows * tileSize + (rows - 1) * spacing;
 
@@ -285,20 +286,28 @@ void GameState::Update(float dt)
 
     }
     //Przycisk pierwszy
-    if (buttons[0].IsButtonClicked(mouseX, mouseY) && isTileSelected)
+    if (buttons[0].IsButtonClicked(mouseX, mouseY) && isTileSelected && playerGold >= BasicTower::COST)
     {
         towers.push_back(make_unique<BasicTower>(tiles[selectedTile].shape.getPosition()));
+        playerGold -= BasicTower::COST;
     }
 
 
 
     for (auto& tower : towers) {
-        tower->Update(dt, monsters);
+        tower->Update(dt, monsters, bullets);
     }
     // Warunek przegranej
     if (playerHp <= 0) {
         this->nextState = new MainMenuState(this->windowPtr);
         quit = true;
+    }
+    for (int i = bullets.size() - 1; i >= 0; i--)
+    {
+        bullets[i]->Update(dt);
+
+        if (bullets[i]->isDead)
+            bullets.erase(bullets.begin() + i);
     }
 }
 
@@ -314,6 +323,8 @@ void GameState::Render(sf::RenderWindow* windowPtr)
         monster->Draw(*windowPtr);
     for (auto& tower : towers)
         tower->Draw(*windowPtr);
+    for (auto& bullet : bullets)
+        bullet->Draw(*windowPtr);
     // Rysowanie UI (na wierzchu)
     windowPtr->draw(hpBox);
     windowPtr->draw(goldBox);

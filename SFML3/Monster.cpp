@@ -71,7 +71,7 @@ void Monster::ChangeHpBar()
 
     sf::Vector2f pos = shape.getPosition();
     hpBarBackground.setPosition({ pos.x, pos.y - 40.f });
-    hpBarFill.setPosition({pos.x - (40.f - hpBarFill.getSize().x) / 2.f, pos.y - 40.f});
+    hpBarFill.setPosition({pos.x - (40.f - hpBarBackground.getSize().x) / 2.f, pos.y - 40.f});
 }
 
 // --- RENDEROWANIE ---

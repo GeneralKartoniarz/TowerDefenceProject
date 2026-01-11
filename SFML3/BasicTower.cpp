@@ -1,4 +1,5 @@
 #include "BasicTower.h"
+#include "Bullet.h"
 #include <cmath>
 using namespace std;
 // --- Konstruktor ---
@@ -6,7 +7,7 @@ using namespace std;
 BasicTower::BasicTower(sf::Vector2f position)
 {
     // --- Statystyki ---
-    tCost = 100;
+    tCost = COST;
     tAttack = 25.f;
     tRange = 200.f;
     tName = "Basic Tower";
@@ -23,18 +24,16 @@ BasicTower::BasicTower(sf::Vector2f position)
 
 // --- Aktualizacja wie¿y ---
 // Odpowiada za cooldown oraz atakowanie potworów
-void BasicTower::Update(float dt,vector<unique_ptr<Monster>>& monsters)
+void BasicTower::Update(float dt,vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets)
 {
     attackTimer += dt;
-
-    // Jeœli wie¿a nie jest gotowa do strza³u
     if (attackTimer < attackCooldown)
         return;
 
     Monster* target = nullptr;
     float closestDistance = tRange;
 
-    // Szukanie najbli¿szego potwora w zasiêgu
+    // Szukanie celu
     for (auto& monster : monsters)
     {
         sf::Vector2f mPos = monster->shape.getPosition();
@@ -42,19 +41,19 @@ void BasicTower::Update(float dt,vector<unique_ptr<Monster>>& monsters)
 
         float dx = mPos.x - tPos.x;
         float dy = mPos.y - tPos.y;
-        float distance = std::sqrt(dx * dx + dy * dy);
+        float dist = sqrt(dx * dx + dy * dy);
 
-        if (distance <= closestDistance)
+        if (dist <= closestDistance)
         {
-            closestDistance = distance;
+            closestDistance = dist;
             target = monster.get();
         }
     }
 
-    // Jeœli znaleziono cel – atak
+    // Strza³
     if (target)
     {
-        target->mHP -= static_cast<int>(tAttack);
+        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (int)(tAttack)));
         attackTimer = 0.f;
     }
 }

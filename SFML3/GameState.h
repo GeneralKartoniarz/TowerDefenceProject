@@ -5,7 +5,7 @@
 #include "Tile.h"
 #include "Tower.h"
 #include "Monster.h"
-
+#include "Bullet.h"
 #include <vector>
 #include <memory>
 using namespace std;
@@ -48,7 +48,7 @@ public:
     vector<unique_ptr<Tower>> towers;           // Postawione wie¿e
     vector<int> map;                // Dane surowe mapy
     vector<sf::Vector2f> pathPoints; // Punkty œcie¿ki dla potworów
-
+    vector<unique_ptr<Bullet>> bullets; //Pociski
     // --- Zasoby i Elementy UI ---
     sf::Font fontGameState;
 

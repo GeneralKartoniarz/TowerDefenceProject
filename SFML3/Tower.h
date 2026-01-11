@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "Bullet.h"
 using namespace std;
 class Monster;
 
@@ -15,7 +16,7 @@ public:
 
     // --- Metody abstrakcyjne ---
     // Ka¿da wie¿a MUSI je zaimplementowaæ
-    virtual void Update(float dt, vector<unique_ptr<Monster>>& monsters) = 0;
+    virtual void Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets) = 0;
 
     virtual void Draw(sf::RenderWindow& window) = 0;
 
