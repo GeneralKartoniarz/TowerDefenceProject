@@ -5,6 +5,7 @@
 #include "Button.h"      
 #include "Monster.h"      
 #include "BasicMonster.h"      
+#include "BasicTower.h"            
 #include "FastMonster.h"      
 #include "TankMonster.h"      
 #include "Tower.h"      
@@ -126,6 +127,7 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     int buttonCount = 6;
     float buttonSpacing = 20.f;
     float topMargin = 15.f;
+    towers.clear();
     buttons.clear();
     buttons.reserve(buttonCount);
 
@@ -282,9 +284,16 @@ void GameState::Update(float dt)
         buttons[i].UpdateHover(mouseX, mouseY);
 
     }
-    if (buttons[0].IsButtonClicked(mouseX, mouseY))
+    //Przycisk pierwszy
+    if (buttons[0].IsButtonClicked(mouseX, mouseY) && isTileSelected)
     {
-        cout << "a";
+        towers.push_back(make_unique<BasicTower>(tiles[selectedTile].shape.getPosition()));
+    }
+
+
+
+    for (auto& tower : towers) {
+        tower->Update(dt, monsters);
     }
     // Warunek przegranej
     if (playerHp <= 0) {
@@ -303,7 +312,8 @@ void GameState::Render(sf::RenderWindow* windowPtr)
         button.Draw(*windowPtr);
     for (auto& monster : monsters)
         monster->Draw(*windowPtr);
-
+    for (auto& tower : towers)
+        tower->Draw(*windowPtr);
     // Rysowanie UI (na wierzchu)
     windowPtr->draw(hpBox);
     windowPtr->draw(goldBox);

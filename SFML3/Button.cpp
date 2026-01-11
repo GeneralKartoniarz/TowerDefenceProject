@@ -61,10 +61,14 @@ bool Button::IsMouseOver(float mouseX, float mouseY)
 // Sprawdza, czy przycisk jest najechany i jednoczeœnie klikniêty lewym przyciskiem myszy
 bool Button::IsButtonClicked(float mouseX, float mouseY)
 {
-    if (IsMouseOver(mouseX, mouseY) && (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)))
-        return true;
-    else
-        return false;
+    bool isHover = IsMouseOver(mouseX, mouseY);
+    bool isPressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+
+    bool clicked = isHover && isPressed && !wasPressed;
+
+    wasPressed = isPressed;
+
+    return clicked;
 }
 
 // Aktualizuje kolor przycisku w zale¿noœci od tego, czy mysz nad nim widnieje

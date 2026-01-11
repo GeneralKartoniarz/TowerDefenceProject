@@ -30,6 +30,9 @@ public:
     sf::Color normalColor = sf::Color::Blue; // Kolor w spoczynku
     sf::Color hoverColor = sf::Color::Red;   // Kolor po najechaniu mysz¹
 
+    // --- Logika i dzia³anie ---
+    bool wasPressed = false;
+
     // --- Metody modyfikuj¹ce ---
     void SetPosition(float x, float y);      // Ustawia pozycjê przycisku i tekstu
     void CenterText();                       // Wyœrodkowuje tekst wewn¹trz ramki

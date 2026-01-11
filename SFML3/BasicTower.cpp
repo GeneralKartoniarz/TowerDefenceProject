@@ -1,6 +1,5 @@
 #include "BasicTower.h"
 #include <cmath>
-#include <iostream>
 using namespace std;
 // --- Konstruktor ---
 // Inicjalizuje podstawow¹ wie¿ê z domyœlnymi statystykami
@@ -12,7 +11,7 @@ BasicTower::BasicTower(sf::Vector2f position)
     tRange = 200.f;
     tName = "Basic Tower";
 
-    attackCooldown = 0.8f;   // Czas pomiêdzy atakami
+    attackCooldown = 0.8f;
     attackTimer = 0.f;
 
     // --- Grafika ---
@@ -23,15 +22,12 @@ BasicTower::BasicTower(sf::Vector2f position)
 }
 
 // --- Aktualizacja wie¿y ---
-// Odpowiada za odliczanie cooldownu i atakowanie potworów
-void BasicTower::Update(
-    float dt,
-    vector<std::unique_ptr<Monster>>& monsters)
+// Odpowiada za cooldown oraz atakowanie potworów
+void BasicTower::Update(float dt,vector<unique_ptr<Monster>>& monsters)
 {
-    // Odliczanie czasu do kolejnego ataku
     attackTimer += dt;
 
-    // Jeœli wie¿a nie jest jeszcze gotowa do strza³u
+    // Jeœli wie¿a nie jest gotowa do strza³u
     if (attackTimer < attackCooldown)
         return;
 
@@ -41,12 +37,12 @@ void BasicTower::Update(
     // Szukanie najbli¿szego potwora w zasiêgu
     for (auto& monster : monsters)
     {
-        sf::Vector2f monsterPos = monster->shape.getPosition();
-        sf::Vector2f towerPos = tShape.getPosition();
+        sf::Vector2f mPos = monster->shape.getPosition();
+        sf::Vector2f tPos = tShape.getPosition();
 
-        float dx = monsterPos.x - towerPos.x;
-        float dy = monsterPos.y - towerPos.y;
-        float distance = sqrt(dx * dx + dy * dy);
+        float dx = mPos.x - tPos.x;
+        float dy = mPos.y - tPos.y;
+        float distance = std::sqrt(dx * dx + dy * dy);
 
         if (distance <= closestDistance)
         {
@@ -56,7 +52,7 @@ void BasicTower::Update(
     }
 
     // Jeœli znaleziono cel – atak
-    if (target != nullptr)
+    if (target)
     {
         target->mHP -= static_cast<int>(tAttack);
         attackTimer = 0.f;

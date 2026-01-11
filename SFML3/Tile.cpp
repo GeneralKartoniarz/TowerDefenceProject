@@ -59,8 +59,12 @@ bool Tile::IsMouseOver(float mouseX, float mouseY)
 // Sprawdza, czy mysz jest nad kafelkiem i czy lewy przycisk jest wciœniêty
 bool Tile::IsButtonClicked(float mouseX, float mouseY)
 {
-    if (IsMouseOver(mouseX, mouseY) && (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)))
-        return true;
-    else
-        return false;
+    bool isHover = IsMouseOver(mouseX, mouseY);
+    bool isPressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+
+    bool clicked = isHover && isPressed && !wasPressed;
+
+    wasPressed = isPressed;
+
+    return clicked;
 }
