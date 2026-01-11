@@ -225,7 +225,7 @@ void GameState::Update(float dt)
                 monsters.push_back(make_unique<FastMonster>(pathPoints[0]));
             else
                 monsters.push_back(make_unique<TankMonster>(pathPoints[0]));
-            monsters[monstersSpawnedThisWave]->mSpeed *= difficulty;
+            monsters.back()->mSpeed *= difficulty;
             monstersSpawnedThisWave++;
         }
     }
@@ -280,8 +280,12 @@ void GameState::Update(float dt)
     // Aktualizacja przycisków
     for (int i = 0; i < buttons.size(); i++) {
         buttons[i].UpdateHover(mouseX, mouseY);
-    }
 
+    }
+    if (buttons[0].IsButtonClicked(mouseX, mouseY))
+    {
+        cout << "a";
+    }
     // Warunek przegranej
     if (playerHp <= 0) {
         this->nextState = new MainMenuState(this->windowPtr);

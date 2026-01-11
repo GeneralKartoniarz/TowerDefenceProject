@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BasicMonster.cpp" />
+    <ClCompile Include="BasicTower.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="FastMonster.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicMonster.h" />
+    <ClInclude Include="BasicTower.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="FastMonster.h" />
     <ClInclude Include="Game.h" />
