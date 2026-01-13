@@ -58,7 +58,11 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="LaserTower.cpp">
+<<<<<<< Updated upstream
       <Filter>Pliki nagłówkowe</Filter>
+=======
+      <Filter>Pliki źródłowe</Filter>
+>>>>>>> Stashed changes
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
