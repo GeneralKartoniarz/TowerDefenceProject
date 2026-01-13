@@ -5,7 +5,7 @@
 FastMonster::FastMonster(sf::Vector2f startPos)
     : Monster(startPos)
 {
-    mMaxHP = 60;
+    mMaxHP = 60.f;
     mHP = mMaxHP;
     mDamage = 3;
     mGold = 8;

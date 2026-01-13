@@ -13,8 +13,8 @@ public:
     virtual ~Monster() = default;
 
     // --- Statystyki potwora ---
-    int mMaxHP;         // Maksymalne punkty ¿ycia
-    int mHP;            // Punkty ¿ycia
+    float mMaxHP;         // Maksymalne punkty ¿ycia
+    float mHP;            // Punkty ¿ycia
     int mDamage;        // Obra¿enia zadawane bazie
     int mGold;          // Z³oto za zabicie
     float mSpeed;       // Prêdkoœæ poruszania
@@ -31,7 +31,6 @@ public:
     // --- Metody g³ówne ---
     // Aktualizuje ruch potwora po œcie¿ce
     virtual void Update(float dt, const vector<sf::Vector2f>& path);
-
     // Rysuje potwora w oknie gry
     virtual void Draw(sf::RenderWindow& window);
     virtual void ChangeHpBar();

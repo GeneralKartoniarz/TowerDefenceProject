@@ -29,7 +29,6 @@ public:
     float size = 50.f;              // Rozmiar boku kafelka
     sf::Color normalColor = sf::Color(45, 191, 0); // Domyœlny kolor (zielony)
     bool wasPressed = false;
-
     // --- Metody obs³ugi ---
     void SetPosition(float x, float y);             // Ustawia now¹ pozycjê kafelka
     bool IsMouseOver(float mouseX, float mouseY);   // Sprawdza, czy mysz znajduje siê nad kafelkiem

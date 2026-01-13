@@ -27,7 +27,8 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     selectMenuLevelOne(fontMainMenu),
     selectMenuLevelTwo(fontMainMenu),
     selectMenuLevelThree(fontMainMenu),
-    backToMenu(fontMainMenu)
+    backToMenu(fontMainMenu),
+    titleText(fontMainMenu)
 {
     // £adowanie zasobów
     if (!fontMainMenu.openFromFile("comicFont.ttf")) {
@@ -38,6 +39,7 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
 
+
     // Inicjalizacja: Menu G³ówne
     startBtn.text.setString("Start");
     startBtn.SetPosition(screenWidth / 2, screenHeight / 3);
@@ -47,6 +49,12 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
 
     quitBtn.text.setString("Exit");
     quitBtn.SetPosition(screenWidth / 2, screenHeight - screenHeight / 3);
+
+    titleText.setString("A.I FIGHTER - Freedom Keeper");
+    titleText.setFillColor(sf::Color::White);
+    titleText.setCharacterSize(60);
+    titleText.setOrigin({ titleText.getLocalBounds().size.x/2, titleText.getLocalBounds().size.y/2});
+    titleText.setPosition({ screenWidth / 2,screenHeight/2 - 330.f });
 
     // Inicjalizacja: Wybór poziomu trudnoœci
     selectMenuEasy.shape.setFillColor(sf::Color::Blue);
@@ -98,7 +106,7 @@ void MainMenuState::Update(float dt)
     this->QuitCheck();
     float mouseX = sf::Mouse::getPosition(*windowPtr).x;
     float mouseY = sf::Mouse::getPosition(*windowPtr).y;
-
+    
     // Logika Menu G³ównego
     if (menuState == MenuState::Main) {
         startBtn.UpdateHover(mouseX, mouseY);
@@ -178,6 +186,7 @@ void MainMenuState::Render(sf::RenderWindow* windowPtr)
         startBtn.Draw(*windowPtr);
         quitBtn.Draw(*windowPtr);
         optBtn.Draw(*windowPtr);
+        windowPtr->draw(titleText);
     }
     else if (menuState == MenuState::LevelSelect) {
         selectMenuEasy.Draw(*windowPtr);

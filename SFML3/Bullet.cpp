@@ -3,7 +3,7 @@
 #include <cmath>
 using namespace std;
 // --- Konstruktor ---
-Bullet::Bullet(sf::Vector2f startPos, Monster* target, float speed, int damage)
+Bullet::Bullet(sf::Vector2f startPos, Monster* target, float speed, float damage)
 {
     mTarget = target;
     mSpeed = speed;

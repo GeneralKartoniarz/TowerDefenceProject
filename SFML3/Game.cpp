@@ -23,7 +23,7 @@ Game::~Game()
 // --- INICJALIZACJA ---
 void Game::InitWindow()
 {
-    this->windowPtr = new sf::RenderWindow(sf::VideoMode({ 1920, 1080 }), "TEST");
+    this->windowPtr = new sf::RenderWindow(sf::VideoMode({ 1920, 1080 }), "B.A.N.A.I.S");
 }
 
 void Game::InitStates()

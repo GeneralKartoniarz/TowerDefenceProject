@@ -10,7 +10,7 @@ class Bullet
 {
 public:
     // --- Konstruktor ---
-    Bullet(sf::Vector2f startPos, Monster* target, float speed, int damage);
+    Bullet(sf::Vector2f startPos, Monster* target, float speed, float damage);
 
     // --- Logika ---
     void Update(float dt);
@@ -22,7 +22,7 @@ public:
 private:
     Monster* mTarget;            // Cel pocisku
     float mSpeed;                // Prêdkoœæ lotu
-    int mDamage;                 // Obra¿enia
+    float mDamage;                 // Obra¿enia
 
     sf::CircleShape shape;       // Grafika pocisku
 };

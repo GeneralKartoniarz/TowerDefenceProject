@@ -7,6 +7,7 @@
 #include "Monster.h"      
 #include "BasicMonster.h"      
 #include "BasicTower.h"            
+#include "LaserTower.h"            
 #include "FastMonster.h"      
 #include "TankMonster.h"      
 #include "Tower.h"      
@@ -25,7 +26,7 @@ using namespace std;
 
 // --- KONSTRUKTOR ---
 GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
-    : States(windowPtr), hpText(fontGameState), goldText(fontGameState), turnText(fontGameState)
+    : States(windowPtr), hpText(fontGameState), goldText(fontGameState), turnText(fontGameState), pauseText(fontGameState)
 {
     // 1. £adowanie mapy z pliku tekstowego
     ifstream mapFile;
@@ -49,6 +50,12 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
     this->difficulty = difficulty;
+    pauseText.setFont(fontGameState);
+    pauseText.setString("PAUZA");
+    pauseText.setCharacterSize(50);
+    pauseText.setFillColor(sf::Color::Red);
+    pauseText.setOrigin({ pauseText.getLocalBounds().size.x / 2.f, pauseText.getLocalBounds().size.y / 2.f });
+    pauseText.setPosition({this->screenWidth / 2.f,this->screenHeight / 2.f});
 
     // 3. Tworzenie siatki kafelków (Grid)
     tiles.clear();
@@ -188,6 +195,8 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     hpText.setPosition(hpBox.getPosition() + sf::Vector2f(8, 8));
     goldText.setPosition(goldBox.getPosition() + sf::Vector2f(8, 8));
     turnText.setPosition(turnBox.getPosition() + sf::Vector2f(8, 8));
+
+
 }
 
 GameState::~GameState() {}
@@ -202,13 +211,32 @@ void GameState::QuitCheck()
 // --- AKTUALIZACJA LOGIKI ---
 void GameState::Update(float dt)
 {
+    
+    static bool pausePressed = false;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P))
+    {
+        if (!pausePressed)
+        {
+            isGamePaused = !isGamePaused;
+            pausePressed = true;
+        }
+    }
+    else
+    {
+        pausePressed = false;
+    }
+
     this->QuitCheck();
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
 
     float mouseX = sf::Mouse::getPosition(*windowPtr).x;
     float mouseY = sf::Mouse::getPosition(*windowPtr).y;
-
+    if (isGamePaused)
+    {
+        return; 
+    }
     // Aktualizacja tekstów UI
     hpText.setString("HP: " + to_string(playerHp));
     goldText.setString("GOLD: " + to_string(playerGold));
@@ -283,16 +311,27 @@ void GameState::Update(float dt)
     // Aktualizacja przycisków
     for (int i = 0; i < buttons.size(); i++) {
         buttons[i].UpdateHover(mouseX, mouseY);
-
     }
+
+    //Sklep
     //Przycisk pierwszy
-    if (buttons[0].IsButtonClicked(mouseX, mouseY) && isTileSelected && playerGold >= BasicTower::COST)
+    if (buttons[1].IsButtonClicked(mouseX, mouseY) && isTileSelected && playerGold >= BasicTower::COST)
     {
         towers.push_back(make_unique<BasicTower>(tiles[selectedTile].shape.getPosition()));
         playerGold -= BasicTower::COST;
+        tiles[selectedTile].state = Tile::TileState::Locked;
+        tiles[selectedTile].Refresh();
+        isTileSelected = false;
     }
-
-
+    //Przycisk drugi
+    if (buttons[2].IsButtonClicked(mouseX, mouseY) && isTileSelected && playerGold >= LaserTower::COST)
+    {
+        towers.push_back(make_unique<LaserTower>(tiles[selectedTile].shape.getPosition()));
+        playerGold -= LaserTower::COST;
+        tiles[selectedTile].state = Tile::TileState::Locked;
+        tiles[selectedTile].Refresh();
+        isTileSelected = false;
+    }
 
     for (auto& tower : towers) {
         tower->Update(dt, monsters, bullets);
@@ -314,6 +353,7 @@ void GameState::Update(float dt)
 // --- RENDEROWANIE ---
 void GameState::Render(sf::RenderWindow* windowPtr)
 {
+
     // Rysowanie obiektów œwiata
     for (auto& tile : tiles)
         tile.Draw(*windowPtr);
@@ -333,4 +373,7 @@ void GameState::Render(sf::RenderWindow* windowPtr)
     windowPtr->draw(hpText);
     windowPtr->draw(goldText);
     windowPtr->draw(turnText);
+    //Pauza
+    if (isGamePaused)
+        windowPtr->draw(pauseText);
 }

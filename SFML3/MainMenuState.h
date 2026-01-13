@@ -57,4 +57,9 @@ private:
 
     // --- Nawigacja ---
     Button backToMenu;
+
+    //Tekst
+    sf::Text titleText;
+
+
 };

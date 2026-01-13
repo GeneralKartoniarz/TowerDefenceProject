@@ -5,7 +5,7 @@
 TankMonster::TankMonster(sf::Vector2f startPos)
     : Monster(startPos)
 {
-    mMaxHP = 300;
+    mMaxHP = 300.f;
     mHP = mMaxHP;
     mDamage = 15;
     mGold = 25;
@@ -13,3 +13,5 @@ TankMonster::TankMonster(sf::Vector2f startPos)
 
     shape.setFillColor(sf::Color(100, 100, 255));
 }
+
+

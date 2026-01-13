@@ -36,6 +36,7 @@ public:
     int selectedTile;
     int selectedTower;
     bool isTileSelected = false;
+    bool isGamePaused = false;
     int monsterPerWave = 20;
     int monstersSpawnedThisWave = 0;
     float spawnTimer = 0.f;
@@ -59,7 +60,7 @@ public:
     sf::Text hpText;
     sf::Text goldText;
     sf::Text turnText;
-
+    sf::Text pauseText;
     // --- Metody G³ówne ---
     void EndState() override;
     void QuitCheck();

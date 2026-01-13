@@ -65,7 +65,7 @@ void Monster::Update(float dt, const vector<sf::Vector2f>& path)
 }
 void Monster::ChangeHpBar()
 {
-    float hpPercent = (float)(mHP) / (float)mMaxHP;
+    float hpPercent = mHP / mMaxHP;
 
     hpBarFill.setSize({ 40.f * hpPercent, 6.f });
 

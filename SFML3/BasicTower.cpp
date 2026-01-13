@@ -53,7 +53,7 @@ void BasicTower::Update(float dt,vector<unique_ptr<Monster>>& monsters, vector<u
     // Strza³
     if (target)
     {
-        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (int)(tAttack)));
+        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack)));
         attackTimer = 0.f;
     }
 }

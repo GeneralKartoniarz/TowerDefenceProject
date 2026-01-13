@@ -5,7 +5,7 @@
 BasicMonster::BasicMonster(sf::Vector2f startPos)
     : Monster(startPos)
 {
-    mMaxHP = 100;
+    mMaxHP = 100.f;
     mHP = mMaxHP;
     mDamage = 5;
     mGold = 10;
