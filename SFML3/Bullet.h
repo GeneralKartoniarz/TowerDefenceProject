@@ -5,7 +5,7 @@
 
 class Monster;
 
-// --- KLASA POCISKU ---
+// --- KLASA POCISKU ---ff
 class Bullet
 {
 public:
