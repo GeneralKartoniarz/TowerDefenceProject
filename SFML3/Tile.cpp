@@ -1,6 +1,26 @@
 #include "Tile.h"
 #include <vector>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include <memory>
+using namespace std;
+vector<string> Tile::placementPaths =
+{
+    "assets/mapa1.png",
+    "assets/mapa2.png",
+    "assets/mapa3.png",
+    "assets/mapa4.png",
+    "assets/mapa5.png"
+};
+void Tile::LoadTexture(const string& path)
+{
+    int r = rand() % placementPaths.size();
+    if (!texture.loadFromFile(placementPaths[r]))
+        cout << "Nie zaladowano tekstury: " << path;
+    shape.setTexture(&texture);
 
+}
 // --- Konstruktor ---
 // Ustawia parametry pocz¹tkowe, rozmiar, punkt œrodka (origin) i odœwie¿a kolor
 Tile::Tile(sf::Vector2f position, float size, TileState state)
@@ -26,12 +46,15 @@ void Tile::Draw(sf::RenderWindow& window) {
 
 // --- Logika Wygl¹du ---
 // Aktualizuje kolor kafelka w zale¿noœci od jego stanu (Placement, Path lub Locked)
+
 void Tile::Refresh()
 {
-    if (this->state == TileState::Placement)
-        this->shape.setFillColor(normalColor);
+    if (this->state == TileState::Placement) {
+        LoadTexture("assets/mapa1.png");
+        this->shape.setFillColor(sf::Color(255, 255, 255, 255));
+    }
     else if (this->state == TileState::Path)
-        this->shape.setFillColor(sf::Color(186, 153, 99));
+        this->shape.setFillColor(sf::Color(43, 43, 43));
     else
         this->shape.setFillColor(sf::Color(201, 104, 77));
 }

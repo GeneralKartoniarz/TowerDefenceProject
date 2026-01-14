@@ -11,7 +11,7 @@ Bullet::Bullet(sf::Vector2f startPos, Monster* target, float speed, float damage
 
     shape.setRadius(6.f);
     shape.setOrigin({ 6.f, 6.f });
-    shape.setFillColor(sf::Color::Yellow);
+    shape.setFillColor(sf::Color(149,0,0));
     shape.setPosition(startPos);
 }
 

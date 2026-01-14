@@ -17,8 +17,10 @@ public:
     // --- Metody abstrakcyjne ---
     // Ka¿da wie¿a MUSI je zaimplementowaæ
     virtual void Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets) = 0;
-
+    virtual void LoadTexture(const string& path);
     virtual void Draw(sf::RenderWindow& window) = 0;
+
+    sf::RectangleShape tShape;
 
 protected:
     // --- Statystyki wie¿y ---
@@ -26,7 +28,6 @@ protected:
     float tAttack;
     float tRange;
     std::string tName;
-
+    sf::Texture texture;
     // --- Grafika ---
-    sf::RectangleShape tShape;
 };

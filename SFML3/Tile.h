@@ -3,11 +3,14 @@
 #include <iostream>   
 #include <string>    
 #include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
-
+using namespace std;
 class Tile
 {
 public:
@@ -27,8 +30,12 @@ public:
     TileState state;                // Aktualny stan kafelka
     sf::RectangleShape shape;       // Obiekt graficzny SFML
     float size = 50.f;              // Rozmiar boku kafelka
-    sf::Color normalColor = sf::Color(45, 191, 0); // Domyœlny kolor (zielony)
+    sf::Color normalColor = sf::Color(255, 255, 255, 255); // Domyœlny kolor (zielony)
     bool wasPressed = false;
+    sf::Texture texture;
+    void LoadTexture(const string& path);
+    static vector<string> placementPaths;
+
     // --- Metody obs³ugi ---
     void SetPosition(float x, float y);             // Ustawia now¹ pozycjê kafelka
     bool IsMouseOver(float mouseX, float mouseY);   // Sprawdza, czy mysz znajduje siê nad kafelkiem

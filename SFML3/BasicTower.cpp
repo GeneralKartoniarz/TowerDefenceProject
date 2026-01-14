@@ -6,6 +6,8 @@ using namespace std;
 // Inicjalizuje podstawow¹ wie¿ê z domyœlnymi statystykami
 BasicTower::BasicTower(sf::Vector2f position)
 {
+
+    LoadTexture("assets/wieza.png");
     // --- Statystyki ---
     tCost = COST;
     tAttack = 25.f;
@@ -18,7 +20,6 @@ BasicTower::BasicTower(sf::Vector2f position)
     // --- Grafika ---
     tShape.setSize({ 50.f, 50.f });
     tShape.setOrigin(tShape.getSize() / 2.f);
-    tShape.setFillColor(sf::Color::Blue);
     tShape.setPosition(position);
 }
 
