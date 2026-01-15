@@ -9,57 +9,62 @@
 
 using namespace std;
 
+/**
+ * class MainMenuState
+ * Stan obs³uguj¹cy menu g³ówne, nawigacjê miêdzy poziomami oraz wybór trudnoœci.
+ */
 class MainMenuState : public States
 {
 public:
-    // --- Konstruktor i Destruktor ---
+    // Inicjalizuje widok menu, ³aduje czcionki i konfiguruje uk³ad przycisków
     MainMenuState(sf::RenderWindow* windowPtr);
     ~MainMenuState();
 
-    // --- Implementacja metod wirtualnych i logika ---
+    // Metody cyklu ¿ycia stanu gry
     void EndState() override;
     void Update(float dt) override;
     void Render(sf::RenderWindow* windowPtr) override;
 
-    // --- Zarz¹dzanie stanem menu ---
+    // Funkcje steruj¹ce przep³ywem aplikacji
     void QuitCheck();
-    void CopyMap(string source, string dest); // Pomocnicza funkcja do plików map
+
+    // Zarz¹dza plikami mapy przed przejœciem do GameState
+    void CopyMap(string source, string dest);
 
 private:
-    // --- Parametry ekranu ---
+    // Wymiary okna pobierane dynamicznie przy inicjalizacji
     float screenWidth;
     float screenHeight;
 
-    // --- Zasoby i Typy ---
+    // Zasoby typograficzne interfejsu
     sf::Font fontMainMenu;
 
+    // Definicja wewnêtrznych warstw widoku menu (Podmenu)
     enum class MenuState {
-        Main,
-        LevelSelect,
-        Options
+        Main,           // Ekran startowy
+        LevelSelect,    // Wybór mapy
+        Options         // Ustawienia (wybór trudnoœci)
     };
     MenuState menuState = MenuState::Main;
 
-    // --- Przyciski: G³ówne Menu ---
+    // Elementy interfejsu: Widok g³ówny
     Button startBtn;
     Button optBtn;
     Button quitBtn;
 
-    // --- Przyciski: Wybór Poziomu ---
+    // Elementy interfejsu: Selektor map (Level Design)
     Button selectMenuLevelOne;
     Button selectMenuLevelTwo;
     Button selectMenuLevelThree;
 
-    // --- Przyciski: Wybór Trudnoœci ---
+    // Elementy interfejsu: Parametry rozgrywki (Difficulty Scaling)
     Button selectMenuEasy;
     Button selectMenuNormal;
     Button selectMenuHard;
 
-    // --- Nawigacja ---
+    // Przycisk nawigacji powrotnej
     Button backToMenu;
 
-    //Tekst
+    // Statyczne elementy tekstowe (np. logo/tytu³ gry)
     sf::Text titleText;
-
-
 };

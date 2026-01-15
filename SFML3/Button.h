@@ -10,38 +10,48 @@
 
 using namespace std;
 
+/**
+ * class Button
+ * Uniwersalny komponent interfejsu u¿ytkownika (UI) obs³uguj¹cy interakcje myszy.
+ */
 class Button
 {
 public:
-    // --- Konstruktor i Destruktor ---
+    // Inicjalizuje przycisk z przypisanym zasobem czcionki dla etykiety tekstowej
     Button(sf::Font& font);
     ~Button();
 
-    // --- Sk³adniki wizualne ---
-    sf::RectangleShape shape;       // Kszta³t przycisku
-    sf::Text text;                  // Tekst wyœwietlany na przycisku
-    string defText = "Test Button"; // Domyœlna treœæ napisu
+    // Elementy sk³adowe graficznej reprezentacji przycisku
+    sf::RectangleShape shape;       // T³o i obramowanie przycisku
+    sf::Text text;                  // Warstwa tekstowa (etykieta)
+    string defText = "Test Button"; // Bufor przechowuj¹cy treœæ napisu
 
-    // --- Transformacje i wymiary ---
+    // W³aœciwoœci geometryczne obiektu
     sf::Vector2f size = { 200.f, 100.f };
     sf::Vector2f position;
 
-    // --- Stylistyka ---
-    sf::Color normalColor = sf::Color::Blue; // Kolor w spoczynku
-    sf::Color hoverColor = sf::Color::Red;   // Kolor po najechaniu mysz¹
+    // Definicje kolorów dla ró¿nych stanów interakcji
+    sf::Color normalColor = sf::Color::Blue; // Barwa domyœlna
+    sf::Color hoverColor = sf::Color::Red;   // Barwa po wskazaniu kursorem
 
-    // --- Logika i dzia³anie ---
+    // Flaga pomocnicza do obs³ugi zdarzeñ klikniêcia
     bool wasPressed = false;
 
-    // --- Metody modyfikuj¹ce ---
-    void SetPosition(float x, float y);      // Ustawia pozycjê przycisku i tekstu
-    void CenterText();                       // Wyœrodkowuje tekst wewn¹trz ramki
+    // Aktualizuje wspó³rzêdne wszystkich sk³adowych przycisku
+    void SetPosition(float x, float y);
 
-    // --- Logika i interakcja ---
-    void UpdateHover(float x, float y);      // Zmienia kolor, jeœli mysz jest nad przyciskiem
-    bool IsMouseOver(float mouseX, float mouseY);    // Sprawdza kolizjê z myszk¹
-    bool IsButtonClicked(float mouseX, float mouseY); // Sprawdza fakt klikniêcia
+    // Wyznacza geometryczny œrodek kszta³tu i wyrównuje do niego tekst
+    void CenterText();
 
-    // --- Renderowanie ---
-    void Draw(sf::RenderWindow& window);     // Rysuje kompletny przycisk w oknie
+    // Zarz¹dza zmian¹ wygl¹du przycisku na podstawie pozycji kursora
+    void UpdateHover(float x, float y);
+
+    // Wykonuje test kolizji punktu (myszy) z obszarem prostok¹ta przycisku
+    bool IsMouseOver(float mouseX, float mouseY);
+
+    // Weryfikuje, czy w bie¿¹cej klatce nast¹pi³a interakcja potwierdzaj¹ca klikniêcie
+    bool IsButtonClicked(float mouseX, float mouseY);
+
+    // Wyœwietla t³o oraz tekst przycisku w zadanym oknie renderowania
+    void Draw(sf::RenderWindow& window);
 };

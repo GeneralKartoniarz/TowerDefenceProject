@@ -3,19 +3,35 @@
 #include "Tower.h"
 #include "Monster.h"
 #include "Bullet.h"
+
 using namespace std;
-// --- PODSTAWOWA WIE¯A ---
+
+/**
+ * class BasicTower
+ * Podstawowa jednostka obronna dziedzicz¹ca po klasie bazowej Tower.
+ * Wykrywa przeciwników w zasiêgu i wystrzeliwuje standardowe pociski.
+ */
 class BasicTower : public Tower
 {
 public:
-    // --- Konstruktor ---
+    // Inicjalizuje wie¿ê na okreœlonych wspó³rzêdnych mapy
     BasicTower(sf::Vector2f position);
+
+    // Sta³y koszt zakupu jednostki wykorzystywany przez system ekonomii gry
     static constexpr int COST = 100;
-    // --- Implementacje metod abstrakcyjnych ---
-    void Update(float dt,vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets) override;
+
+    /**
+     * G³ówna pêtla logiczna wie¿y:
+     * - Odlicza czas do kolejnego strza³u
+     * - Wyszukuje najbli¿szy cel z listy potworów
+     * - Generuje nowe obiekty typu Bullet
+     */
+    void Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets) override;
+
+    // Odpowiada za wyœwietlenie grafiki wie¿y oraz opcjonalnych elementów (np. zasiêgu)
     void Draw(sf::RenderWindow& window) override;
 
 private:
-    float attackCooldown;   // Czas pomiêdzy atakami
-    float attackTimer;      // Licznik czasu
+    float attackCooldown;   // Minimalny odstêp czasu miêdzy kolejnymi strza³ami
+    float attackTimer;      // Zegar monitoruj¹cy gotowoœæ wie¿y do ataku
 };

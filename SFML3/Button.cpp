@@ -4,53 +4,57 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 
-// --- KONSTRUKTOR ---
-// Inicjalizuje kszta³t, tekst oraz ustawia pocz¹tkowe wyœrodkowanie
 Button::Button(sf::Font& font) : text(font)
 {
+    // Konfiguracja bazowej geometrii prostok¹ta
     this->shape.setSize(this->size);
+
+    // Ustawienie punktu kotwiczenia (origin) na geometrycznym œrodku prostok¹ta
     this->shape.setOrigin(shape.getLocalBounds().position + shape.getLocalBounds().size / 2.f);
     this->shape.setPosition(this->position);
+
+    // Przypisanie domyœlnej treœci etykiety
     this->text.setString(defText);
 
+    // Wstêpne wyrównanie tekstu do œrodka przycisku
     CenterText();
 }
 
-// --- DESTRUKTOR ---
 Button::~Button()
 {
+    // Destruktor domyœlny
 }
 
-// --- RENDEROWANIE ---
-// Rysuje najpierw t³o przycisku, a nastêpnie tekst na wierzchu
 void Button::Draw(sf::RenderWindow& window)
 {
+    // Renderowanie warstwowe: najpierw t³o, potem etykieta tekstowa
     window.draw(shape);
     window.draw(text);
 }
 
-// --- TRANSFORMACJE I POZYCJONOWANIE ---
-// Ustawia now¹ pozycjê przycisku i automatycznie przesuwa tekst
 void Button::SetPosition(float x, float y) {
+    // Aktualizacja wspó³rzêdnych przycisku i wymuszenie rekalkulacji pozycji tekstu
     shape.setPosition({ x, y });
     CenterText();
 }
 
-// Wyœrodkowuje tekst wzglêdem aktualnej pozycji i wymiarów kszta³tu
 void Button::CenterText()
 {
+    // Obliczanie œrodka lokalnego tekstu i ustawienie go jako punktu odniesienia
     sf::FloatRect tb = text.getLocalBounds();
     text.setOrigin(tb.position + tb.size / 2.f);
+
+    // Synchronizacja pozycji tekstu z pozycj¹ kszta³tu (oba maj¹ origin w œrodku)
     text.setPosition(shape.getPosition());
 }
 
-// --- INTERAKCJA I LOGIKA MYSZY ---
-// Sprawdza, czy kursor znajduje siê wewn¹trz granic przycisku
 bool Button::IsMouseOver(float mouseX, float mouseY)
 {
+    // Pobranie aktualnego stanu transformacji kszta³tu
     sf::Vector2f sp = shape.getPosition();
     sf::Vector2f sh = shape.getSize() / 2.f;
 
+    // Test kolizji punktu z obszarem typu AABB (Axis-Aligned Bounding Box)
     return
         mouseX >= sp.x - sh.x &&
         mouseX <= sp.x + sh.x &&
@@ -58,21 +62,23 @@ bool Button::IsMouseOver(float mouseX, float mouseY)
         mouseY <= sp.y + sh.y;
 }
 
-// Sprawdza, czy przycisk jest najechany i jednoczeœnie klikniêty lewym przyciskiem myszy
 bool Button::IsButtonClicked(float mouseX, float mouseY)
 {
+    // Sprawdzenie stanu najechania i fizycznego naciœniêcia klawisza myszy
     bool isHover = IsMouseOver(mouseX, mouseY);
     bool isPressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 
+    // Detekcja zbocza narastaj¹cego (zapobiega wielokrotnemu wyzwalaniu przy trzymaniu przycisku)
     bool clicked = isHover && isPressed && !wasPressed;
 
+    // Zapamiêtanie stanu do porównania w kolejnej klatce (debouncing)
     wasPressed = isPressed;
 
     return clicked;
 }
 
-// Aktualizuje kolor przycisku w zale¿noœci od tego, czy mysz nad nim widnieje
 void Button::UpdateHover(float mouseX, float mouseY)
 {
+    // Dynamiczna zmiana barwy wype³nienia w oparciu o pozycjê kursora
     shape.setFillColor(IsMouseOver(mouseX, mouseY) ? hoverColor : normalColor);
 }

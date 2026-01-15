@@ -1,17 +1,23 @@
 #include "TankMonster.h"
 
-// --- KONSTRUKTOR ---
-// Ustawia statystyki ciê¿kiego potwora
+/**
+ * @brief Konstruktor TankMonster
+ * Inicjalizuje statystyki potwora o wysokiej wytrzyma³oœci i niskiej mobilnoœci.
+ */
 TankMonster::TankMonster(sf::Vector2f startPos)
     : Monster(startPos)
 {
+    // Statystyki wytrzyma³oœciowe (3x wy¿sze HP ni¿ BasicMonster)
     mMaxHP = 300.f;
     mHP = mMaxHP;
-    mDamage = 15;
-    mGold = 25;
-    mSpeed = 80.f;
 
+    // Statystyki ataku i nagrody
+    mDamage = 15;        // Znaczne obra¿enia zadawane bazie gracza po dotarciu do koñca
+    mGold = 25;          // Wysoka nagroda za eliminacjê ze wzglêdu na trudnoœæ pokonania
+
+    // Kinematyka jednostki
+    mSpeed = 80.f;       // Niska prêdkoœæ wymuszaj¹ca d³u¿sz¹ ekspozycjê na ogieñ wie¿
+
+    // Reprezentacja wizualna (kolor stalowy/niebieski sugeruj¹cy opancerzenie)
     shape.setFillColor(sf::Color(100, 100, 255));
 }
-
-

@@ -13,35 +13,45 @@
 
 using namespace std;
 
+/**
+ * class Game
+ * G³ówna klasa silnika zarz¹dzaj¹ca cyklem ¿ycia aplikacji, oknem oraz maszyna stanów.
+ */
 class Game
 {
 public:
-    // --- Konstruktor i Destruktor ---
+    // Zarz¹dzaj¹ alokacj¹ i zwalnianiem zasobów systemowych silnika
     Game();
     ~Game();
 
-    // --- Glówne metody steruj¹ce ---
-    void Run();                 // G³ówna pêtla gry (Game Loop)
-    void Update(float dt);      // Aktualizacja logiki stanów
-    void Render();              // Czyszczenie okna i wywo³anie rysowania stanów
+    // Inicjuje g³ówny cykl przetwarzania aplikacji
+    void Run();
 
-    // --- Inicjalizacja ---
-    void InitWindow();          // Tworzenie i konfiguracja okna SFML
-    void InitStates();          // Wstêpna konfiguracja stosu stanów
+    // Przekazuje czas delty do aktualnie aktywnego stanu logicznego
+    void Update(float dt);
 
-    // --- Obs³uga wejœcia ---
-    void UpdateEvent();         // Przetwarzanie zdarzeñ (klawiatura, mysz, okno)
+    // Koordynuje proces czyszczenia bufora i renderowania grafiki
+    void Render();
+
+    // Konfiguruje parametry techniczne okna (rozdzielczoœæ, VSync, tytu³)
+    void InitWindow();
+
+    // Przygotowuje pocz¹tkowe obiekty stanów (np. Menu, Gra w³aœciwa)
+    void InitStates();
+
+    // Przechwytuje i dystrybuuje sygna³y z urz¹dzeñ wejœcia oraz systemu operacyjnego
+    void UpdateEvent();
 
 private:
-    // --- Okno i czas ---
-    sf::RenderWindow* windowPtr; // WskaŸnik na okno aplikacji
-    sf::Clock dtClock;           // Zegar do mierzenia czasu klatki
-    float dt;                    // Czas delty (Delta Time)
+    // Zarz¹dzanie zasobami okna i synchronizacj¹ czasu
+    sf::RenderWindow* windowPtr; // dynamicznie alokowane okno renderowania
+    sf::Clock dtClock;           // Precyzyjny licznik czasu rzeczywistego
+    float dt;                    // Zmienna przechowuj¹ca czas trwania ostatniej klatki
 
-    // --- System stanów ---
-    vector<States*> states;      // Kontener przechowuj¹cy aktywne stany
-    int activeState;             // Indeks aktualnie przetwarzanego stanu
+    // Mechanizm maszyny stanów (State Machine)
+    vector<States*> states;      // Stos/lista dostêpnych modu³ów funkcjonalnych gry
+    int activeState;             // WskaŸnik na bie¿¹cy kontekst wykonawczy
 
-    // --- Obs³uga zdarzeñ ---
-    optional<sf::Event> ev;      // Obiekt przechowuj¹cy zdarzenia SFML
+    // Kontener na dane zdarzeñ systemowych
+    optional<sf::Event> ev;
 };

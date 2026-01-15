@@ -1,81 +1,102 @@
 #include "Monster.h"
 #include <cmath>
 #include <iostream>
+
 using namespace std;
-// --- KONSTRUKTOR BAZOWY ---
-// Inicjalizuje wspólne elementy graficzne potwora
+
+/**
+ * @brief Konstruktor bazowy Monster.
+ * Inicjalizuje parametry fizyczne jednostki oraz jej interfejs wizualny (HUD).
+ */
 Monster::Monster(sf::Vector2f startPos)
 {
-    // --- Statystyki ---
+    // --- Inicjalizacja statystyk bazowych ---
     mMaxHP = 100;
     mHP = mMaxHP;
     mDamage = 5;
     mGold = 10;
     mSpeed = 150.f;
 
-    // --- Wygl¹d potwora ---
+    // --- Konfiguracja reprezentacji graficznej ---
     shape.setSize({ 50.f, 50.f });
-    shape.setOrigin(shape.getSize() / 2.f);
+    shape.setOrigin(shape.getSize() / 2.f); // Centrowanie œrodka ciê¿koœci dla obrotów i kolizji
     shape.setFillColor(sf::Color::Red);
     shape.setPosition(startPos);
 
-    // --- T³o paska HP ---
+    // --- Konfiguracja wskaŸnika zdrowia (Health Bar) ---
+    // T³o paska
     hpBarBackground.setSize({ 40.f, 6.f });
     hpBarBackground.setFillColor(sf::Color(50, 50, 50));
     hpBarBackground.setOrigin({ hpBarBackground.getSize().x / 2.f, 0.f });
 
-    // --- Wype³nienie paska HP ---
+    // Dynamiczne wype³nienie paska
     hpBarFill.setSize({ 40.f, 6.f });
     hpBarFill.setFillColor(sf::Color::Green);
-    hpBarFill.setOrigin({hpBarFill.getSize().x / 2.f, 0.f});
+    hpBarFill.setOrigin({ hpBarFill.getSize().x / 2.f, 0.f });
 }
 
-// --- AKTUALIZACJA LOGIKI ---
-// Odpowiada za poruszanie siê potwora po œcie¿ce
+/**
+ * @brief Przetwarza logikê przemieszczania siê wzd³u¿ wêz³ów œcie¿ki.
+ * Wykorzystuje normalizacjê wektora kierunku w celu uzyskania sta³ej prêdkoœci.
+ */
 void Monster::Update(float dt, const vector<sf::Vector2f>& path)
 {
+    // Weryfikacja stanu ¿ywotnoœci
     if (mHP <= 0)
         isDead = true;
-    // Sprawdzenie czy potwór dotar³ do koñca œcie¿ki
-    if (pathIndex >= path.size())
+
+    // Sprawdzenie warunku zwyciêstwa potwora (dotarcie do bazy gracza)
+    if (pathIndex >= (int)path.size())
     {
         reachedEnd = true;
         return;
     }
 
-    // Wyznaczenie celu i kierunku ruchu
+    // --- Matematyka ruchu ---
     sf::Vector2f target = path[pathIndex];
     sf::Vector2f pos = shape.getPosition();
-    sf::Vector2f dir = target - pos;
+    sf::Vector2f dir = target - pos; // Wektor ró¿nicy pozycji
 
-    // Obliczenie d³ugoœci wektora (odleg³oœci do celu)
+    // Obliczenie dystansu przy u¿yciu twierdzenia Pitagorasa
     float length = sqrt(dir.x * dir.x + dir.y * dir.y);
 
-    // Jeœli potwór jest bardzo blisko punktu – przechodzi do nastêpnego
+    // Detekcja osi¹gniêcia punktu orientacyjnego (Waypoint)
     if (length < 2.f)
     {
-        pathIndex++;
+        pathIndex++; // Prze³¹czenie na kolejny punkt nawigacyjny
     }
     else
     {
-        // Ruch potwora z uwzglêdnieniem czasu klatki (dt)
+        // Normalizacja wektora (dir / length) nadaje mu d³ugoœæ 1, zachowuj¹c kierunek.
+        // Mno¿enie przez mSpeed i dt zapewnia ruch niezale¿ny od klatek na sekundê.
         shape.move((dir / length) * mSpeed * dt);
     }
+
+    // Aktualizacja pozycji paska HP wzglêdem poruszaj¹cego siê potwora
     ChangeHpBar();
 }
+
+/**
+ * @brief Skaluje i pozycjonuje pasek zdrowia nad g³ow¹ potwora.
+ */
 void Monster::ChangeHpBar()
 {
+    // Obliczanie wspó³czynnika wype³nienia (0.0 do 1.0)
     float hpPercent = mHP / mMaxHP;
+    if (hpPercent < 0) hpPercent = 0;
 
+    // Aktualizacja szerokoœci zielonego wype³nienia
     hpBarFill.setSize({ 40.f * hpPercent, 6.f });
 
+    // Synchronizacja pozycji HUD z pozycj¹ obiektu (offset pionowy -40px)
     sf::Vector2f pos = shape.getPosition();
     hpBarBackground.setPosition({ pos.x, pos.y - 40.f });
-    hpBarFill.setPosition({pos.x - (40.f - hpBarBackground.getSize().x) / 2.f, pos.y - 40.f});
+    hpBarFill.setPosition({ pos.x, pos.y - 40.f });
 }
 
-// --- RENDEROWANIE ---
-// Rysuje potwora na ekranie
+/**
+ * @brief Renderuje kompletny obiekt potwora (cia³o + interfejs).
+ */
 void Monster::Draw(sf::RenderWindow& window)
 {
     window.draw(shape);
