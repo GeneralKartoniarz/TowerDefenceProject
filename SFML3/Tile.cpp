@@ -77,6 +77,7 @@ void Tile::Refresh()
     else // TileState::Locked
     {
         // Pola zajête lub zablokowane otrzymuj¹ odcieñ ceglasty/ostrzegawczy
+        LoadTexture("assets/map/mapa1.png");
         this->shape.setFillColor(sf::Color(201, 104, 77));
     }
 }

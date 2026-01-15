@@ -67,6 +67,7 @@ void LaserTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<
     // Jeœli znaleziono cel w zasiêgu, instancjonowany jest nowy pocisk zmierzaj¹cy do celu.
     if (target)
     {
+        RotateToEnemy(target);
         // Utworzenie inteligentnego wskaŸnika na pocisk i dodanie go do globalnej listy w GameState
         bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, tAttack));
 

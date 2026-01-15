@@ -44,6 +44,8 @@ public:
      */
     virtual void LoadTexture(const string& path);
 
+    virtual void RotateToEnemy(Monster* target);
+
     // Reprezentacja wizualna wie¿y na siatce gry
     sf::RectangleShape tShape;
 

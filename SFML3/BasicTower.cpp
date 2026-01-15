@@ -16,7 +16,7 @@ BasicTower::BasicTower(sf::Vector2f position)
     tName = "Basic Tower";
 
     // Ustawienie mechaniki szybkostrzelnoœci
-    attackCooldown = 0.8f;
+    attackCooldown = 0.4f;
     attackTimer = 0.f;
 
     // Definiowanie w³aœciwoœci transformacji obiektu
@@ -57,6 +57,7 @@ void BasicTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<
     // Procedura generowania pocisku po znalezieniu prawid³owego celu
     if (target)
     {
+        RotateToEnemy(target);
         bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack)));
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
     }

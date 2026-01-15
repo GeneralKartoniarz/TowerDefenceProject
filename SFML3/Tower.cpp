@@ -1,4 +1,5 @@
 #include "Tower.h"
+#include "Monster.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -22,4 +23,12 @@ void Tower::LoadTexture(const string& path)
     // Mapowanie tekstury na kszta³t geometryczny wie¿y
     // U¿ycie adresu (&texture) zapewnia, ¿e Shape korzysta z wczytanych danych
     tShape.setTexture(&texture);
+}
+
+void Tower::RotateToEnemy(Monster* target)
+{
+    sf::Vector2f dir = this->tShape.getPosition() - target->shape.getPosition();
+    float angleRadian = atan2(dir.y, dir.x);
+    float angleDeg = angleRadian * 180 / 3.141592f;
+    this->tShape.setRotation(sf::degrees(angleDeg));
 }
