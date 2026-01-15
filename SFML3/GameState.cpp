@@ -228,7 +228,6 @@ void GameState::Update(float dt)
         waveActive = true;
         spawnTimer = 0.f;
         monstersSpawnedThisWave = 0;
-        currentWave++;
 
     }
 
@@ -275,6 +274,8 @@ void GameState::Update(float dt)
         waveActive = false;
         playerGold += 500;
         monsterPerWave += (currentWave * difficulty);
+        currentWave++;
+
     }
 
     // Interakcja z siatk¹ kafelków (Hover & Selection)
@@ -303,14 +304,14 @@ void GameState::Update(float dt)
     for (auto& button : buttons) button.UpdateHover(mouseX, mouseY);
 
     if (isTileSelected) {
-        if (buttons[1].IsButtonClicked(mouseX, mouseY) && playerGold >= BasicTower::COST) {
+        if (buttons[0].IsButtonClicked(mouseX, mouseY) && playerGold >= BasicTower::COST) {
             towers.push_back(make_unique<BasicTower>(tiles[selectedTile].shape.getPosition()));
             playerGold -= BasicTower::COST;
             tiles[selectedTile].state = Tile::TileState::Locked;
             tiles[selectedTile].Refresh();
             isTileSelected = false;
         }
-        else if (buttons[2].IsButtonClicked(mouseX, mouseY) && playerGold >= LaserTower::COST) {
+        else if (buttons[1].IsButtonClicked(mouseX, mouseY) && playerGold >= LaserTower::COST) {
             towers.push_back(make_unique<LaserTower>(tiles[selectedTile].shape.getPosition()));
             playerGold -= LaserTower::COST;
             tiles[selectedTile].state = Tile::TileState::Locked;
@@ -330,6 +331,10 @@ void GameState::Update(float dt)
     // Weryfikacja warunku koñca gry
     if (playerHp <= 0) {
         this->nextState = new panelState(this->windowPtr,"HA HA HA HA HA HA",new MainMenuState(this->windowPtr));
+        quit = true;
+    }
+    if (currentWave > waves && monsters.empty()) {
+        this->nextState = new panelState(this->windowPtr, "GRATULCAJE! WYGRANA! WYGRANA!", new MainMenuState(this->windowPtr));
         quit = true;
     }
 }

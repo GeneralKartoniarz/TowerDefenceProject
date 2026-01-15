@@ -34,8 +34,8 @@ public:
     int difficulty;             // Mno¿nik trudnoœci wp³ywaj¹cy na statystyki wrogów
     int playerGold = 2000;      // Dostêpne fundusze na zakup wie¿
     int playerHp = 200;         // Punkty ¿ycia bazy gracza
-    int currentWave = 0;        // Numer bie¿¹cej fali przeciwników
-    int waves = 50;             // Maksymalna liczba fal w scenariuszu
+    int currentWave = 1;        // Numer bie¿¹cej fali przeciwników
+    int waves = 3;             // Maksymalna liczba fal w scenariuszu
 
     // --- Zarz¹dzanie logik¹ fali i interakcji ---
     int selectedTile;           // Indeks aktualnie podœwietlonego kafelka

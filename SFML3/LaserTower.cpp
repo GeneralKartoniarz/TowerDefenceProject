@@ -10,6 +10,7 @@ using namespace std;
  */
 LaserTower::LaserTower(sf::Vector2f position)
 {
+    LoadTexture("assets/laser_tower/inferno1.png");
     // --- Konfiguracja parametrów bojowych ---
     tCost = COST;
     tAttack = 0.2f;       // Obra¿enia zadawane przez pojedynczy pocisk
