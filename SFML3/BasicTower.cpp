@@ -7,7 +7,7 @@ using namespace std;
 BasicTower::BasicTower(sf::Vector2f position)
 {
     // £adowanie zasobów graficznych
-    LoadTexture("assets/wieza.png");
+    LoadTexture("assets/cassual_tower/cas1.png");
 
     // Konfiguracja parametrów bojowych i ekonomicznych
     tCost = COST;

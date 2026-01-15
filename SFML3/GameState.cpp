@@ -59,7 +59,8 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     pauseText.setFillColor(sf::Color::Red);
     pauseText.setOrigin({ pauseText.getLocalBounds().size.x / 2.f, pauseText.getLocalBounds().size.y / 2.f });
     pauseText.setPosition({ this->screenWidth / 2.f, this->screenHeight / 2.f });
-
+    pauseBackground.setSize({ 1920, 1080 });
+    pauseBackground.setFillColor(sf::Color(150, 0, 0, 100));
     // Inicjalizacja kontrolera fal (Wave Button)
     waveBtn.SetPosition(screenWidth - screenWidth / 11, screenHeight / 11);
     waveBtn.shape.setScale({ 0.5f, 1.f });
@@ -68,6 +69,8 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     waveBtn.text.setCharacterSize(13.f);
     waveBtn.text.setString("START");
     waveBtn.CenterText();
+    waveBtn.shape.setFillColor(waveBtn.normalColor);
+    waveBtn.LoadTexture("assets/button/menu2.png");
     waveBtn.text.setFillColor(sf::Color::Red);
 
     // 3. Generowanie siatki gry (Grid System)
@@ -136,7 +139,7 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
             if (!foundNext) endOfPath = true;
         }
     }
-
+    mapFile.close();
     // 5. Inicjalizacja interfejsu sklepu (Tower Shop)
     int buttonCount = 6;
     float buttonSpacing = 20.f;
@@ -163,7 +166,6 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
         buttons[i].SetPosition(startX + i * (buttonWidth + buttonSpacing), y);
         buttons[i].LoadTexture("assets/button/menu1.png");
     }
-    mapFile.close();
 
     // 6. Konfiguracja paneli statystyk (HUD Boxes)
     float boxWidth = 160.f;
@@ -302,6 +304,27 @@ void GameState::Update(float dt)
     }
 
     // Obs³uga zakupu wie¿ w sklepie
+    buttons[0].text.setString("Normal\nTower");
+    buttons[0].text.setCharacterSize(20);
+    buttons[0].CenterText();
+
+    buttons[1].text.setString("Laser\nTower");
+    buttons[1].text.setCharacterSize(20);
+    buttons[1].CenterText();
+
+    buttons[2].text.setString("EMP\nTower");
+    buttons[2].text.setCharacterSize(20);
+    buttons[2].CenterText();
+
+    buttons[3].text.setString("Hacker\nTower");
+    buttons[3].text.setCharacterSize(20);
+    buttons[3].CenterText();
+
+    buttons[4].text.setString("Missle\nTower");
+    buttons[4].text.setCharacterSize(20);
+    buttons[4].CenterText();
+
+
     for (auto& button : buttons) button.UpdateHover(mouseX, mouseY);
 
     if (isTileSelected) {
@@ -318,6 +341,9 @@ void GameState::Update(float dt)
             tiles[selectedTile].state = Tile::TileState::Locked;
             tiles[selectedTile].Refresh();
             isTileSelected = false;
+        }
+        else if (buttons[5].IsButtonClicked(mouseX, mouseY)) {
+            cout << "ULEPSZ";
         }
     }
 
@@ -342,8 +368,10 @@ void GameState::Update(float dt)
 
 void GameState::Render(sf::RenderWindow* windowPtr)
 {
+
     // Renderowanie elementów œwiata gry
     for (auto& tile : tiles) tile.Draw(*windowPtr);
+
     for (auto& button : buttons) button.Draw(*windowPtr);
     for (auto& monster : monsters) monster->Draw(*windowPtr);
     for (auto& tower : towers) tower->Draw(*windowPtr);
@@ -358,5 +386,8 @@ void GameState::Render(sf::RenderWindow* windowPtr)
     windowPtr->draw(turnText);
 
     if (!waveActive) waveBtn.Draw(*windowPtr);
-    if (isGamePaused) windowPtr->draw(pauseText);
+    if (isGamePaused) {
+        windowPtr->draw(pauseBackground);
+        windowPtr->draw(pauseText);
+    }
 }

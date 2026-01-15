@@ -63,6 +63,7 @@ public:
     sf::RectangleShape hpBox;                   // T≥o wskaünika zdrowia
     sf::RectangleShape goldBox;                 // T≥o wskaünika funduszy
     sf::RectangleShape turnBox;                 // T≥o wskaünika fali
+    sf::RectangleShape pauseBackground;         // T≥o pauzy
 
     sf::Text hpText;                            // Tekstowa reprezentacja punktÛw øycia
     sf::Text goldText;                          // Tekstowa reprezentacja z≥ota
