@@ -30,5 +30,5 @@ void Tower::RotateToEnemy(Monster* target)
     sf::Vector2f dir = this->tShape.getPosition() - target->shape.getPosition();
     float angleRadian = atan2(dir.y, dir.x);
     float angleDeg = angleRadian * 180 / 3.141592f;
-    this->tShape.setRotation(sf::degrees(angleDeg));
+    this->tShape.setRotation(sf::degrees(angleDeg-90));
 }
