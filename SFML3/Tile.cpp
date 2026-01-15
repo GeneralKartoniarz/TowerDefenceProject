@@ -10,11 +10,11 @@ using namespace std;
 // Inicjalizacja statycznej puli œcie¿ek do tekstur terenu
 vector<string> Tile::placementPaths =
 {
-    "assets/mapa1.png",
-    "assets/mapa2.png",
-    "assets/mapa3.png",
-    "assets/mapa4.png",
-    "assets/mapa5.png"
+    "assets/map/mapa1.png",
+    "assets/map/mapa2.png",
+    "assets/map/mapa3.png",
+    "assets/map/mapa4.png",
+    "assets/map/mapa5.png"
 };
 
 /**
@@ -66,7 +66,7 @@ void Tile::Refresh()
     if (this->state == TileState::Placement)
     {
         // Pola do zabudowy otrzymuj¹ teksturê i pe³n¹ nieprzezroczystoœæ
-        LoadTexture("assets/mapa1.png");
+        LoadTexture("assets/map/mapa1.png");
         this->shape.setFillColor(sf::Color(255, 255, 255, 255));
     }
     else if (this->state == TileState::Path)

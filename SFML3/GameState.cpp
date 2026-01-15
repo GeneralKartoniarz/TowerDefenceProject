@@ -1,4 +1,5 @@
 #include "GameState.h"   
+#include "panelState.h"   
 #include "MainMenuState.h"   
 #include "States.h"           
 #include "Tile.h"           
@@ -328,7 +329,7 @@ void GameState::Update(float dt)
 
     // Weryfikacja warunku koñca gry
     if (playerHp <= 0) {
-        this->nextState = new MainMenuState(this->windowPtr);
+        this->nextState = new panelState(this->windowPtr,"HA HA HA HA HA HA",new MainMenuState(this->windowPtr));
         quit = true;
     }
 }

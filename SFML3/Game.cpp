@@ -103,14 +103,3 @@ void Game::Render()
         windowPtr->display();
     }
 }
-
-// Metody pomocnicze klasy bazowej States zarz¹dzaj¹ce cyklem ¿ycia sceny
-void States::CheckForQuit()
-{
-    // Metoda przeznaczona do nadpisania w klasach pochodnych
-}
-
-bool States::GetQuit()
-{
-    return quit;
-}

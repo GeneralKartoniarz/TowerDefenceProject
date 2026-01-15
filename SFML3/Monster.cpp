@@ -30,4 +30,76 @@ Monster::Monster(sf::Vector2f startPos)
     hpBarBackground.setOrigin({ hpBarBackground.getSize().x / 2.f, 0.f });
 
     // Dynamiczne wype³nienie paska
-    hpBarFill.setSize({ 40.
+    hpBarFill.setSize({ 40.f, 6.f });
+    hpBarFill.setFillColor(sf::Color::Green);
+    hpBarFill.setOrigin({ hpBarFill.getSize().x / 2.f, 0.f });
+}
+
+/**
+ * @brief Przetwarza logikê przemieszczania siê wzd³u¿ wêz³ów œcie¿ki.
+ * Wykorzystuje normalizacjê wektora kierunku w celu uzyskania sta³ej prêdkoœci.
+ */
+void Monster::Update(float dt, const vector<sf::Vector2f>& path)
+{
+    // Weryfikacja stanu ¿ywotnoœci
+    if (mHP <= 0)
+        isDead = true;
+
+    // Sprawdzenie warunku zwyciêstwa potwora (dotarcie do bazy gracza)
+    if (pathIndex >= (int)path.size())
+    {
+        reachedEnd = true;
+        return;
+    }
+
+    // --- Matematyka ruchu ---
+    sf::Vector2f target = path[pathIndex];
+    sf::Vector2f pos = shape.getPosition();
+    sf::Vector2f dir = target - pos; // Wektor ró¿nicy pozycji
+
+    // Obliczenie dystansu przy u¿yciu twierdzenia Pitagorasa
+    float length = sqrt(dir.x * dir.x + dir.y * dir.y);
+
+    // Detekcja osi¹gniêcia punktu orientacyjnego (Waypoint)
+    if (length < 2.f)
+    {
+        pathIndex++; // Prze³¹czenie na kolejny punkt nawigacyjny
+    }
+    else
+    {
+        // Normalizacja wektora (dir / length) nadaje mu d³ugoœæ 1, zachowuj¹c kierunek.
+        // Mno¿enie przez mSpeed i dt zapewnia ruch niezale¿ny od klatek na sekundê.
+        shape.move((dir / length) * mSpeed * dt);
+    }
+
+    // Aktualizacja pozycji paska HP wzglêdem poruszaj¹cego siê potwora
+    ChangeHpBar();
+}
+
+/**
+ * @brief Skaluje i pozycjonuje pasek zdrowia nad g³ow¹ potwora.
+ */
+void Monster::ChangeHpBar()
+{
+    // Obliczanie wspó³czynnika wype³nienia (0.0 do 1.0)
+    float hpPercent = mHP / mMaxHP;
+    if (hpPercent < 0) hpPercent = 0;
+
+    // Aktualizacja szerokoœci zielonego wype³nienia
+    hpBarFill.setSize({ 40.f * hpPercent, 6.f });
+
+    // Synchronizacja pozycji HUD z pozycj¹ obiektu (offset pionowy -40px)
+    sf::Vector2f pos = shape.getPosition();
+    hpBarBackground.setPosition({ pos.x, pos.y - 40.f });
+    hpBarFill.setPosition({ pos.x, pos.y - 40.f });
+}
+
+/**
+ * @brief Renderuje kompletny obiekt potwora (cia³o + interfejs).
+ */
+void Monster::Draw(sf::RenderWindow& window)
+{
+    window.draw(shape);
+    window.draw(hpBarBackground);
+    window.draw(hpBarFill);
+}

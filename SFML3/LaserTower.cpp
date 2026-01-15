@@ -57,4 +57,27 @@ void LaserTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<
         // Jeœli potwór jest w zasiêgu i jest bli¿ej ni¿ poprzednio znaleziony
         if (dist <= closestDistance)
         {
-            closestDistance
+            closestDistance = dist;
+            target = monster.get(); // Pobranie surowego wskaŸnika do obserwacji celu
+        }
+    }
+
+    // --- Procedura generowania strza³u ---
+    // Jeœli znaleziono cel w zasiêgu, instancjonowany jest nowy pocisk zmierzaj¹cy do celu.
+    if (target)
+    {
+        // Utworzenie inteligentnego wskaŸnika na pocisk i dodanie go do globalnej listy w GameState
+        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, tAttack));
+
+        // Resetowanie licznika czasu do zera (inicjacja prze³adowania)
+        attackTimer = 0.f;
+    }
+}
+
+/**
+ * @brief Przesy³a kszta³t wie¿y do bufora ramki okna.
+ */
+void LaserTower::Draw(sf::RenderWindow& window)
+{
+    window.draw(tShape);
+}
