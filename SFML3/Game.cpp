@@ -8,45 +8,54 @@
 #include "MainMenuState.h"
 #include <vector>
 
-// --- KONSTRUKTOR I DESTRUKTOR ---
 Game::Game()
 {
+    // Inicjalizacja komponentów bazowych przy starcie aplikacji
     this->InitWindow();
     this->InitStates();
 }
 
 Game::~Game()
 {
-    // Tutaj w przysz³oœci warto dodaæ czyszczenie wektora states, jeœli nie jest pusty
+    // Zwalnianie zasobów dynamicznie alokowanych stanów
+    for (auto* state : states)
+    {
+        delete state;
+    }
+
+    // Zwalnianie pamiêci okna
+    delete this->windowPtr;
 }
 
-// --- INICJALIZACJA ---
 void Game::InitWindow()
 {
+    // Tworzenie kontekstu renderowania z okreœlon¹ rozdzielczoœci¹ i tytu³em
     this->windowPtr = new sf::RenderWindow(sf::VideoMode({ 1920, 1080 }), "B.A.N.A.I.S");
 }
 
 void Game::InitStates()
 {
-    // TUTAJ UMIESZCZMAY STANY CZYTAJ SCENY JEST 3.13 OCZY MI WYCHODZ¥ Z ORBIT
+    // Konfiguracja pocz¹tkowej sceny aplikacji
     states.clear();
     this->states.push_back(new MainMenuState(this->windowPtr));
     activeState = 1;
 }
 
-// --- PÊTLA G£ÓWNA I STEROWANIE ---
 void Game::Run()
 {
+    // G³ówna pêtla steruj¹ca przep³ywem aplikacji
     while (this->windowPtr->isOpen()) {
-        this->dt = dtClock.restart().asSeconds(); // Obliczanie czasu klatki
+        // Obliczanie czasu up³ywaj¹cego miêdzy klatkami dla p³ynnoœci animacji
+        this->dt = dtClock.restart().asSeconds();
+
         this->Update(this->dt);
         this->Render();
     }
 }
 
-// --- AKTUALIZACJA LOGIKI ---
 void Game::UpdateEvent()
 {
+    // Obs³uga komunikatów przesy³anych przez system operacyjny
     while (ev = this->windowPtr->pollEvent())
     {
         if (ev->is<sf::Event::Closed>())
@@ -60,42 +69,45 @@ void Game::Update(float dt)
 
     if (!states.empty())
     {
+        // Przekazanie logiki do aktualnie aktywnego stanu na szczycie stosu
         states.back()->Update(dt);
 
-        // Mechanizm zmiany/zamykania stanów
+        // Obs³uga mechanizmu przejœæ miêdzy stanami (np. wyjœcie do menu, start gry)
         if (states.back()->GetQuit())
         {
             States* next = states.back()->nextState;
 
-            delete states.back();
+            delete states.back(); // Sprz¹tanie pamiêci po zamykanym stanie
             states.pop_back();
 
             if (next)
-                states.push_back(next);
+                states.push_back(next); // Aktywacja nowego stanu, jeœli zosta³ zdefiniowany
         }
     }
     else
     {
-        // Zamknij aplikacjê, jeœli nie ma ju¿ ¿adnych stanów
+        // Wyjœcie z aplikacji w przypadku braku aktywnych scen
         windowPtr->close();
     }
 }
 
-// --- RENDEROWANIE ---
 void Game::Render()
 {
     if (!states.empty())
     {
         windowPtr->clear();
-        states.back()->Render(windowPtr); // Rysuje tylko aktualny stan na wierzchu
+
+        // Delegacja procesu rysowania do bie¿¹cego stanu
+        states.back()->Render(windowPtr);
+
         windowPtr->display();
     }
 }
 
-// --- IMPLEMENTACJA KLASY BAZOWEJ STATES ---
-// (Te metody znajduj¹ siê w pliku Game.cpp zgodnie z Twoim kodem)
+// Metody pomocnicze klasy bazowej States zarz¹dzaj¹ce cyklem ¿ycia sceny
 void States::CheckForQuit()
 {
+    // Metoda przeznaczona do nadpisania w klasach pochodnych
 }
 
 bool States::GetQuit()

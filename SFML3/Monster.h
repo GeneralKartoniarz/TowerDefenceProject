@@ -2,40 +2,61 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
+
 using namespace std;
-// --- KLASA BAZOWA POTWORA (ABSTRAKCYJNA) ---
-// Odpowiada za wspóln¹ logikê ruchu i podstawowe statystyki
+
+/**
+ * @class Monster
+ * @brief Abstrakcyjna klasa bazowa definiuj¹ca zachowanie i atrybuty przeciwników.
+ * * Klasa zarz¹dza wspóln¹ logik¹ dla wszystkich typów potworów, w tym
+ * systemem poruszania siê po œcie¿ce (Path Following) oraz wyœwietlaniem pasków zdrowia.
+ */
 class Monster
 {
 public:
-    // --- Destruktor wirtualny ---
-    // Wymagany przy dziedziczeniu (unique_ptr, delete przez wskaŸnik)
+    // Wirtualny destruktor gwarantuje poprawne czyszczenie zasobów klas pochodnych
     virtual ~Monster() = default;
 
-    // --- Statystyki potwora ---
-    float mMaxHP;         // Maksymalne punkty ¿ycia
-    float mHP;            // Punkty ¿ycia
-    int mDamage;        // Obra¿enia zadawane bazie
-    int mGold;          // Z³oto za zabicie
-    float mSpeed;       // Prêdkoœæ poruszania
+    // --- Atrybuty kondycji i ekonomii ---
+    float mMaxHP;           // Maksymalna wytrzyma³oœæ jednostki
+    float mHP;              // Aktualny stan punktów ¿ycia
+    int mDamage;            // Kara nak³adana na HP gracza po dotarciu do celu
+    int mGold;              // Nagroda finansowa dla gracza za eliminacjê jednostki
+    float mSpeed;           // Prêdkoœæ przemieszczania siê wyra¿ona w pikselach na sekundê
 
-    // --- Logika œcie¿ki ---
-    int pathIndex = 0;  // Aktualny punkt na œcie¿ce
-    bool reachedEnd = false; // Czy dotar³ do koñca mapy
-    bool isDead = false; // Czy dotar³ do koñca mapy KILLER IS DEAD ZNACZY ¯E JA GO KYLLYM
+    // --- Logika nawigacji i statusu ---
+    int pathIndex = 0;      // Indeks punktu (waypoint), do którego obecnie zmierza jednostka
+    bool reachedEnd = false;// Flaga aktywowana po dotarciu do ostatniego punktu œcie¿ki
+    bool isDead = false;    // Flaga eliminacji (HP <= 0) wyzwalaj¹ca usuniêcie z pamiêci
 
-    // --- Grafika ---
-    sf::RectangleShape shape; // Reprezentacja wizualna potwora
-    sf::RectangleShape hpBarBackground;
-    sf::RectangleShape hpBarFill;
-    // --- Metody g³ówne ---
-    // Aktualizuje ruch potwora po œcie¿ce
+    // --- Komponenty wizualne (Renderable Components) ---
+    sf::RectangleShape shape;           // G³ówny korpus potwora
+    sf::RectangleShape hpBarBackground; // T³o paska zdrowia (zazwyczaj czerwone/czarne)
+    sf::RectangleShape hpBarFill;       // Wype³nienie paska zdrowia (dynamicznie skalowane)
+
+    // --- Metody cyklu ¿ycia i logiki ---
+
+    /**
+     * @brief Przetwarza ruch w stronê kolejnych punktów œcie¿ki.
+     * @param dt Czas od ostatniej klatki (Delta Time).
+     * @param path Wektor punktów Vector2f definiuj¹cy trasê przemarszu.
+     */
     virtual void Update(float dt, const vector<sf::Vector2f>& path);
-    // Rysuje potwora w oknie gry
+
+    /**
+     * @brief Renderuje potwora wraz z jego interfejsem (paskiem zdrowia).
+     */
     virtual void Draw(sf::RenderWindow& window);
+
+    /**
+     * @brief Aktualizuje szerokoœæ paska zdrowia na podstawie stosunku mHP/mMaxHP.
+     */
     virtual void ChangeHpBar();
+
 protected:
-    // --- Konstruktor chroniony ---
-    // Zapobiega tworzeniu obiektu Monster bezpoœrednio
+    /**
+     * @brief Konstruktor chroniony – wywo³ywany wy³¹cznie przez klasy pochodne.
+     * @param startPos Wspó³rzêdne pierwszego punktu œcie¿ki (spawn point).
+     */
     Monster(sf::Vector2f startPos);
 };

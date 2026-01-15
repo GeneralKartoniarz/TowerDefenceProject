@@ -12,10 +12,9 @@
 
 using namespace std;
 
-// Zmienna globalna kontroluj¹ca trudnoœæ
+// Globalny modyfikator wp³ywaj¹cy na balans gry w GameState
 int difficulty = 1;
 
-// --- KONSTRUKTOR ---
 MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     : States(windowPtr),
     startBtn(fontMainMenu),
@@ -30,17 +29,16 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     backToMenu(fontMainMenu),
     titleText(fontMainMenu)
 {
-    // £adowanie zasobów
+    // £adowanie zasobów typograficznych
     if (!fontMainMenu.openFromFile("comicFont.ttf")) {
-        cout << "Font sie zepsul";
+        cout << "B³¹d krytyczny: Nie odnaleziono pliku czcionki.";
     }
 
     this->windowPtr = windowPtr;
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
 
-
-    // Inicjalizacja: Menu G³ówne
+    // --- Konfiguracja interfejsu: Menu G³ówne ---
     startBtn.text.setString("Start");
     startBtn.SetPosition(screenWidth / 2, screenHeight / 3);
 
@@ -50,13 +48,14 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     quitBtn.text.setString("Exit");
     quitBtn.SetPosition(screenWidth / 2, screenHeight - screenHeight / 3);
 
+    // Parametry wizualne tytu³u gry
     titleText.setString("A.I FIGHTER - Freedom Keeper");
     titleText.setFillColor(sf::Color::White);
     titleText.setCharacterSize(60);
-    titleText.setOrigin({ titleText.getLocalBounds().size.x/2, titleText.getLocalBounds().size.y/2});
-    titleText.setPosition({ screenWidth / 2,screenHeight/2 - 330.f });
+    titleText.setOrigin({ titleText.getLocalBounds().size.x / 2, titleText.getLocalBounds().size.y / 2 });
+    titleText.setPosition({ screenWidth / 2, screenHeight / 2 - 330.f });
 
-    // Inicjalizacja: Wybór poziomu trudnoœci
+    // --- Konfiguracja interfejsu: Poziomy Trudnoœci ---
     selectMenuEasy.shape.setFillColor(sf::Color::Blue);
     selectMenuEasy.text.setString("Easy");
     selectMenuEasy.SetPosition(screenWidth / 2, screenHeight - screenHeight * 0.7);
@@ -69,7 +68,7 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     selectMenuHard.text.setString("Hard");
     selectMenuHard.SetPosition(screenWidth / 2, screenHeight - screenHeight * 0.3);
 
-    // Inicjalizacja: Wybór konkretnego poziomu (Mapy)
+    // --- Konfiguracja interfejsu: Wybór Map ---
     selectMenuLevelOne.shape.setFillColor(sf::Color::Blue);
     selectMenuLevelOne.text.setString("1");
     selectMenuLevelOne.SetPosition(screenWidth - screenWidth * 0.7, screenHeight - screenHeight * 0.9);
@@ -82,7 +81,7 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     selectMenuLevelThree.text.setString("3");
     selectMenuLevelThree.SetPosition(screenWidth - screenWidth * 0.3, screenHeight - screenHeight * 0.9);
 
-    // Inicjalizacja: Przycisk powrotu
+    // Konfiguracja przycisku powrotu do wy¿szego poziomu menu
     backToMenu.shape.setFillColor(sf::Color::Blue);
     backToMenu.text.setString("<-");
     backToMenu.SetPosition(backToMenu.shape.getSize().x, backToMenu.shape.getSize().y);
@@ -92,7 +91,7 @@ MainMenuState::~MainMenuState() {}
 
 void MainMenuState::EndState()
 {
-    cout << "Wybrano poziom";
+    cout << "Zamykanie menu g³ównego...";
 }
 
 void MainMenuState::QuitCheck()
@@ -100,14 +99,13 @@ void MainMenuState::QuitCheck()
     this->CheckForQuit();
 }
 
-// --- AKTUALIZACJA LOGIKI ---
 void MainMenuState::Update(float dt)
 {
     this->QuitCheck();
     float mouseX = sf::Mouse::getPosition(*windowPtr).x;
     float mouseY = sf::Mouse::getPosition(*windowPtr).y;
-    
-    // Logika Menu G³ównego
+
+    // Obs³uga logiki warstwowej menu (Finite State Machine wewn¹trz Menu)
     if (menuState == MenuState::Main) {
         startBtn.UpdateHover(mouseX, mouseY);
         if (startBtn.IsButtonClicked(mouseX, mouseY)) {
@@ -124,10 +122,8 @@ void MainMenuState::Update(float dt)
             windowPtr->close();
         }
     }
-
-    // Logika Wyboru Poziomu i Trudnoœci
-    if (menuState == MenuState::LevelSelect) {
-        // Obs³uga trudnoœci
+    else if (menuState == MenuState::LevelSelect) {
+        // Logika wyboru trudnoœci - zmiana parametrów i wizualnego stanu przycisków
         if (selectMenuEasy.IsButtonClicked(mouseX, mouseY)) {
             difficulty = 1;
             selectMenuEasy.shape.setFillColor(sf::Color::Red);
@@ -147,7 +143,7 @@ void MainMenuState::Update(float dt)
             selectMenuNormal.shape.setFillColor(sf::Color::Blue);
         }
 
-        // Obs³uga wyboru mapy i przejœcie do GameState
+        // Procedura uruchamiania gry: wybór mapy -> nadpisanie pliku roboczego -> zmiana stanu
         if (selectMenuLevelOne.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_1.txt", "map.txt");
             nextState = new GameState(windowPtr, 1);
@@ -169,9 +165,7 @@ void MainMenuState::Update(float dt)
             menuState = MenuState::Main;
         }
     }
-
-    // Logika Opcji
-    if (menuState == MenuState::Options) {
+    else if (menuState == MenuState::Options) {
         backToMenu.UpdateHover(mouseX, mouseY);
         if (backToMenu.IsButtonClicked(mouseX, mouseY)) {
             menuState = MenuState::Main;
@@ -179,9 +173,9 @@ void MainMenuState::Update(float dt)
     }
 }
 
-// --- RENDEROWANIE ---
 void MainMenuState::Render(sf::RenderWindow* windowPtr)
 {
+    // Renderowanie warstwowe zale¿ne od aktualnego podstanu menu
     if (menuState == MenuState::Main) {
         startBtn.Draw(*windowPtr);
         quitBtn.Draw(*windowPtr);
@@ -203,11 +197,11 @@ void MainMenuState::Render(sf::RenderWindow* windowPtr)
     }
 }
 
-// --- METODY POMOCNICZE ---
 void MainMenuState::CopyMap(string source, string dest)
 {
+    // Fizyczne kopiowanie danych mapy ze Ÿród³a do pliku tymczasowego wykorzystywanego przez silnik
     ifstream sourceFile(source);
-    ofstream destFile(dest, ios::trunc);
+    ofstream destFile(dest, ios::trunc); // Flaga trunc zapewnia nadpisanie pliku
     destFile << sourceFile.rdbuf();
     sourceFile.close();
     destFile.close();
