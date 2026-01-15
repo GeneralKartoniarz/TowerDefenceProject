@@ -41,13 +41,13 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     // --- Konfiguracja interfejsu: Menu G³ówne ---
     startBtn.text.setString("Start");
     startBtn.SetPosition(screenWidth / 2, screenHeight / 3);
-
+    startBtn.LoadTexture("assets/button/menu1.png");
     optBtn.text.setString("Options");
     optBtn.SetPosition(screenWidth / 2, screenHeight / 2);
-
+    optBtn.LoadTexture("assets/button/menu1.png");
     quitBtn.text.setString("Exit");
     quitBtn.SetPosition(screenWidth / 2, screenHeight - screenHeight / 3);
-
+    quitBtn.LoadTexture("assets/button/menu1.png");
     // Parametry wizualne tytu³u gry
     titleText.setString("A.I FIGHTER - Freedom Keeper");
     titleText.setFillColor(sf::Color::White);
@@ -56,34 +56,34 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     titleText.setPosition({ screenWidth / 2, screenHeight / 2 - 330.f });
 
     // --- Konfiguracja interfejsu: Poziomy Trudnoœci ---
-    selectMenuEasy.shape.setFillColor(sf::Color::Blue);
     selectMenuEasy.text.setString("Easy");
+    selectMenuEasy.shape.setFillColor(selectMenuEasy.normalColor);
     selectMenuEasy.SetPosition(screenWidth / 2, screenHeight - screenHeight * 0.7);
-
-    selectMenuNormal.shape.setFillColor(sf::Color::Blue);
+    selectMenuEasy.LoadTexture("assets/button/menu1.png");
     selectMenuNormal.text.setString("Medium");
+    selectMenuNormal.shape.setFillColor(selectMenuEasy.normalColor);
     selectMenuNormal.SetPosition(screenWidth / 2, screenHeight - screenHeight * 0.5);
-
-    selectMenuHard.shape.setFillColor(sf::Color::Blue);
+    selectMenuNormal.LoadTexture("assets/button/menu1.png");
     selectMenuHard.text.setString("Hard");
+    selectMenuHard.shape.setFillColor(selectMenuEasy.normalColor);
     selectMenuHard.SetPosition(screenWidth / 2, screenHeight - screenHeight * 0.3);
-
+    selectMenuHard.LoadTexture("assets/button/menu1.png");
     // --- Konfiguracja interfejsu: Wybór Map ---
-    selectMenuLevelOne.shape.setFillColor(sf::Color::Blue);
+    selectMenuLevelOne.LoadTexture("assets/button/menu1.png");;
     selectMenuLevelOne.text.setString("1");
     selectMenuLevelOne.SetPosition(screenWidth - screenWidth * 0.7, screenHeight - screenHeight * 0.9);
 
-    selectMenuLevelTwo.shape.setFillColor(sf::Color::Blue);
+    selectMenuLevelTwo.LoadTexture("assets/button/menu1.png");
     selectMenuLevelTwo.text.setString("2");
     selectMenuLevelTwo.SetPosition(screenWidth - screenWidth * 0.5, screenHeight - screenHeight * 0.9);
 
-    selectMenuLevelThree.shape.setFillColor(sf::Color::Blue);
+    selectMenuLevelThree.LoadTexture("assets/button/menu1.png");
     selectMenuLevelThree.text.setString("3");
     selectMenuLevelThree.SetPosition(screenWidth - screenWidth * 0.3, screenHeight - screenHeight * 0.9);
 
     // Konfiguracja przycisku powrotu do wy¿szego poziomu menu
-    backToMenu.shape.setFillColor(sf::Color::Blue);
-    backToMenu.text.setString("<-");
+    backToMenu.LoadTexture("assets/button/menu1.png");
+    backToMenu.text.setString("Cofnij");
     backToMenu.SetPosition(backToMenu.shape.getSize().x, backToMenu.shape.getSize().y);
 }
 
@@ -126,37 +126,37 @@ void MainMenuState::Update(float dt)
         // Logika wyboru trudnoœci - zmiana parametrów i wizualnego stanu przycisków
         if (selectMenuEasy.IsButtonClicked(mouseX, mouseY)) {
             difficulty = 1;
-            selectMenuEasy.shape.setFillColor(sf::Color::Red);
-            selectMenuNormal.shape.setFillColor(sf::Color::Blue);
-            selectMenuHard.shape.setFillColor(sf::Color::Blue);
+            selectMenuEasy.shape.setFillColor(selectMenuEasy.hoverColor);
+            selectMenuNormal.shape.setFillColor(selectMenuNormal.normalColor);
+            selectMenuHard.shape.setFillColor(selectMenuHard.normalColor);
         }
         if (selectMenuNormal.IsButtonClicked(mouseX, mouseY)) {
             difficulty = 2;
-            selectMenuNormal.shape.setFillColor(sf::Color::Red);
-            selectMenuEasy.shape.setFillColor(sf::Color::Blue);
-            selectMenuHard.shape.setFillColor(sf::Color::Blue);
+            selectMenuNormal.shape.setFillColor(selectMenuNormal.hoverColor);
+            selectMenuEasy.shape.setFillColor(selectMenuEasy.normalColor);
+            selectMenuHard.shape.setFillColor(selectMenuHard.normalColor);
         }
         if (selectMenuHard.IsButtonClicked(mouseX, mouseY)) {
             difficulty = 3;
-            selectMenuHard.shape.setFillColor(sf::Color::Red);
-            selectMenuEasy.shape.setFillColor(sf::Color::Blue);
-            selectMenuNormal.shape.setFillColor(sf::Color::Blue);
+            selectMenuHard.shape.setFillColor(selectMenuHard.hoverColor);
+            selectMenuEasy.shape.setFillColor(selectMenuEasy.normalColor);
+            selectMenuNormal.shape.setFillColor(selectMenuNormal.normalColor);
         }
 
         // Procedura uruchamiania gry: wybór mapy -> nadpisanie pliku roboczego -> zmiana stanu
         if (selectMenuLevelOne.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_1.txt", "map.txt");
-            nextState = new GameState(windowPtr, 1);
+            nextState = new GameState(windowPtr, difficulty);
             quit = true;
         }
         if (selectMenuLevelTwo.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_2.txt", "map.txt");
-            nextState = new GameState(windowPtr, 2);
+            nextState = new GameState(windowPtr, difficulty);
             quit = true;
         }
         if (selectMenuLevelThree.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_3.txt", "map.txt");
-            nextState = new GameState(windowPtr, 3);
+            nextState = new GameState(windowPtr, difficulty);
             quit = true;
         }
 

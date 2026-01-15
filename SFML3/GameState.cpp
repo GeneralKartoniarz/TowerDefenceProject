@@ -161,6 +161,7 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
         buttons[i].hoverColor = sf::Color(255, 200, 0);
         buttons[i].shape.setFillColor(buttons[i].normalColor);
         buttons[i].SetPosition(startX + i * (buttonWidth + buttonSpacing), y);
+        buttons[i].LoadTexture("assets/button/menu1.png");
     }
     mapFile.close();
 
