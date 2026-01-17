@@ -40,11 +40,17 @@ Projekt **wymaga** obecności następujących plików:
 - `System Windows`
 - Brak któregokolwiek z tych plików może spowodować niepoprawne działanie gry!
 
-1.Otwórz plik z rozszerzeniem .sln w Visual Studio
-2.Podlinkuj niezbędne biblioteki SFML
+
+### URUCHAMIANIE
+- 1.Otwórz plik z rozszerzeniem .sln w Visual Studio
+
+- 2.Podlinkuj niezbędne biblioteki SFML
+
   -sfml-graphics
   -sfml-window
   -sfml-system
   -sfml-audio
-  3.Ustaw konfigurcje projektu na Debug/x64
-  4.Naciśnij przycisk F5
+- 3.Ustaw konfigurcje projektu na Debug/x64
+
+- 4.Naciśnij przycisk F5
+
