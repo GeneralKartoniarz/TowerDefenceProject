@@ -1,6 +1,7 @@
 #include "GameState.h"   
 #include "panelState.h"   
 #include "MainMenuState.h"   
+#include "MusicManager.h"   
 #include "States.h"           
 #include "Tile.h"           
 #include "Button.h"      
@@ -37,6 +38,7 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     mapFile.open("map.txt");
     string mapString;
     string tempString;
+
     while (getline(mapFile, tempString)) {
         mapString += tempString;
     }
@@ -54,7 +56,8 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
     this->difficulty = difficulty;
-
+    musicManager.LoadMusic("game", "assets/music/game.mp3");
+    musicManager.Play("game");
     // Konfiguracja komunikatu pauzy
     pauseText.setFont(fontGameState);
     pauseText.setString("PAUZA");
@@ -230,10 +233,14 @@ void GameState::Update(float dt)
         if (!pausePressed)
         {
             isGamePaused = !isGamePaused;
+            musicManager.Pause();
             pausePressed = true;
         }
     }
-    else pausePressed = false;
+    else { 
+        pausePressed = false; 
+        musicManager.Resume();
+    }
 
     if (isGamePaused) return;
 

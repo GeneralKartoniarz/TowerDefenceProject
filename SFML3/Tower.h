@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <string>
 #include <vector>
 #include <memory>
@@ -55,6 +56,9 @@ public:
 
     bool isSelected = false;
     bool isRangeShown = false;
+
+    sf::SoundBuffer buffer;
+    sf::Sound sound;
 
     virtual void Upgrade();
 

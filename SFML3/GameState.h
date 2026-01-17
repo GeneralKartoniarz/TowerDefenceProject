@@ -5,6 +5,7 @@
 #include "Tile.h"
 #include "Tower.h"
 #include "Monster.h"
+#include "MusicManager.h"   
 #include "Bullet.h"
 #include <vector>
 #include <memory>
@@ -70,6 +71,9 @@ public:
     sf::Text pauseText;                         // Komunikat wyœwietlany podczas pauzy
 
     Button waveBtn;                             // Przycisk wyzwalaj¹cy kolejn¹ falê
+
+    // --- Muzyka i sfx ---
+    MusicManager musicManager;
 
     Tower* selectedTowerPtr = nullptr;
     bool showUpgradePanel = false;

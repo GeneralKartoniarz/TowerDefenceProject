@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "States.h"
 #include "Button.h"
+#include "MusicManager.h"
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -67,4 +68,7 @@ private:
 
     // Statyczne elementy tekstowe (np. logo/tytu³ gry)
     sf::Text titleText;
+
+    //Muzyka
+    MusicManager musicManager;
 };

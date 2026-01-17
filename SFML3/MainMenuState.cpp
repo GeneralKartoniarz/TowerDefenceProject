@@ -1,4 +1,5 @@
 #include "MainMenuState.h"
+#include "MusicManager.h"
 #include "GameState.h"
 #include "States.h"      
 #include "Button.h"      
@@ -9,7 +10,6 @@
 #include <SFML/Audio.hpp>
 #include <fstream>
 #include <string>
-
 using namespace std;
 
 // Globalny modyfikator wp³ywaj¹cy na balans gry w GameState
@@ -37,7 +37,8 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     this->windowPtr = windowPtr;
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
-
+    musicManager.LoadMusic("menu","assets/music/menu.mp3");
+    musicManager.Play("menu");
     // --- Konfiguracja interfejsu: Menu G³ówne ---
     startBtn.text.setString("Start");
     startBtn.SetPosition(screenWidth / 2, screenHeight / 3);
@@ -149,16 +150,19 @@ void MainMenuState::Update(float dt)
             CopyMap("map_1.txt", "map.txt");
             nextState = new GameState(windowPtr, difficulty);
             quit = true;
+            musicManager.Stop();
         }
         if (selectMenuLevelTwo.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_2.txt", "map.txt");
             nextState = new GameState(windowPtr, difficulty);
             quit = true;
+            musicManager.Stop();
         }
         if (selectMenuLevelThree.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_3.txt", "map.txt");
             nextState = new GameState(windowPtr, difficulty);
             quit = true;
+            musicManager.Stop();
         }
 
         backToMenu.UpdateHover(mouseX, mouseY);
