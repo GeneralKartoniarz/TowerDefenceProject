@@ -47,6 +47,7 @@ public:
 
     void ApplyEffect(StatusEffect type, float duration, float value);
     void UpdateEffects(float dt);
+    bool HasEffect(StatusEffect type);
     // --- Komponenty wizualne (Renderable Components) ---
     sf::RectangleShape shape;           // G³ówny korpus potwora
     sf::RectangleShape hpBarBackground; // T³o paska zdrowia (zazwyczaj czerwone/czarne)

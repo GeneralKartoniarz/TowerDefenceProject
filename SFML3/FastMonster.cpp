@@ -12,7 +12,7 @@ FastMonster::FastMonster(sf::Vector2f startPos)
     mDamage = 3;      // Mniejsze obra¿enia bazowe dla zachowania balansu
     mGold = 8;        // Nagroda za eliminacjê jednostki
     mSpeed = 250.f;   // Znacznie zwiêkszona prêdkoœæ ruchu wzglêdem standardowych jednostek
-
+    baseSpeed = mSpeed;
     // Wyró¿nienie wizualne jednostki na mapie gry
     shape.setFillColor(sf::Color::Yellow);
 }

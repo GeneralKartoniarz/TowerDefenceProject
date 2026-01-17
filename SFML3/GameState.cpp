@@ -10,6 +10,7 @@
 #include "BasicTower.h"            
 #include "LaserTower.h"
 #include "EMPtower.h"
+#include "Hackertower.h"
 #include "FastMonster.h"      
 #include "TankMonster.h"      
 #include "Tower.h"      
@@ -249,7 +250,7 @@ void GameState::Update(float dt)
                 else if (type == 1) monsters.push_back(make_unique<FastMonster>(pathPoints[0]));
                 else monsters.push_back(make_unique<TankMonster>(pathPoints[0]));
 
-                monsters.back()->mSpeed *= difficulty;
+                monsters.back()->baseSpeed *= difficulty;
                 monstersSpawnedThisWave++;
             }
         }
@@ -325,6 +326,9 @@ void GameState::Update(float dt)
     buttons[4].text.setCharacterSize(20);
     buttons[4].CenterText();
 
+    buttons[5].text.setString("Support\nNode");
+    buttons[5].text.setCharacterSize(20);
+    buttons[5].CenterText();
 
     for (auto& button : buttons) button.UpdateHover(mouseX, mouseY);
 
@@ -343,9 +347,16 @@ void GameState::Update(float dt)
             tiles[selectedTile].Refresh();
             isTileSelected = false;
         }
-        else if (buttons[2].IsButtonClicked(mouseX, mouseY) && playerGold >= LaserTower::COST) {
+        else if (buttons[2].IsButtonClicked(mouseX, mouseY) && playerGold >= EMPtower::COST) {
             towers.push_back(make_unique<EMPtower>(tiles[selectedTile].shape.getPosition()));
             playerGold -= EMPtower::COST;
+            tiles[selectedTile].state = Tile::TileState::Locked;
+            tiles[selectedTile].Refresh();
+            isTileSelected = false;
+        }
+        else if (buttons[3].IsButtonClicked(mouseX, mouseY) && playerGold >= HackerTower::COST) {
+            towers.push_back(make_unique<HackerTower>(tiles[selectedTile].shape.getPosition()));
+            playerGold -= HackerTower::COST;
             tiles[selectedTile].state = Tile::TileState::Locked;
             tiles[selectedTile].Refresh();
             isTileSelected = false;

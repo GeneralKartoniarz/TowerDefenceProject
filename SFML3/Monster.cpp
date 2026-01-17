@@ -41,12 +41,16 @@ Monster::Monster(sf::Vector2f startPos)
  */
 void Monster::Update(float dt, const vector<sf::Vector2f>& path)
 {
-
     // Weryfikacja stanu ¿ywotnoœci
     if (mHP <= 0)
         isDead = true;
-    if (isStunned)
-        return;
+    if (isStunned) {
+        mSpeed = 0;
+    }
+    else {
+        mSpeed = baseSpeed;
+    }
+
 
     // Sprawdzenie warunku zwyciêstwa potwora (dotarcie do bazy gracza)
     if (pathIndex >= (int)path.size())
@@ -101,7 +105,18 @@ void Monster::ChangeHpBar()
 
 void Monster::ApplyEffect(StatusEffect type, float duration, float value)
 {
+    if (HasEffect(type))
+        return;
     effects.push_back({ type, duration, value });
+}
+bool Monster::HasEffect(StatusEffect type)
+{
+    for (const ActiveEffect& effect : effects)
+    {
+        if (effect.type == type)
+            return true;
+    }
+    return false;
 }
 
 void Monster::UpdateEffects(float dt)

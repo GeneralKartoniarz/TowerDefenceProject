@@ -136,6 +136,7 @@
     <ClCompile Include="FastMonster.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="HackerTower.cpp" />
     <ClCompile Include="LaserTower.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="FastMonster.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="HackerTower.h" />
     <ClInclude Include="LaserTower.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Monster.h" />

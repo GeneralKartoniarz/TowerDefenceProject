@@ -141,6 +141,7 @@ void MainMenuState::Update(float dt)
             selectMenuHard.shape.setFillColor(selectMenuHard.hoverColor);
             selectMenuEasy.shape.setFillColor(selectMenuEasy.normalColor);
             selectMenuNormal.shape.setFillColor(selectMenuNormal.normalColor);
+            cout << difficulty;
         }
 
         // Procedura uruchamiania gry: wybór mapy -> nadpisanie pliku roboczego -> zmiana stanu

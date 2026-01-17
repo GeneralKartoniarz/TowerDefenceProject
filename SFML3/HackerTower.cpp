@@ -1,18 +1,18 @@
-#include "EMPtower.h"
+#include "HackerTower.h"
 #include "Tower.h"
 #include "Monster.h"
-EMPtower::EMPtower(sf::Vector2f position)
+HackerTower::HackerTower(sf::Vector2f position)
 {
-    LoadTexture("assets/emp_tower/emp1.png");
+    LoadTexture("assets/hacker_tower/hacker1.png");
 
     // Konfiguracja parametrów bojowych i ekonomicznych
     tCost = COST;
     tAttack = 25.f;
     tRange = 200.f;
-    tName = "EMP Tower";
+    tName = "Hacker Tower";
 
     // Ustawienie mechaniki szybkostrzelnoœci
-    attackCooldown = 0.4f;
+    attackCooldown = 3.f;
     attackTimer = 0.f;
 
     // Definiowanie w³aœciwoœci transformacji obiektu
@@ -20,7 +20,8 @@ EMPtower::EMPtower(sf::Vector2f position)
     tShape.setOrigin(tShape.getSize() / 2.f); // Centrowanie punktu obrotu/pozycji
     tShape.setPosition(position);
 }
-void EMPtower::Update(float dt,vector<unique_ptr<Monster>>& monsters,vector<unique_ptr<Bullet>>& bullets)
+
+void HackerTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets)
 {
     attackTimer += dt;
     if (attackTimer < attackCooldown)
@@ -41,21 +42,19 @@ void EMPtower::Update(float dt,vector<unique_ptr<Monster>>& monsters,vector<uniq
         if (dist <= closestDistance)
         {
             closestDistance = dist;
-            if (!monster.get()->HasEffect(Monster::StatusEffect::Stun) && !monster.get()->HasEffect(Monster::StatusEffect::Slow))
+            if(!monster.get()->HasEffect(Monster::StatusEffect::Stun))
                 target = monster.get();
         }
     }
     if (target)
     {
         RotateToEnemy(target);
-        target->ApplyEffect(Monster::StatusEffect::Slow, 2.f, 0.5f);
+        target->ApplyEffect(Monster::StatusEffect::Stun, 2.f, .6f);
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
     }
-
 }
 
-void EMPtower::Draw(sf::RenderWindow& window)
+void HackerTower::Draw(sf::RenderWindow& window)
 {
     window.draw(tShape);
-
 }
