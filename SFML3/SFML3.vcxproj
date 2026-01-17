@@ -132,6 +132,7 @@
     <ClCompile Include="BasicTower.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="EMPtower.cpp" />
     <ClCompile Include="FastMonster.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="BasicTower.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="EMPtower.h" />
     <ClInclude Include="FastMonster.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />

@@ -28,10 +28,9 @@ public:
      */
     void Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets) override;
 
-    // Odpowiada za wyœwietlenie grafiki wie¿y oraz opcjonalnych elementów (np. zasiêgu)
+    // Odpowiada za wyœwietlenie grafiki wie¿y oraz opcjonalnych elema entów (np. zasiêgu)
     void Draw(sf::RenderWindow& window) override;
 
 private:
-    float attackCooldown;   // Minimalny odstêp czasu miêdzy kolejnymi strza³ami
-    float attackTimer;      // Zegar monitoruj¹cy gotowoœæ wie¿y do ataku
+
 };

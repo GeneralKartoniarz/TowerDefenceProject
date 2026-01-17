@@ -28,7 +28,25 @@ public:
     int pathIndex = 0;      // Indeks punktu (waypoint), do którego obecnie zmierza jednostka
     bool reachedEnd = false;// Flaga aktywowana po dotarciu do ostatniego punktu œcie¿ki
     bool isDead = false;    // Flaga eliminacji (HP <= 0) wyzwalaj¹ca usuniêcie z pamiêci
+    enum class StatusEffect
+    {
+        None,
+        Slow,
+        Stun
+    };
+    struct ActiveEffect
+    {
+        StatusEffect type;
+        float duration;
+        float value; 
+    };
+    vector<ActiveEffect> effects;
 
+    float baseSpeed;
+    bool isStunned = false;
+
+    void ApplyEffect(StatusEffect type, float duration, float value);
+    void UpdateEffects(float dt);
     // --- Komponenty wizualne (Renderable Components) ---
     sf::RectangleShape shape;           // G³ówny korpus potwora
     sf::RectangleShape hpBarBackground; // T³o paska zdrowia (zazwyczaj czerwone/czarne)

@@ -8,7 +8,8 @@
 #include "Monster.h"      
 #include "BasicMonster.h"      
 #include "BasicTower.h"            
-#include "LaserTower.h"            
+#include "LaserTower.h"
+#include "EMPtower.h"
 #include "FastMonster.h"      
 #include "TankMonster.h"      
 #include "Tower.h"      
@@ -338,6 +339,13 @@ void GameState::Update(float dt)
         else if (buttons[1].IsButtonClicked(mouseX, mouseY) && playerGold >= LaserTower::COST) {
             towers.push_back(make_unique<LaserTower>(tiles[selectedTile].shape.getPosition()));
             playerGold -= LaserTower::COST;
+            tiles[selectedTile].state = Tile::TileState::Locked;
+            tiles[selectedTile].Refresh();
+            isTileSelected = false;
+        }
+        else if (buttons[2].IsButtonClicked(mouseX, mouseY) && playerGold >= LaserTower::COST) {
+            towers.push_back(make_unique<EMPtower>(tiles[selectedTile].shape.getPosition()));
+            playerGold -= EMPtower::COST;
             tiles[selectedTile].state = Tile::TileState::Locked;
             tiles[selectedTile].Refresh();
             isTileSelected = false;

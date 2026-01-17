@@ -39,6 +39,4 @@ public:
     void Draw(sf::RenderWindow& window) override;
 
 private:
-    float attackCooldown;   // Nominalny czas oczekiwania miêdzy strza³ami (np. 1.5s)
-    float attackTimer;      // Bie¿¹cy licznik odmierzaj¹cy czas do kolejnego strza³u
 };

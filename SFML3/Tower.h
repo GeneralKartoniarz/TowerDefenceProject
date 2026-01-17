@@ -55,6 +55,8 @@ protected:
     int tCost;              // Koszt zakupu jednostki w z³ocie
     float tAttack;          // Wartoœæ zadawanych obra¿eñ
     float tRange;           // Promieñ skutecznego ra¿enia celów
+    float attackCooldown;   // Minimalny odstêp czasu miêdzy kolejnymi strza³ami
+    float attackTimer;      // Zegar monitoruj¹cy gotowoœæ wie¿y do ataku
     std::string tName;      // Unikalna nazwa identyfikacyjna typu wie¿y
 
     sf::Texture texture;    // Zasób graficzny przechowywany w pamiêci VRAM
