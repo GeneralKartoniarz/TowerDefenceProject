@@ -57,5 +57,12 @@ void EMPtower::Update(float dt,vector<unique_ptr<Monster>>& monsters,vector<uniq
 void EMPtower::Draw(sf::RenderWindow& window)
 {
     window.draw(tShape);
+    if (isRangeShown) {
+        sf::CircleShape rangeCircle(this->tRange);
+        rangeCircle.setOrigin({ this->tRange, this->tRange });
+        rangeCircle.setPosition(this->tShape.getPosition());
+        rangeCircle.setFillColor(sf::Color(250, 50, 50, 100));
+        window.draw(rangeCircle);
+    }
 
 }

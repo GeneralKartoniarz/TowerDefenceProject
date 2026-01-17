@@ -32,3 +32,28 @@ void Tower::RotateToEnemy(Monster* target)
     float angleDeg = angleRadian * 180 / 3.141592f;
     this->tShape.setRotation(sf::degrees(angleDeg-90));
 }
+
+void Tower::Upgrade()
+{
+    if (level >= maxLevel)
+        return;
+
+    level++;
+    upgradeCost += (int)tCost / 2;
+
+    tRange *= 1.2f;
+    attackCooldown *= 0.85f;
+}
+
+int Tower::GetUpgradeCost() 
+{
+    if (level >= maxLevel)
+        return -1;
+
+    return upgradeCost;
+}
+bool Tower::IsMouseOver(float mouseX, float mouseY)
+{
+    return tShape.getGlobalBounds().contains({ mouseX, mouseY });
+}
+

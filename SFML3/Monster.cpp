@@ -46,9 +46,11 @@ void Monster::Update(float dt, const vector<sf::Vector2f>& path)
         isDead = true;
     if (isStunned) {
         mSpeed = 0;
+        shape.setFillColor(sf::Color(0, 200, 100));
     }
     else if(effects.empty()){
         mSpeed = baseSpeed;
+        shape.setFillColor(normalColor);
     }
 
 

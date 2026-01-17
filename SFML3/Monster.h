@@ -23,7 +23,7 @@ public:
     int mDamage;            // Kara nak³adana na HP gracza po dotarciu do celu
     int mGold;              // Nagroda finansowa dla gracza za eliminacjê jednostki
     float mSpeed;           // Prêdkoœæ przemieszczania siê wyra¿ona w pikselach na sekundê
-
+    sf::Color normalColor;
     // --- Logika nawigacji i statusu ---
     int pathIndex = 0;      // Indeks punktu (waypoint), do którego obecnie zmierza jednostka
     bool reachedEnd = false;// Flaga aktywowana po dotarciu do ostatniego punktu œcie¿ki

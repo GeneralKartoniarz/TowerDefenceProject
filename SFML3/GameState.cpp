@@ -30,7 +30,7 @@
 using namespace std;
 
 GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
-    : States(windowPtr), hpText(fontGameState), goldText(fontGameState), turnText(fontGameState), pauseText(fontGameState), waveBtn(fontGameState)
+    : States(windowPtr), hpText(fontGameState), goldText(fontGameState), turnText(fontGameState), pauseText(fontGameState), waveBtn(fontGameState), upgradeButton(fontGameState),upgradeText(fontGameState)
 {
     // 1. Deserializacja mapy z pliku zewnêtrznego
     ifstream mapFile;
@@ -75,6 +75,26 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     waveBtn.shape.setFillColor(waveBtn.normalColor);
     waveBtn.LoadTexture("assets/button/menu2.png");
     waveBtn.text.setFillColor(sf::Color::Red);
+
+    upgradePanel.setSize({ 200.f, 100.f });
+    upgradePanel.setFillColor(sf::Color(30, 30, 30, 220));
+    upgradePanel.setOutlineThickness(2.f);
+    upgradePanel.setOutlineColor(sf::Color::White);
+
+    upgradeText.setFont(fontGameState);
+    upgradeText.setCharacterSize(16);
+    upgradeText.setFillColor(sf::Color::White);
+
+    upgradeButton.text.setString("UPGRADE");
+    upgradeButton.text.setCharacterSize(6);
+    upgradeButton = Button(fontGameState);
+    upgradeButton.text.setString("UPGRADE");
+    upgradeButton.text.setCharacterSize(16);
+    upgradeButton.text.setFillColor(sf::Color::White);
+    upgradeButton.CenterText();
+    upgradeButton.hoverColor = sf::Color(0, 0,0,0);
+    upgradeButton.normalColor = sf::Color(0, 0,0,0);
+
 
     // 3. Generowanie siatki gry (Grid System)
     tiles.clear();
@@ -382,6 +402,58 @@ void GameState::Update(float dt)
         if (bullets[i]->isDead) bullets.erase(bullets.begin() + i);
     }
 
+    bool clickedTower = false;
+
+    for (auto& tower : towers)
+    {
+        if (tower->IsMouseOver(mouseX, mouseY) &&sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+        {
+            selectedTowerPtr = tower.get();
+            showUpgradePanel = true;
+            clickedTower = true;
+            selectedTowerPtr->isRangeShown = true;
+            upgradePanel.setPosition(tower->tShape.getPosition() + sf::Vector2f(40, -40));
+            upgradeText.setPosition(upgradePanel.getPosition() + sf::Vector2f(10, 10));
+            upgradeButton.SetPosition(
+                upgradePanel.getPosition().x + 100,
+                upgradePanel.getPosition().y + 70
+            );
+        }
+    }
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !clickedTower)
+    {
+        if (showUpgradePanel && !upgradePanel.getGlobalBounds().contains({ mouseX, mouseY }))
+        {
+            showUpgradePanel = false;
+            selectedTowerPtr->isRangeShown = false;
+            selectedTowerPtr = nullptr;
+            
+        }
+    }
+    if (showUpgradePanel && (selectedTowerPtr !=nullptr))
+    {
+        upgradeButton.UpdateHover(mouseX, mouseY);
+
+        int cost = selectedTowerPtr->GetUpgradeCost();
+
+        if (cost != -1)
+            upgradeText.setString("Upgrade: " + to_string(cost));
+        else
+            upgradeText.setString("MAX LEVEL");
+
+        if (upgradeButton.IsButtonClicked(mouseX, mouseY) &&
+            cost != -1 &&
+            playerGold >= cost)
+        {
+            playerGold -= cost;
+            selectedTowerPtr->Upgrade();
+
+            showUpgradePanel = false;
+            selectedTowerPtr->isRangeShown = false;
+            selectedTowerPtr = nullptr;
+        }
+    }
+
     // Weryfikacja warunku koñca gry
     if (playerHp <= 0) {
         this->nextState = new panelState(this->windowPtr,"HA HA HA HA HA HA",new MainMenuState(this->windowPtr));
@@ -417,4 +489,11 @@ void GameState::Render(sf::RenderWindow* windowPtr)
         windowPtr->draw(pauseBackground);
         windowPtr->draw(pauseText);
     }
+    if (showUpgradePanel && selectedTowerPtr)
+    {
+        windowPtr->draw(upgradePanel);
+        windowPtr->draw(upgradeText);
+        upgradeButton.Draw(*windowPtr);
+    }
+
 }

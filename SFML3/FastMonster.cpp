@@ -14,5 +14,5 @@ FastMonster::FastMonster(sf::Vector2f startPos)
     mSpeed = 250.f;   // Znacznie zwiêkszona prêdkoœæ ruchu wzglêdem standardowych jednostek
     baseSpeed = mSpeed;
     // Wyró¿nienie wizualne jednostki na mapie gry
-    shape.setFillColor(sf::Color::Yellow);
+    normalColor = (sf::Color::Yellow);
 }

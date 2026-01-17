@@ -39,7 +39,6 @@ public:
 
     // --- Zarz¹dzanie logik¹ fali i interakcji ---
     int selectedTile;           // Indeks aktualnie podœwietlonego kafelka
-    int selectedTower;          // Typ wybranej wie¿y ze sklepu
     bool isTileSelected = false;
     bool isGamePaused = false;
     bool waveActive = false;    // Flaga okreœlaj¹ca, czy trwa faza walki
@@ -71,6 +70,13 @@ public:
     sf::Text pauseText;                         // Komunikat wyœwietlany podczas pauzy
 
     Button waveBtn;                             // Przycisk wyzwalaj¹cy kolejn¹ falê
+
+    Tower* selectedTowerPtr = nullptr;
+    bool showUpgradePanel = false;
+
+    sf::RectangleShape upgradePanel;
+    sf::Text upgradeText;
+    Button upgradeButton;
 
     // --- Cykl ¿ycia stanu ---
     void EndState() override;                   // Obs³uga czyszczenia stanu przed usuniêciem

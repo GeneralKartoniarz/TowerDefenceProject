@@ -48,7 +48,18 @@ public:
 
     // Reprezentacja wizualna wie¿y na siatce gry
     sf::RectangleShape tShape;
+    int level = 1;
+    int maxLevel = 4;
 
+    int upgradeCost =100;
+
+    bool isSelected = false;
+    bool isRangeShown = false;
+
+    virtual void Upgrade();
+
+    virtual int GetUpgradeCost();
+    virtual bool IsMouseOver(float mouseX, float mouseY);
 protected:
     // --- Atrybuty chronione (dostêpne dla klas pochodnych) ---
 

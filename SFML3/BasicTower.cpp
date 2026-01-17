@@ -67,4 +67,12 @@ void BasicTower::Draw(sf::RenderWindow& window)
 {
     // Przekazanie obiektu graficznego do bufora renderowania
     window.draw(tShape);
+    if (isRangeShown) {
+        sf::CircleShape rangeCircle(this->tRange);
+        rangeCircle.setOrigin({ this->tRange, this->tRange });
+        rangeCircle.setPosition(this->tShape.getPosition());
+        rangeCircle.setFillColor(sf::Color(250, 50, 50, 100));
+        window.draw(rangeCircle);
+    }
+
 }

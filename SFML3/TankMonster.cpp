@@ -20,5 +20,5 @@ TankMonster::TankMonster(sf::Vector2f startPos)
     baseSpeed = mSpeed;
 
     // Reprezentacja wizualna (kolor stalowy/niebieski sugeruj¹cy opancerzenie)
-    shape.setFillColor(sf::Color(100, 100, 255));
+    normalColor = sf::Color(100, 100, 255);
 }

@@ -5,7 +5,7 @@
 MissleTower::MissleTower(sf::Vector2f position)
 {
     // £adowanie zasobów graficznych
-    LoadTexture("assets/cassual_tower/cas1.png");
+    LoadTexture("assets/missle_launcher/miss1.png");
 
     // Konfiguracja parametrów bojowych i ekonomicznych
     tCost = COST;
@@ -65,4 +65,11 @@ void MissleTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector
 void MissleTower::Draw(sf::RenderWindow& window)
 {
     window.draw(tShape);
+    if (isRangeShown) {
+        sf::CircleShape rangeCircle(this->tRange);
+        rangeCircle.setOrigin({ this->tRange, this->tRange });
+        rangeCircle.setPosition(this->tShape.getPosition());
+        rangeCircle.setFillColor(sf::Color(250, 50, 50, 100));
+        window.draw(rangeCircle);
+    }
 }
