@@ -57,8 +57,7 @@ public:
     bool isSelected = false;
     bool isRangeShown = false;
 
-    sf::SoundBuffer buffer;
-    sf::Sound sound;
+
 
     virtual void Upgrade();
 

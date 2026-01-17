@@ -39,4 +39,6 @@ public:
     void Draw(sf::RenderWindow& window) override;
 
 private:
+    sf::SoundBuffer shootBuffer;
+    sf::Sound shootSound;
 };

@@ -41,7 +41,9 @@ public:
         {
             if (t.key == key)
             {
+                t.music->setVolume(20);
                 t.music->play();
+                
                 currentKey = key;
                 return;
             }

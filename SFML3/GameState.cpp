@@ -33,6 +33,8 @@ using namespace std;
 GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     : States(windowPtr), hpText(fontGameState), goldText(fontGameState), turnText(fontGameState), pauseText(fontGameState), waveBtn(fontGameState), upgradeButton(fontGameState),upgradeText(fontGameState)
 {
+    musicManager.LoadMusic("game", "assets/music/game.mp3");
+    musicManager.Play("game");
     // 1. Deserializacja mapy z pliku zewnêtrznego
     ifstream mapFile;
     mapFile.open("map.txt");
@@ -56,8 +58,7 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
     this->difficulty = difficulty;
-    musicManager.LoadMusic("game", "assets/music/game.mp3");
-    musicManager.Play("game");
+
     // Konfiguracja komunikatu pauzy
     pauseText.setFont(fontGameState);
     pauseText.setString("PAUZA");
@@ -228,21 +229,27 @@ void GameState::Update(float dt)
 {
     // Obs³uga prze³¹cznika pauzy
     static bool pausePressed = false;
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P))
     {
         if (!pausePressed)
         {
             isGamePaused = !isGamePaused;
-            musicManager.Pause();
+
+            if (isGamePaused)
+                musicManager.Pause();
+            else
+                musicManager.Resume();
+
             pausePressed = true;
         }
     }
-    else { 
-        pausePressed = false; 
-        musicManager.Resume();
+    else
+    {
+        pausePressed = false;
     }
-
-    if (isGamePaused) return;
+    if (isGamePaused)
+        return;
 
     this->QuitCheck();
 
@@ -464,10 +471,12 @@ void GameState::Update(float dt)
     // Weryfikacja warunku koñca gry
     if (playerHp <= 0) {
         this->nextState = new panelState(this->windowPtr,"HA HA HA HA HA HA",new MainMenuState(this->windowPtr));
+        musicManager.Stop();
         quit = true;
     }
     if (currentWave > waves && monsters.empty()) {
         this->nextState = new panelState(this->windowPtr, "GRATULCAJE! WYGRANA! WYGRANA!", new MainMenuState(this->windowPtr));
+        musicManager.Stop();
         quit = true;
     }
 }

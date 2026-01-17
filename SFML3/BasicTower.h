@@ -3,6 +3,7 @@
 #include "Tower.h"
 #include "Monster.h"
 #include "Bullet.h"
+#include <SFML/Audio.hpp>
 
 using namespace std;
 
@@ -32,5 +33,6 @@ public:
     void Draw(sf::RenderWindow& window) override;
 
 private:
-
+    sf::SoundBuffer shootBuffer;
+    sf::Sound shootSound;
 };

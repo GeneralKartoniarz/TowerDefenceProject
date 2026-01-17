@@ -2,7 +2,7 @@
 #include "Bullet.h"
 #include "Monster.h"
 #include <cmath>
-MissleTower::MissleTower(sf::Vector2f position)
+MissleTower::MissleTower(sf::Vector2f position):shootSound(shootBuffer)
 {
     // £adowanie zasobów graficznych
     LoadTexture("assets/missle_launcher/miss1.png");
@@ -17,6 +17,10 @@ MissleTower::MissleTower(sf::Vector2f position)
     // Ustawienie mechaniki szybkostrzelnoœci
     attackCooldown = 3.f;
     attackTimer = 0.f;
+
+    if (!shootBuffer.loadFromFile("assets/sfx/missleSound.wav"))
+        cout << "chuj";
+    shootSound.setVolume(40.f);
 
     // Definiowanie w³aœciwoœci transformacji obiektu
     tShape.setSize({ 50.f, 50.f });
@@ -59,6 +63,7 @@ void MissleTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector
         RotateToEnemy(target);
         bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 200.f,monsters));
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
+        shootSound.play();
     }
 }
 

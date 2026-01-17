@@ -1,7 +1,7 @@
 #include "HackerTower.h"
 #include "Tower.h"
 #include "Monster.h"
-HackerTower::HackerTower(sf::Vector2f position)
+HackerTower::HackerTower(sf::Vector2f position):shootSound(shootBuffer)
 {
     LoadTexture("assets/hacker_tower/hacker1.png");
 
@@ -14,6 +14,10 @@ HackerTower::HackerTower(sf::Vector2f position)
     // Ustawienie mechaniki szybkostrzelnoœci
     attackCooldown = 3.f;
     attackTimer = 0.f;
+
+    if (!shootBuffer.loadFromFile("assets/sfx/hackerSound.wav"))
+        cout << "c";
+    shootSound.setVolume(40.f);
 
     // Definiowanie w³aœciwoœci transformacji obiektu
     tShape.setSize({ 50.f, 50.f });
@@ -50,7 +54,9 @@ void HackerTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector
     {
         RotateToEnemy(target);
         target->ApplyEffect(Monster::StatusEffect::Stun, 2.f, .6f);
+        target->mHP -= 50;
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
+        shootSound.play();
     }
 }
 

@@ -1,7 +1,7 @@
 #include "EMPtower.h"
 #include "Tower.h"
 #include "Monster.h"
-EMPtower::EMPtower(sf::Vector2f position)
+EMPtower::EMPtower(sf::Vector2f position):shootSound(shootBuffer)
 {
     LoadTexture("assets/emp_tower/emp1.png");
 
@@ -14,7 +14,9 @@ EMPtower::EMPtower(sf::Vector2f position)
     // Ustawienie mechaniki szybkostrzelnoœci
     attackCooldown = 0.4f;
     attackTimer = 0.f;
-
+    if (!shootBuffer.loadFromFile("assets/sfx/EMPsound.wav"))
+        cout << "c";
+    shootSound.setVolume(40.f);
     // Definiowanie w³aœciwoœci transformacji obiektu
     tShape.setSize({ 50.f, 50.f });
     tShape.setOrigin(tShape.getSize() / 2.f); // Centrowanie punktu obrotu/pozycji
@@ -49,6 +51,7 @@ void EMPtower::Update(float dt,vector<unique_ptr<Monster>>& monsters,vector<uniq
     {
         RotateToEnemy(target);
         target->ApplyEffect(Monster::StatusEffect::Slow, 2.f, 0.5f);
+        shootSound.play();
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
     }
 

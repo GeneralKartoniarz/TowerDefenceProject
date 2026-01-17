@@ -1,24 +1,25 @@
 #include "BasicTower.h"
 #include "Bullet.h"
+#include <SFML/Audio.hpp>
 #include <cmath>
 
 using namespace std;
 
-BasicTower::BasicTower(sf::Vector2f position)
+BasicTower::BasicTower(sf::Vector2f position) : shootSound(shootBuffer)
 {
     // £adowanie zasobów graficznych
     LoadTexture("assets/cassual_tower/cas1.png");
-
     // Konfiguracja parametrów bojowych i ekonomicznych
     tCost = COST;
     tAttack = 25.f;
     tRange = 200.f;
     tName = "Basic Tower";
-
     // Ustawienie mechaniki szybkostrzelnoœci
     attackCooldown = 0.4f;
     attackTimer = 0.f;
-
+    if(!shootBuffer.loadFromFile("assets/sfx/basicSound.wav"))
+        cout << "c";
+    shootSound.setVolume(40.f);
     // Definiowanie w³aœciwoœci transformacji obiektu
     tShape.setSize({ 50.f, 50.f });
     tShape.setOrigin(tShape.getSize() / 2.f); // Centrowanie punktu obrotu/pozycji
@@ -60,6 +61,7 @@ void BasicTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<
         RotateToEnemy(target);
         bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 0.f, monsters));
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
+        shootSound.play();
     }
 }
 

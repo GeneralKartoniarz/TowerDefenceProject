@@ -8,7 +8,7 @@ using namespace std;
  * @brief Konstruktor LaserTower.
  * Definiuje profil bojowy wie¿y laserowej, ustawiaj¹c parametry zasiêgu i szybkoœci ognia.
  */
-LaserTower::LaserTower(sf::Vector2f position)
+LaserTower::LaserTower(sf::Vector2f position):shootSound(shootBuffer)
 {
     LoadTexture("assets/laser_tower/inferno1.png");
     // --- Konfiguracja parametrów bojowych ---
@@ -21,6 +21,10 @@ LaserTower::LaserTower(sf::Vector2f position)
     // Wartoœæ 0.0008f przy dt (np. 1/60s) oznacza strza³ niemal w ka¿dej klatce.
     attackCooldown = 0.0008f;
     attackTimer = 0.f;
+
+    if (!shootBuffer.loadFromFile("assets/sfx/laserSound.wav"))
+        cout << "chuj";
+    shootSound.setVolume(40.f);
 
     // --- Konfiguracja reprezentacji graficznej ---
     tShape.setSize({ 50.f, 50.f });
@@ -60,6 +64,7 @@ void LaserTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<
         {
             closestDistance = dist;
             target = monster.get(); // Pobranie surowego wskaŸnika do obserwacji celu
+            shootSound.play();
         }
     }
 

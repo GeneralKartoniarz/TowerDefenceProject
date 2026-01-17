@@ -9,4 +9,8 @@ public:
 
     void Update(float dt, vector<unique_ptr<Monster>>& monsters,vector<unique_ptr<Bullet>>& bullets) override;
     void Draw(sf::RenderWindow& window) override;
+
+private:
+    sf::SoundBuffer shootBuffer;
+    sf::Sound shootSound;
 };
