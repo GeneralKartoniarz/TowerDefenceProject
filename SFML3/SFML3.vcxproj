@@ -140,6 +140,7 @@
     <ClCompile Include="LaserTower.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="MissleTower.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="panelState.cpp" />
     <ClCompile Include="States.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="HackerTower.h" />
     <ClInclude Include="LaserTower.h" />
     <ClInclude Include="MainMenuState.h" />
+    <ClInclude Include="MissleTower.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="panelState.h" />
     <ClInclude Include="resource.h" />

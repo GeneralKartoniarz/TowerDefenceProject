@@ -19,6 +19,7 @@
     <ClCompile Include="panelState.cpp" />
     <ClCompile Include="EMPtower.cpp" />
     <ClCompile Include="HackerTower.cpp" />
+    <ClCompile Include="MissleTower.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicMonster.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="panelState.h" />
     <ClInclude Include="EMPtower.h" />
     <ClInclude Include="HackerTower.h" />
+    <ClInclude Include="MissleTower.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SFML3.rc" />

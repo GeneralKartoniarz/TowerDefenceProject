@@ -47,7 +47,7 @@ void Monster::Update(float dt, const vector<sf::Vector2f>& path)
     if (isStunned) {
         mSpeed = 0;
     }
-    else {
+    else if(effects.empty()){
         mSpeed = baseSpeed;
     }
 

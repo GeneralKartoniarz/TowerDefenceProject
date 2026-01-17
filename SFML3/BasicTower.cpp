@@ -58,7 +58,7 @@ void BasicTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<
     if (target)
     {
         RotateToEnemy(target);
-        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack)));
+        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 0.f, monsters));
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
     }
 }

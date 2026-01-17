@@ -9,6 +9,7 @@
 #include "BasicMonster.h"      
 #include "BasicTower.h"            
 #include "LaserTower.h"
+#include "MissleTower.h"
 #include "EMPtower.h"
 #include "Hackertower.h"
 #include "FastMonster.h"      
@@ -357,6 +358,13 @@ void GameState::Update(float dt)
         else if (buttons[3].IsButtonClicked(mouseX, mouseY) && playerGold >= HackerTower::COST) {
             towers.push_back(make_unique<HackerTower>(tiles[selectedTile].shape.getPosition()));
             playerGold -= HackerTower::COST;
+            tiles[selectedTile].state = Tile::TileState::Locked;
+            tiles[selectedTile].Refresh();
+            isTileSelected = false;
+        }
+        else if (buttons[4].IsButtonClicked(mouseX, mouseY) && playerGold >= MissleTower::COST) {
+            towers.push_back(make_unique<MissleTower>(tiles[selectedTile].shape.getPosition()));
+            playerGold -= MissleTower::COST;
             tiles[selectedTile].state = Tile::TileState::Locked;
             tiles[selectedTile].Refresh();
             isTileSelected = false;
