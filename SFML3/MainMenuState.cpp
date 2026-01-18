@@ -40,7 +40,8 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr, bool isMuted)
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
     musicManager.LoadMusic("menu","assets/music/menu.mp3");
-    
+    musicManager.Play("menu");
+
     // --- Konfiguracja interfejsu: Menu G³ówne ---
     startBtn.text.setString("Start");
     startBtn.SetPosition(screenWidth / 2, screenHeight / 3);
@@ -112,10 +113,7 @@ void MainMenuState::QuitCheck()
 
 void MainMenuState::Update(float dt)
 {
-    if (!isMuted)
-        musicManager.Resume();
-    else
-        musicManager.Pause();
+
     this->QuitCheck();
     float mouseX = sf::Mouse::getPosition(*windowPtr).x;
     float mouseY = sf::Mouse::getPosition(*windowPtr).y;

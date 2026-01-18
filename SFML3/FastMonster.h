@@ -15,4 +15,6 @@ public:
      * @param startPos Wspó³rzêdne punktu pocz¹tkowego na œcie¿ce.
      */
     FastMonster(sf::Vector2f startPos);
+    sf::Texture texture;           
+    void LoadTexture(const string& path);
 };

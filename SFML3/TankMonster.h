@@ -15,4 +15,6 @@ public:
      * @param startPos Pocz¹tkowe wspó³rzêdne spawnu na œcie¿ce.
      */
     TankMonster(sf::Vector2f startPos);
+    sf::Texture texture;       
+    void LoadTexture(const string& path);
 };

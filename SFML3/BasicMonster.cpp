@@ -1,9 +1,19 @@
 #include "BasicMonster.h"
 
+
+void BasicMonster::LoadTexture(const string& path)
+{
+    if (!texture.loadFromFile(path))
+    {
+        cout << "B³¹d krytyczny: Nie za³adowano tekstury: " << path << endl;
+    }
+    shape.setTexture(&texture);
+}
 // Definicja konstruktora przekazuj¹cego pozycjê startow¹ do klasy bazowej
 BasicMonster::BasicMonster(sf::Vector2f startPos)
     : Monster(startPos)
 {
+    LoadTexture("assets/AI/AI1.png");
     // Konfiguracja ¿ywotnoœci (HP)
     mMaxHP = 100.f;
     mHP = mMaxHP;

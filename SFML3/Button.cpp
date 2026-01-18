@@ -8,7 +8,7 @@ void Button::LoadTexture(const string& path)
 {
     if (!texture.loadFromFile(path))
     {
-        cout << "B³¹d krytyczny: Nie za³adowano tekstury: " << path << endl;
+        cout << "B³¹d: Nie za³adowano tekstury: " << path << endl;
     }
     shape.setTexture(&texture);
 }
@@ -26,6 +26,7 @@ Button::Button(sf::Font& font) : text(font)
 
     // Wstêpne wyrównanie tekstu do œrodka przycisku
     CenterText();
+
 }
 
 Button::~Button()

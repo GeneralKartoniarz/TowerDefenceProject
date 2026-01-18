@@ -1,4 +1,12 @@
 #include "Boss.h"
+void Boss::LoadTexture(const string& path)
+{
+    if (!texture.loadFromFile(path))
+    {
+        cout << "B³¹d: Nie za³adowano tekstury: " << path << endl;
+    }
+    shape.setTexture(&texture);
+}
 Boss::Boss(sf::Vector2f startPos): Monster(startPos)
 {
     // Statystyki wytrzyma³oœciowe (3x wy¿sze HP ni¿ BasicMonster)
@@ -25,7 +33,8 @@ Boss::Boss(sf::Vector2f startPos): Monster(startPos)
     baseSpeed = mSpeed;
 
     // Reprezentacja wizualna (kolor stalowy/niebieski sugeruj¹cy opancerzenie)
-    normalColor = sf::Color(100, 150, 200);
+    normalColor = sf::Color(255, 255, 255);
+    LoadTexture("assets/AI/AI5.png");
     shape.setSize({ 100.f, 100.f });
     shape.setOrigin(shape.getSize() / 2.f); // Centrowanie œrodka ciê¿koœci dla obrotów i kolizji
     shape.setFillColor(sf::Color::Red);

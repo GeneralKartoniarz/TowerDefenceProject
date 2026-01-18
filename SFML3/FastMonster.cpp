@@ -1,9 +1,17 @@
 #include "FastMonster.h"
-
+void FastMonster::LoadTexture(const string& path)
+{
+    if (!texture.loadFromFile(path))
+    {
+        cout << "B³¹d: Nie za³adowano tekstury: " << path << endl;
+    }
+    shape.setTexture(&texture);
+}
 // Inicjalizacja instancji szybkiego przeciwnika poprzez konstruktor klasy bazowej
 FastMonster::FastMonster(sf::Vector2f startPos)
     : Monster(startPos)
 {
+    LoadTexture("assets/AI/AI2.png");
     // Konfiguracja wytrzyma³oœci - ni¿sza wartoœæ HP czyni go podatnym na pojedyncze ataki
     mMaxHP = 60.f;
     mHP = mMaxHP;

@@ -15,4 +15,6 @@ public:
      * @param startPos Pocz¹tkowe wspó³rzêdne spawnu.
      */
     BasicMonster(sf::Vector2f startPos);
+    sf::Texture texture;            
+    void LoadTexture(const string& path);
 };

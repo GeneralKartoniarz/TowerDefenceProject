@@ -52,7 +52,7 @@ public:
     // Weryfikuje, czy w bie¿¹cej klatce nast¹pi³a interakcja potwierdzaj¹ca klikniêcie
     bool IsButtonClicked(float mouseX, float mouseY);
 
-    sf::Texture texture;            // Unikalna tekstura przycisku
+    sf::Texture texture;            
     void LoadTexture(const string& path);
 
     // Wyœwietla t³o oraz tekst przycisku w zadanym oknie renderowania
