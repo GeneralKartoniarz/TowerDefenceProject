@@ -15,7 +15,7 @@ using namespace std;
 // Globalny modyfikator wp³ywaj¹cy na balans gry w GameState
 int difficulty = 1;
 
-MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
+MainMenuState::MainMenuState(sf::RenderWindow* windowPtr, bool isMuted)
     : States(windowPtr),
     startBtn(fontMainMenu),
     quitBtn(fontMainMenu),
@@ -27,18 +27,20 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     selectMenuLevelTwo(fontMainMenu),
     selectMenuLevelThree(fontMainMenu),
     backToMenu(fontMainMenu),
-    titleText(fontMainMenu)
+    titleText(fontMainMenu),
+    muteMusic(fontMainMenu),
+    muteSfx(fontMainMenu)
 {
     // £adowanie zasobów typograficznych
     if (!fontMainMenu.openFromFile("comicFont.ttf")) {
         cout << "B³¹d krytyczny: Nie odnaleziono pliku czcionki.";
     }
-
+    this->isMuted = isMuted;
     this->windowPtr = windowPtr;
     this->screenHeight = windowPtr->getSize().y;
     this->screenWidth = windowPtr->getSize().x;
     musicManager.LoadMusic("menu","assets/music/menu.mp3");
-    musicManager.Play("menu");
+    
     // --- Konfiguracja interfejsu: Menu G³ówne ---
     startBtn.text.setString("Start");
     startBtn.SetPosition(screenWidth / 2, screenHeight / 3);
@@ -86,6 +88,14 @@ MainMenuState::MainMenuState(sf::RenderWindow* windowPtr)
     backToMenu.LoadTexture("assets/button/menu1.png");
     backToMenu.text.setString("Cofnij");
     backToMenu.SetPosition(backToMenu.shape.getSize().x, backToMenu.shape.getSize().y);
+    muteMusic.LoadTexture("assets/button/menu1.png");
+    muteMusic.text.setString("Mute Music");
+    muteMusic.SetPosition(screenWidth - screenWidth * 0.3, screenHeight - screenHeight * 0.9);
+    muteSfx.LoadTexture("assets/button/menu1.png");
+    muteSfx.text.setString("Mute Sfx");
+    muteSfx.SetPosition(screenWidth - screenWidth * 0.3, screenHeight - screenHeight * 0.6);
+    musicManager.Play("menu");
+
 }
 
 MainMenuState::~MainMenuState() {}
@@ -102,6 +112,10 @@ void MainMenuState::QuitCheck()
 
 void MainMenuState::Update(float dt)
 {
+    if (!isMuted)
+        musicManager.Resume();
+    else
+        musicManager.Pause();
     this->QuitCheck();
     float mouseX = sf::Mouse::getPosition(*windowPtr).x;
     float mouseY = sf::Mouse::getPosition(*windowPtr).y;
@@ -142,25 +156,24 @@ void MainMenuState::Update(float dt)
             selectMenuHard.shape.setFillColor(selectMenuHard.hoverColor);
             selectMenuEasy.shape.setFillColor(selectMenuEasy.normalColor);
             selectMenuNormal.shape.setFillColor(selectMenuNormal.normalColor);
-            cout << difficulty;
         }
 
         // Procedura uruchamiania gry: wybór mapy -> nadpisanie pliku roboczego -> zmiana stanu
         if (selectMenuLevelOne.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_1.txt", "map.txt");
-            nextState = new GameState(windowPtr, difficulty);
+            nextState = new GameState(windowPtr, difficulty, isMuted, isSfxMuted);
             quit = true;
             musicManager.Stop();
         }
         if (selectMenuLevelTwo.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_2.txt", "map.txt");
-            nextState = new GameState(windowPtr, difficulty);
+            nextState = new GameState(windowPtr, difficulty, isMuted, isSfxMuted);
             quit = true;
             musicManager.Stop();
         }
         if (selectMenuLevelThree.IsButtonClicked(mouseX, mouseY)) {
             CopyMap("map_3.txt", "map.txt");
-            nextState = new GameState(windowPtr, difficulty);
+            nextState = new GameState(windowPtr, difficulty, isMuted, isSfxMuted);
             quit = true;
             musicManager.Stop();
         }
@@ -174,6 +187,22 @@ void MainMenuState::Update(float dt)
         backToMenu.UpdateHover(mouseX, mouseY);
         if (backToMenu.IsButtonClicked(mouseX, mouseY)) {
             menuState = MenuState::Main;
+        }
+        muteMusic.UpdateHover(mouseX, mouseY);
+        muteSfx.UpdateHover(mouseX, mouseY);
+        if (muteMusic.IsButtonClicked(mouseX, mouseY)) {
+            if (!isMuted)
+                isMuted = true;
+            else
+                isMuted = false;
+            cout << isMuted;
+        }
+        if (muteSfx.IsButtonClicked(mouseX, mouseY)) {
+            if (!isSfxMuted)
+                isSfxMuted = true;
+            else
+                isSfxMuted = false;
+            cout << isSfxMuted;
         }
     }
 }
@@ -199,6 +228,8 @@ void MainMenuState::Render(sf::RenderWindow* windowPtr)
     }
     else if (menuState == MenuState::Options) {
         backToMenu.Draw(*windowPtr);
+        muteMusic.Draw(*windowPtr);
+        muteSfx.Draw(*windowPtr);
     }
 }
 

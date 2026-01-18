@@ -37,7 +37,7 @@ void Game::InitStates()
 {
     // Konfiguracja pocz¹tkowej sceny aplikacji
     states.clear();
-    this->states.push_back(new MainMenuState(this->windowPtr));
+    this->states.push_back(new MainMenuState(this->windowPtr, false));
     activeState = 1;
 }
 

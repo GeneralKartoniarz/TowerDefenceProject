@@ -37,12 +37,12 @@ public:
      * @brief Renderuje teksturê wie¿y.
      */
     void Draw(sf::RenderWindow& window) override;
-
+    sf::SoundBuffer shootBuffer;
+    sf::Sound shootSound;
 private:
     float heat;
     float heatMax;
     float cooldownTime;
     float cooldownCounter;
-    sf::SoundBuffer shootBuffer;
-    sf::Sound shootSound;
+
 };

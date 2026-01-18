@@ -63,7 +63,7 @@ void MissleTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector
     if (target)
     {
         RotateToEnemy(target);
-        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 200.f,monsters));
+        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 200.f,monsters,Monster::AttackType::Explosive));
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
         shootSound.play();
     }

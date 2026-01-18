@@ -19,7 +19,6 @@ BasicTower::BasicTower(sf::Vector2f position) : shootSound(shootBuffer)
     attackTimer = 0.f;
     if(!shootBuffer.loadFromFile("assets/sfx/basicSound.wav"))
         cout << "c";
-    shootSound.setVolume(40.f);
     // Definiowanie w³aœciwoœci transformacji obiektu
     tShape.setSize({ 50.f, 50.f });
     tShape.setOrigin(tShape.getSize() / 2.f); // Centrowanie punktu obrotu/pozycji
@@ -60,7 +59,7 @@ void BasicTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<
     if (target)
     {
         RotateToEnemy(target);
-        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 0.f, monsters));
+        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 0.f, monsters, Monster::AttackType::Basic));
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
         shootSound.play();
     }

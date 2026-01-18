@@ -31,8 +31,8 @@ public:
 
     // Odpowiada za wyœwietlenie grafiki wie¿y oraz opcjonalnych elema entów (np. zasiêgu)
     void Draw(sf::RenderWindow& window) override;
-
-private:
     sf::SoundBuffer shootBuffer;
     sf::Sound shootSound;
+private:
+
 };

@@ -41,7 +41,43 @@ public:
         float value; 
     };
     vector<ActiveEffect> effects;
+    enum class AttackType
+    {
+        Basic,
+        Laser,
+        Explosive
+        // dodaj inne typy jeœli chcesz
+    };
 
+    void TakeDamage(float damage, AttackType attackType)
+    {
+        // jeœli potwór jest odporny na dany typ ataku, nic nie robi
+        if (IsImmuneTo(attackType))
+            return;
+
+        mHP -= damage;
+        if (mHP <= 0.f)
+        {
+            mHP = 0.f;
+            isDead = true;
+        }
+
+        ChangeHpBar();
+    }
+
+    bool IsImmuneTo(AttackType attackType)
+    {
+        // prosty przyk³ad — mo¿na mieæ wektor odpornoœci
+        for (auto& at : immuneTypes)
+            if (at == attackType) return true;
+        return false;
+    }
+
+    void AddImmunity(AttackType attackType)
+    {
+        immuneTypes.push_back(attackType);
+    }
+    vector<AttackType> immuneTypes;
     float baseSpeed;
     bool isStunned = false;
 

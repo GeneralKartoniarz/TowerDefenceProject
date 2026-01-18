@@ -21,7 +21,7 @@ class GameState : public States
 {
 public:
     // Inicjalizuje sesjê gry z uwzglêdnieniem wybranego poziomu trudnoœci
-    GameState(sf::RenderWindow* windowPtr, int difficulty);
+    GameState(sf::RenderWindow* windowPtr, int difficulty, bool isMuted, bool isSfxMuted);
     ~GameState();
 
     // --- Parametry geometryczne œwiata gry ---
@@ -37,12 +37,14 @@ public:
     int playerGold = 2000;      // Dostêpne fundusze na zakup wie¿
     int playerHp = 200;         // Punkty ¿ycia bazy gracza
     int currentWave = 1;        // Numer bie¿¹cej fali przeciwników
-    int waves = 1;             // Maksymalna liczba fal w scenariuszu
+    int waves = 5;             // Maksymalna liczba fal w scenariuszu
     Boss* currentBoss = nullptr;
     // --- Zarz¹dzanie logik¹ fali i interakcji ---
     int selectedTile;           // Indeks aktualnie podœwietlonego kafelka
     bool isTileSelected = false;
     bool isGamePaused = false;
+    bool isMuted;
+    bool isSfxMuted;
     bool waveActive = false;    // Flaga okreœlaj¹ca, czy trwa faza walki
     int monsterPerWave = 20;    // Bazowa liczba wrogów do zespawnowania
     int monstersSpawnedThisWave = 0;
