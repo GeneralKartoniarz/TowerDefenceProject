@@ -1,8 +1,9 @@
 #include "BasicTower.h"
 #include "Bullet.h"
+#include "Monster.h"
 #include <SFML/Audio.hpp>
 #include <cmath>
-
+class Monster;
 using namespace std;
 
 BasicTower::BasicTower(sf::Vector2f position) : shootSound(shootBuffer)
@@ -60,7 +61,7 @@ void BasicTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<
     if (target)
     {
         RotateToEnemy(target);
-        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 0.f, monsters));
+        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 1200.f, tAttack, 0.f, monsters, Monster::AttackType::Physical));
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
         shootSound.play();
     }

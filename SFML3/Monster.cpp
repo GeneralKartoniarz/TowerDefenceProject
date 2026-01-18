@@ -1,6 +1,7 @@
 #include "Monster.h"
 #include <cmath>
 #include <iostream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -86,6 +87,26 @@ void Monster::Update(float dt, const vector<sf::Vector2f>& path)
     UpdateEffects(dt);
 
 }
+
+void Monster::TakeDamage(float damage, AttackType type)
+{
+    float resistance = 0.f;
+
+    //DLACZEGO CONATINS NIE DZIALA CO TO W OGOLE ZA MONSTRUM
+    auto it = resistances.find(type);
+    if (it != resistances.end())
+        resistance = it->second;
+
+    resistance = clamp(resistance, 0.f, 1.f);
+
+    float finalDamage = damage * (1.f - resistance);
+    mHP -= finalDamage;
+
+    if (mHP < 0)
+        mHP = 0;
+}
+
+
 
 /**
  * @brief Skaluje i pozycjonuje pasek zdrowia nad g³ow¹ potwora.

@@ -1,25 +1,21 @@
 #include "Bullet.h"
 #include "Monster.h"
 #include <cmath>
-using namespace std;
 
-Bullet::Bullet(sf::Vector2f startPos, Monster* target, float speed, float damage, float aoeRadius,
-    vector<unique_ptr<Monster>>& monsters)
-    : mTarget(target), mSpeed(speed), mDamage(damage), mAoERadius(aoeRadius), mMonsters(monsters)
+Bullet::Bullet(sf::Vector2f startPos, Monster* target, float speed, float damage,float aoeRadius, const vector<Monster*>& monsters, Monster::AttackType attackType)
+    : mTarget(target), mSpeed(speed), mDamage(damage), mAoERadius(aoeRadius), mMonsters(monsters), mAttackType(attackType)
 {
     shape.setRadius(6.f);
     shape.setOrigin({ 6.f, 6.f });
     shape.setFillColor(sf::Color(149, 0, 0));
     shape.setPosition(startPos);
+
     if (target)
     {
         sf::Vector2f dir = target->shape.getPosition() - startPos;
         float len = sqrt(dir.x * dir.x + dir.y * dir.y);
-
-        if (len != 0)
-            direction = dir / len;
+        if (len != 0) direction = dir / len;
     }
-    mSpeed = speed * 5;
 }
 
 void Bullet::Update(float dt)
@@ -31,20 +27,17 @@ void Bullet::Update(float dt)
         return;
     }
 
-    // ruch po linii prostej
     shape.move(direction * mSpeed * dt);
 
-    // kolizja z potworami
     for (auto& monster : mMonsters)
     {
-        if (monster->isDead)
-            continue;
+        if (monster->isDead) continue;
 
         float dx = monster->shape.getPosition().x - shape.getPosition().x;
         float dy = monster->shape.getPosition().y - shape.getPosition().y;
         float dist = sqrt(dx * dx + dy * dy);
 
-        if (dist < 12.f) // trafienie
+        if (dist < 12.f)
         {
             if (mAoERadius > 0.f)
             {
@@ -53,14 +46,13 @@ void Bullet::Update(float dt)
                     float ax = m->shape.getPosition().x - shape.getPosition().x;
                     float ay = m->shape.getPosition().y - shape.getPosition().y;
                     float ad = sqrt(ax * ax + ay * ay);
-
                     if (ad <= mAoERadius)
-                        m->mHP -= mDamage;
+                        m->TakeDamage(mDamage, mAttackType);
                 }
             }
             else
             {
-                monster->mHP -= mDamage;
+                monster->TakeDamage(mDamage, mAttackType);
             }
 
             isDead = true;
@@ -68,7 +60,6 @@ void Bullet::Update(float dt)
         }
     }
 }
-
 
 void Bullet::Draw(sf::RenderWindow& window)
 {

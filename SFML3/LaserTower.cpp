@@ -1,5 +1,6 @@
 #include "LaserTower.h"
 #include "Bullet.h"
+#include "Monster.h"
 #include <cmath>
 
 using namespace std;
@@ -86,7 +87,7 @@ void LaserTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<
     {
         RotateToEnemy(target);
         // Utworzenie inteligentnego wskaŸnika na pocisk i dodanie go do globalnej listy w GameState
-        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 1200.f, tAttack, 0.f,monsters));
+        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 1200.f, tAttack, 0.f,monsters,Monster::AttackType::Laser));
         shootSound.play();
         // Resetowanie licznika czasu do zera (inicjacja prze³adowania)
         attackTimer = 0.f;
