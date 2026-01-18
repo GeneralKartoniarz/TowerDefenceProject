@@ -142,6 +142,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="MissleTower.cpp" />
+    <ClCompile Include="MODTEMPLATE.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="panelState.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="LaserTower.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MissleTower.h" />
+    <ClInclude Include="MODTEMPLATE.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MusicManager.h" />
     <ClInclude Include="panelState.h" />

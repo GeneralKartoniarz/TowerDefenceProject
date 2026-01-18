@@ -22,6 +22,7 @@
     <ClCompile Include="MissleTower.cpp" />
     <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="MODTEMPLATE.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicMonster.h" />
@@ -45,6 +46,7 @@
     <ClInclude Include="MissleTower.h" />
     <ClInclude Include="MusicManager.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="MODTEMPLATE.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SFML3.rc" />
