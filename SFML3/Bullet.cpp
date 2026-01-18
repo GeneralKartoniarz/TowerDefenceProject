@@ -11,48 +11,64 @@ Bullet::Bullet(sf::Vector2f startPos, Monster* target, float speed, float damage
     shape.setOrigin({ 6.f, 6.f });
     shape.setFillColor(sf::Color(149, 0, 0));
     shape.setPosition(startPos);
+    if (target)
+    {
+        sf::Vector2f dir = target->shape.getPosition() - startPos;
+        float len = sqrt(dir.x * dir.x + dir.y * dir.y);
+
+        if (len != 0)
+            direction = dir / len;
+    }
+    mSpeed = speed * 5;
 }
 
 void Bullet::Update(float dt)
 {
-    if (!mTarget || mTarget->isDead)
+    mLifeTime -= dt;
+    if (mLifeTime <= 0.f)
     {
         isDead = true;
         return;
     }
 
-    sf::Vector2f targetPos = mTarget->shape.getPosition();
-    sf::Vector2f pos = shape.getPosition();
-    sf::Vector2f dir = targetPos - pos;
+    // ruch po linii prostej
+    shape.move(direction * mSpeed * dt);
 
-    float length = sqrt(dir.x * dir.x + dir.y * dir.y);
-
-    if (length < 10.f)
+    // kolizja z potworami
+    for (auto& monster : mMonsters)
     {
-        if (mAoERadius > 0.f)
+        if (monster->isDead)
+            continue;
+
+        float dx = monster->shape.getPosition().x - shape.getPosition().x;
+        float dy = monster->shape.getPosition().y - shape.getPosition().y;
+        float dist = sqrt(dx * dx + dy * dy);
+
+        if (dist < 12.f) // trafienie
         {
-            // AoE - wszystkie potwory w zasiêgu
-            for (auto& monster : mMonsters)
+            if (mAoERadius > 0.f)
             {
-                float dx = monster->shape.getPosition().x - shape.getPosition().x;
-                float dy = monster->shape.getPosition().y - shape.getPosition().y;
-                float dist = sqrt(dx * dx + dy * dy);
-                if (dist <= mAoERadius)
-                    monster->mHP -= mDamage;
+                for (auto& m : mMonsters)
+                {
+                    float ax = m->shape.getPosition().x - shape.getPosition().x;
+                    float ay = m->shape.getPosition().y - shape.getPosition().y;
+                    float ad = sqrt(ax * ax + ay * ay);
+
+                    if (ad <= mAoERadius)
+                        m->mHP -= mDamage;
+                }
             }
-        }
-        else
-        {
-            mTarget->mHP -= mDamage;
-        }
+            else
+            {
+                monster->mHP -= mDamage;
+            }
 
-        isDead = true;
-        return;
+            isDead = true;
+            return;
+        }
     }
-
-    // poruszanie w stronê celu
-    shape.move((dir / length) * mSpeed * dt);
 }
+
 
 void Bullet::Draw(sf::RenderWindow& window)
 {

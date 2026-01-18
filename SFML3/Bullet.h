@@ -20,9 +20,11 @@ public:
 
 private:
     Monster* mTarget;                         // cel pocisku
+    sf::Vector2f direction;
     float mSpeed;
     float mDamage;
     float mAoERadius = 0.f;                   // promieñ AoE, 0 = brak AoE
+    float mLifeTime = .2f;
     sf::CircleShape shape;
 
     vector<unique_ptr<Monster>>& mMonsters;   // referencja do wszystkich potworów

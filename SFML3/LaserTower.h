@@ -39,6 +39,10 @@ public:
     void Draw(sf::RenderWindow& window) override;
 
 private:
+    float heat;
+    float heatMax;
+    float cooldownTime;
+    float cooldownCounter;
     sf::SoundBuffer shootBuffer;
     sf::Sound shootSound;
 };

@@ -19,7 +19,7 @@ MissleTower::MissleTower(sf::Vector2f position):shootSound(shootBuffer)
     attackTimer = 0.f;
 
     if (!shootBuffer.loadFromFile("assets/sfx/missleSound.wav"))
-        cout << "chuj";
+        cout << "c";
     shootSound.setVolume(40.f);
 
     // Definiowanie w³aœciwoœci transformacji obiektu

@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClCompile Include="BasicMonster.cpp" />
     <ClCompile Include="BasicTower.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="EMPtower.cpp" />
@@ -152,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="BasicMonster.h" />
     <ClInclude Include="BasicTower.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="EMPtower.h" />

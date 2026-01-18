@@ -6,6 +6,7 @@
 #include "Tile.h"           
 #include "Button.h"      
 #include "Bullet.h"      
+#include "Boss.h"      
 #include "Monster.h"      
 #include "BasicMonster.h"      
 #include "BasicTower.h"            
@@ -34,6 +35,7 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     : States(windowPtr), hpText(fontGameState), goldText(fontGameState), turnText(fontGameState), pauseText(fontGameState), waveBtn(fontGameState), upgradeButton(fontGameState),upgradeText(fontGameState)
 {
     musicManager.LoadMusic("game", "assets/music/game.mp3");
+    musicManager.LoadMusic("boss", "assets/music/boss.mp3");
     musicManager.Play("game");
     // 1. Deserializacja mapy z pliku zewnêtrznego
     ifstream mapFile;
@@ -275,20 +277,39 @@ void GameState::Update(float dt)
     if (waveActive)
     {
         spawnTimer += dt;
-        if (spawnTimer >= spawnDelay && monstersSpawnedThisWave < monsterPerWave)
-        {
-            spawnTimer = 0.f;
-            if (!pathPoints.empty())
+        if (currentWave != waves) {
+            if (spawnTimer >= spawnDelay && monstersSpawnedThisWave < monsterPerWave)
             {
-                int type = rand() % 3;
-                if (type == 0) monsters.push_back(make_unique<BasicMonster>(pathPoints[0]));
-                else if (type == 1) monsters.push_back(make_unique<FastMonster>(pathPoints[0]));
-                else monsters.push_back(make_unique<TankMonster>(pathPoints[0]));
+                spawnTimer = 0.f;
+                if (!pathPoints.empty())
+                {
+                    int type = rand() % 3;
+                    if (type == 0) monsters.push_back(make_unique<BasicMonster>(pathPoints[0]));
+                    else if (type == 1) monsters.push_back(make_unique<FastMonster>(pathPoints[0]));
+                    else monsters.push_back(make_unique<TankMonster>(pathPoints[0]));
 
-                monsters.back()->baseSpeed *= difficulty;
-                monstersSpawnedThisWave++;
+                    monsters.back()->baseSpeed *= difficulty;
+                    monstersSpawnedThisWave++;
+                }
             }
         }
+        else {
+            musicManager.Play("boss");
+            if (spawnTimer >= spawnDelay && monstersSpawnedThisWave < 1)
+            {
+                monsterPerWave = 1;
+                spawnTimer = 0.f;
+                if (!pathPoints.empty())
+                {
+                    monsters.push_back(make_unique<Boss>(pathPoints[0]));
+                    monsters.back()->baseSpeed *= difficulty;
+                    monstersSpawnedThisWave++;
+                }
+            }
+        }
+            
+
+        
     }
 
     // Przetwarzanie stanów jednostek przeciwnika
@@ -420,22 +441,25 @@ void GameState::Update(float dt)
 
     for (auto& tower : towers)
     {
+
+
+        Tower* temp;
+
         if (tower->IsMouseOver(mouseX, mouseY) &&sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
         {
             selectedTowerPtr = tower.get();
+            temp = selectedTowerPtr;
             showUpgradePanel = true;
             clickedTower = true;
             selectedTowerPtr->isRangeShown = true;
             upgradePanel.setPosition(tower->tShape.getPosition() + sf::Vector2f(40, -40));
             upgradeText.setPosition(upgradePanel.getPosition() + sf::Vector2f(10, 10));
-            upgradeButton.SetPosition(
-                upgradePanel.getPosition().x + 100,
-                upgradePanel.getPosition().y + 70
-            );
+            upgradeButton.SetPosition(upgradePanel.getPosition().x + 100,upgradePanel.getPosition().y + 70);
         }
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !clickedTower)
     {
+
         if (showUpgradePanel && !upgradePanel.getGlobalBounds().contains({ mouseX, mouseY }))
         {
             showUpgradePanel = false;
@@ -455,9 +479,7 @@ void GameState::Update(float dt)
         else
             upgradeText.setString("MAX LEVEL");
 
-        if (upgradeButton.IsButtonClicked(mouseX, mouseY) &&
-            cost != -1 &&
-            playerGold >= cost)
+        if (upgradeButton.IsButtonClicked(mouseX, mouseY) && cost != -1 && playerGold >= cost)
         {
             playerGold -= cost;
             selectedTowerPtr->Upgrade();
