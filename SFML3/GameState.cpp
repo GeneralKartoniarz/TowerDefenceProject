@@ -411,7 +411,7 @@ void GameState::Update(float dt)
     buttons[4].text.setCharacterSize(20);
     buttons[4].CenterText();
 
-    buttons[5].text.setString("Support\nNode");
+    buttons[5].text.setString("MOD\nTEMPLATE");
     buttons[5].text.setCharacterSize(20);
     buttons[5].CenterText();
 
@@ -471,7 +471,16 @@ void GameState::Update(float dt)
             isTileSelected = false;
         }
         else if (buttons[5].IsButtonClicked(mouseX, mouseY)) {
-            cout << "ULEPSZ";
+            //MOD
+            //TUTAJ DODAJ PARAMETRY W£ASNEJ WIE¯YCZKI
+           /* towers.push_back(make_unique<X>(tiles[selectedTile].shape.getPosition()));
+            playerGold -= X::COST;
+            X* tower = dynamic_cast<X*>(towers.back().get());
+            if (isSfxMuted)
+                tower->shootSound.setVolume(0);
+            tiles[selectedTile].state = Tile::TileState::Locked;
+            tiles[selectedTile].Refresh();
+            isTileSelected = false;*/
         }
     }
 
