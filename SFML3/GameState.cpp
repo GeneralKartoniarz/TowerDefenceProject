@@ -1,14 +1,19 @@
 #include "GameState.h"   
 #include "panelState.h"   
 #include "MainMenuState.h"   
+#include "MusicManager.h"   
 #include "States.h"           
 #include "Tile.h"           
 #include "Button.h"      
 #include "Bullet.h"      
+#include "Boss.h"      
 #include "Monster.h"      
 #include "BasicMonster.h"      
 #include "BasicTower.h"            
-#include "LaserTower.h"            
+#include "LaserTower.h"
+#include "MissleTower.h"
+#include "EMPtower.h"
+#include "Hackertower.h"
 #include "FastMonster.h"      
 #include "TankMonster.h"      
 #include "Tower.h"      
@@ -26,14 +31,21 @@
 
 using namespace std;
 
-GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
-    : States(windowPtr), hpText(fontGameState), goldText(fontGameState), turnText(fontGameState), pauseText(fontGameState), waveBtn(fontGameState)
+GameState::GameState(sf::RenderWindow* windowPtr, int difficulty, bool isMuted, bool isSfxMuted)
+    : States(windowPtr), hpText(fontGameState), goldText(fontGameState), turnText(fontGameState), pauseText(fontGameState), waveBtn(fontGameState), upgradeButton(fontGameState),upgradeText(fontGameState)
 {
+    musicManager.LoadMusic("game", "assets/music/game.mp3");
+    musicManager.LoadMusic("boss", "assets/music/boss.mp3");
+    this->isSfxMuted = isSfxMuted;
+    this->isMuted = isMuted;
+    if(!isMuted)
+        musicManager.Play("game");
     // 1. Deserializacja mapy z pliku zewnêtrznego
     ifstream mapFile;
     mapFile.open("map.txt");
     string mapString;
     string tempString;
+
     while (getline(mapFile, tempString)) {
         mapString += tempString;
     }
@@ -59,7 +71,8 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     pauseText.setFillColor(sf::Color::Red);
     pauseText.setOrigin({ pauseText.getLocalBounds().size.x / 2.f, pauseText.getLocalBounds().size.y / 2.f });
     pauseText.setPosition({ this->screenWidth / 2.f, this->screenHeight / 2.f });
-
+    pauseBackground.setSize({ 1920, 1080 });
+    pauseBackground.setFillColor(sf::Color(150, 0, 0, 100));
     // Inicjalizacja kontrolera fal (Wave Button)
     waveBtn.SetPosition(screenWidth - screenWidth / 11, screenHeight / 11);
     waveBtn.shape.setScale({ 0.5f, 1.f });
@@ -68,7 +81,29 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
     waveBtn.text.setCharacterSize(13.f);
     waveBtn.text.setString("START");
     waveBtn.CenterText();
+    waveBtn.shape.setFillColor(waveBtn.normalColor);
+    waveBtn.LoadTexture("assets/button/menu2.png");
     waveBtn.text.setFillColor(sf::Color::Red);
+
+    upgradePanel.setSize({ 200.f, 100.f });
+    upgradePanel.setFillColor(sf::Color(30, 30, 30, 220));
+    upgradePanel.setOutlineThickness(2.f);
+    upgradePanel.setOutlineColor(sf::Color::White);
+
+    upgradeText.setFont(fontGameState);
+    upgradeText.setCharacterSize(16);
+    upgradeText.setFillColor(sf::Color::White);
+
+    upgradeButton.text.setString("UPGRADE");
+    upgradeButton.text.setCharacterSize(6);
+    upgradeButton = Button(fontGameState);
+    upgradeButton.text.setString("UPGRADE");
+    upgradeButton.text.setCharacterSize(16);
+    upgradeButton.text.setFillColor(sf::Color::White);
+    upgradeButton.CenterText();
+    upgradeButton.hoverColor = sf::Color(0, 0,0,0);
+    upgradeButton.normalColor = sf::Color(0, 0,0,0);
+
 
     // 3. Generowanie siatki gry (Grid System)
     tiles.clear();
@@ -136,7 +171,7 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
             if (!foundNext) endOfPath = true;
         }
     }
-
+    mapFile.close();
     // 5. Inicjalizacja interfejsu sklepu (Tower Shop)
     int buttonCount = 6;
     float buttonSpacing = 20.f;
@@ -161,8 +196,8 @@ GameState::GameState(sf::RenderWindow* windowPtr, int difficulty)
         buttons[i].hoverColor = sf::Color(255, 200, 0);
         buttons[i].shape.setFillColor(buttons[i].normalColor);
         buttons[i].SetPosition(startX + i * (buttonWidth + buttonSpacing), y);
+        buttons[i].LoadTexture("assets/button/menu1.png");
     }
-    mapFile.close();
 
     // 6. Konfiguracja paneli statystyk (HUD Boxes)
     float boxWidth = 160.f;
@@ -199,17 +234,27 @@ void GameState::Update(float dt)
 {
     // Obs³uga prze³¹cznika pauzy
     static bool pausePressed = false;
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P))
     {
         if (!pausePressed)
         {
             isGamePaused = !isGamePaused;
+
+            if (isGamePaused)
+                musicManager.Pause();
+            else
+                musicManager.Resume();
+
             pausePressed = true;
         }
     }
-    else pausePressed = false;
-
-    if (isGamePaused) return;
+    else
+    {
+        pausePressed = false;
+    }
+    if (isGamePaused)
+        return;
 
     this->QuitCheck();
 
@@ -235,18 +280,63 @@ void GameState::Update(float dt)
     if (waveActive)
     {
         spawnTimer += dt;
-        if (spawnTimer >= spawnDelay && monstersSpawnedThisWave < monsterPerWave)
-        {
-            spawnTimer = 0.f;
-            if (!pathPoints.empty())
+        if (currentWave != waves) {
+            if (spawnTimer >= spawnDelay && monstersSpawnedThisWave < monsterPerWave)
             {
-                int type = rand() % 3;
-                if (type == 0) monsters.push_back(make_unique<BasicMonster>(pathPoints[0]));
-                else if (type == 1) monsters.push_back(make_unique<FastMonster>(pathPoints[0]));
-                else monsters.push_back(make_unique<TankMonster>(pathPoints[0]));
+                spawnTimer = 0.f;
+                if (!pathPoints.empty())
+                {
+                    int type = rand() % 3;
+                    if (type == 0) monsters.push_back(make_unique<BasicMonster>(pathPoints[0]));
+                    else if (type == 1) monsters.push_back(make_unique<FastMonster>(pathPoints[0]));
+                    else monsters.push_back(make_unique<TankMonster>(pathPoints[0]));
 
-                monsters.back()->mSpeed *= difficulty;
-                monstersSpawnedThisWave++;
+                    type = rand() % 6;
+                    if (type == 0) {
+                        monsters.back()->AddImmunity(Monster::AttackType::Basic);
+                    }
+                    else if (type == 2) {
+                        monsters.back()->AddImmunity(Monster::AttackType::Explosive);
+                    }
+                    else if (type == 4) {
+                        monsters.back()->AddImmunity(Monster::AttackType::Laser);
+                    }
+                    monsters.back()->baseSpeed *= difficulty;
+                    monstersSpawnedThisWave++;
+                }
+            }
+        }
+        else {
+            musicManager.Play("boss");
+
+            if (spawnTimer >= spawnDelay && monstersSpawnedThisWave < monsterPerWave)
+            {
+                spawnTimer = 0.f;
+
+                if (!pathPoints.empty())
+                {
+                    monsterPerWave = 1;
+
+                    auto bossPtr = make_unique<Boss>(pathPoints[0]);
+                    bossPtr->baseSpeed *= difficulty;
+
+                    currentBoss = bossPtr.get(); // zapamiêtanie bossa
+
+                    monsters.push_back(move(bossPtr));
+                    monstersSpawnedThisWave++;
+                }
+            }
+            //TODO
+            if (currentBoss)
+            {
+                if (currentBoss->mHP > currentBoss->mMaxHP * 0.7f)
+                {
+                    currentBoss->AddImmunity(Monster::AttackType::Laser);
+                }
+                else if (currentBoss->mHP > currentBoss->mMaxHP * 0.4f)
+                {
+                    currentBoss->AddImmunity(Monster::AttackType::Explosive);
+                }
             }
         }
     }
@@ -301,11 +391,40 @@ void GameState::Update(float dt)
     }
 
     // Obs³uga zakupu wie¿ w sklepie
+    buttons[0].text.setString("Normal\nTower");
+    buttons[0].text.setCharacterSize(20);
+    buttons[0].CenterText();
+
+    buttons[1].text.setString("Laser\nTower");
+    buttons[1].text.setCharacterSize(20);
+    buttons[1].CenterText();
+
+    buttons[2].text.setString("EMP\nTower");
+    buttons[2].text.setCharacterSize(20);
+    buttons[2].CenterText();
+
+    buttons[3].text.setString("Hacker\nTower");
+    buttons[3].text.setCharacterSize(20);
+    buttons[3].CenterText();
+
+    buttons[4].text.setString("Missle\nTower");
+    buttons[4].text.setCharacterSize(20);
+    buttons[4].CenterText();
+
+    buttons[5].text.setString("Support\nNode");
+    buttons[5].text.setCharacterSize(20);
+    buttons[5].CenterText();
+
     for (auto& button : buttons) button.UpdateHover(mouseX, mouseY);
 
     if (isTileSelected) {
         if (buttons[0].IsButtonClicked(mouseX, mouseY) && playerGold >= BasicTower::COST) {
             towers.push_back(make_unique<BasicTower>(tiles[selectedTile].shape.getPosition()));
+            BasicTower* tower = dynamic_cast<BasicTower*>(towers.back().get());
+            if (isSfxMuted) {
+                cout << "sasa";
+                tower->shootSound.setVolume(0);
+            }
             playerGold -= BasicTower::COST;
             tiles[selectedTile].state = Tile::TileState::Locked;
             tiles[selectedTile].Refresh();
@@ -314,9 +433,45 @@ void GameState::Update(float dt)
         else if (buttons[1].IsButtonClicked(mouseX, mouseY) && playerGold >= LaserTower::COST) {
             towers.push_back(make_unique<LaserTower>(tiles[selectedTile].shape.getPosition()));
             playerGold -= LaserTower::COST;
+            LaserTower* tower = dynamic_cast<LaserTower*>(towers.back().get());
+            if (isSfxMuted)
+                tower->shootSound.setVolume(0);
             tiles[selectedTile].state = Tile::TileState::Locked;
             tiles[selectedTile].Refresh();
             isTileSelected = false;
+        }
+        else if (buttons[2].IsButtonClicked(mouseX, mouseY) && playerGold >= EMPtower::COST) {
+            towers.push_back(make_unique<EMPtower>(tiles[selectedTile].shape.getPosition()));
+            playerGold -= EMPtower::COST;
+            EMPtower* tower = dynamic_cast<EMPtower*>(towers.back().get());
+            if (isSfxMuted)
+                tower->shootSound.setVolume(0);
+            tiles[selectedTile].state = Tile::TileState::Locked;
+            tiles[selectedTile].Refresh();
+            isTileSelected = false;
+        }
+        else if (buttons[3].IsButtonClicked(mouseX, mouseY) && playerGold >= HackerTower::COST) {
+            towers.push_back(make_unique<HackerTower>(tiles[selectedTile].shape.getPosition()));
+            playerGold -= HackerTower::COST;
+            HackerTower* tower = dynamic_cast<HackerTower*>(towers.back().get());
+            if (isSfxMuted)
+                tower->shootSound.setVolume(0);
+            tiles[selectedTile].state = Tile::TileState::Locked;
+            tiles[selectedTile].Refresh();
+            isTileSelected = false;
+        }
+        else if (buttons[4].IsButtonClicked(mouseX, mouseY) && playerGold >= MissleTower::COST) {
+            towers.push_back(make_unique<MissleTower>(tiles[selectedTile].shape.getPosition()));
+            playerGold -= MissleTower::COST;
+            MissleTower* tower = dynamic_cast<MissleTower*>(towers.back().get());
+            if (isSfxMuted)
+                tower->shootSound.setVolume(0);
+            tiles[selectedTile].state = Tile::TileState::Locked;
+            tiles[selectedTile].Refresh();
+            isTileSelected = false;
+        }
+        else if (buttons[5].IsButtonClicked(mouseX, mouseY)) {
+            cout << "ULEPSZ";
         }
     }
 
@@ -328,21 +483,78 @@ void GameState::Update(float dt)
         if (bullets[i]->isDead) bullets.erase(bullets.begin() + i);
     }
 
+    bool clickedTower = false;
+
+    for (auto& tower : towers)
+    {
+
+
+        Tower* temp;
+
+        if (tower->IsMouseOver(mouseX, mouseY) &&sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+        {
+            selectedTowerPtr = tower.get();
+            temp = selectedTowerPtr;
+            showUpgradePanel = true;
+            clickedTower = true;
+            selectedTowerPtr->isRangeShown = true;
+            upgradePanel.setPosition(tower->tShape.getPosition() + sf::Vector2f(40, -40));
+            upgradeText.setPosition(upgradePanel.getPosition() + sf::Vector2f(10, 10));
+            upgradeButton.SetPosition(upgradePanel.getPosition().x + 100,upgradePanel.getPosition().y + 70);
+        }
+    }
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !clickedTower)
+    {
+
+        if (showUpgradePanel && !upgradePanel.getGlobalBounds().contains({ mouseX, mouseY }))
+        {
+            showUpgradePanel = false;
+            selectedTowerPtr->isRangeShown = false;
+            selectedTowerPtr = nullptr;
+            
+        }
+    }
+    if (showUpgradePanel && (selectedTowerPtr !=nullptr))
+    {
+        upgradeButton.UpdateHover(mouseX, mouseY);
+
+        int cost = selectedTowerPtr->GetUpgradeCost();
+
+        if (cost != -1)
+            upgradeText.setString("Upgrade: " + to_string(cost));
+        else
+            upgradeText.setString("MAX LEVEL");
+
+        if (upgradeButton.IsButtonClicked(mouseX, mouseY) && cost != -1 && playerGold >= cost)
+        {
+            playerGold -= cost;
+            selectedTowerPtr->Upgrade();
+
+            showUpgradePanel = false;
+            selectedTowerPtr->isRangeShown = false;
+            selectedTowerPtr = nullptr;
+        }
+    }
+
     // Weryfikacja warunku koñca gry
     if (playerHp <= 0) {
-        this->nextState = new panelState(this->windowPtr,"HA HA HA HA HA HA",new MainMenuState(this->windowPtr));
+        this->nextState = new panelState(this->windowPtr,"HA HA HA HA HA HA",new MainMenuState(this->windowPtr, isMuted));
+        musicManager.Stop();
         quit = true;
     }
     if (currentWave > waves && monsters.empty()) {
-        this->nextState = new panelState(this->windowPtr, "GRATULCAJE! WYGRANA! WYGRANA!", new MainMenuState(this->windowPtr));
+        this->nextState = new panelState(this->windowPtr, "GRATULCAJE! WYGRANA! WYGRANA!", new MainMenuState(this->windowPtr, isMuted));
+        musicManager.Stop();
         quit = true;
     }
 }
 
 void GameState::Render(sf::RenderWindow* windowPtr)
 {
+
     // Renderowanie elementów œwiata gry
     for (auto& tile : tiles) tile.Draw(*windowPtr);
+
     for (auto& button : buttons) button.Draw(*windowPtr);
     for (auto& monster : monsters) monster->Draw(*windowPtr);
     for (auto& tower : towers) tower->Draw(*windowPtr);
@@ -357,5 +569,15 @@ void GameState::Render(sf::RenderWindow* windowPtr)
     windowPtr->draw(turnText);
 
     if (!waveActive) waveBtn.Draw(*windowPtr);
-    if (isGamePaused) windowPtr->draw(pauseText);
+    if (isGamePaused) {
+        windowPtr->draw(pauseBackground);
+        windowPtr->draw(pauseText);
+    }
+    if (showUpgradePanel && selectedTowerPtr)
+    {
+        windowPtr->draw(upgradePanel);
+        windowPtr->draw(upgradeText);
+        upgradeButton.Draw(*windowPtr);
+    }
+
 }

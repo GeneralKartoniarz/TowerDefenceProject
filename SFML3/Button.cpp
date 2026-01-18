@@ -4,6 +4,14 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 
+void Button::LoadTexture(const string& path)
+{
+    if (!texture.loadFromFile(path))
+    {
+        cout << "B³¹d krytyczny: Nie za³adowano tekstury: " << path << endl;
+    }
+    shape.setTexture(&texture);
+}
 Button::Button(sf::Font& font) : text(font)
 {
     // Konfiguracja bazowej geometrii prostok¹ta

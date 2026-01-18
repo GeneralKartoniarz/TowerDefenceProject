@@ -17,7 +17,8 @@ TankMonster::TankMonster(sf::Vector2f startPos)
 
     // Kinematyka jednostki
     mSpeed = 80.f;       // Niska prêdkoœæ wymuszaj¹ca d³u¿sz¹ ekspozycjê na ogieñ wie¿
+    baseSpeed = mSpeed;
 
     // Reprezentacja wizualna (kolor stalowy/niebieski sugeruj¹cy opancerzenie)
-    shape.setFillColor(sf::Color(100, 100, 255));
+    normalColor = sf::Color(100, 100, 255);
 }

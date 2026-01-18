@@ -16,7 +16,7 @@ Monster::Monster(sf::Vector2f startPos)
     mDamage = 5;
     mGold = 10;
     mSpeed = 150.f;
-
+    baseSpeed = mSpeed;
     // --- Konfiguracja reprezentacji graficznej ---
     shape.setSize({ 50.f, 50.f });
     shape.setOrigin(shape.getSize() / 2.f); // Centrowanie œrodka ciê¿koœci dla obrotów i kolizji
@@ -44,6 +44,15 @@ void Monster::Update(float dt, const vector<sf::Vector2f>& path)
     // Weryfikacja stanu ¿ywotnoœci
     if (mHP <= 0)
         isDead = true;
+    if (isStunned) {
+        mSpeed = 0;
+        shape.setFillColor(sf::Color(0, 200, 100));
+    }
+    else if(effects.empty()){
+        mSpeed = baseSpeed;
+        shape.setFillColor(normalColor);
+    }
+
 
     // Sprawdzenie warunku zwyciêstwa potwora (dotarcie do bazy gracza)
     if (pathIndex >= (int)path.size())
@@ -74,6 +83,8 @@ void Monster::Update(float dt, const vector<sf::Vector2f>& path)
 
     // Aktualizacja pozycji paska HP wzglêdem poruszaj¹cego siê potwora
     ChangeHpBar();
+    UpdateEffects(dt);
+
 }
 
 /**
@@ -93,6 +104,46 @@ void Monster::ChangeHpBar()
     hpBarBackground.setPosition({ pos.x, pos.y - 40.f });
     hpBarFill.setPosition({ pos.x, pos.y - 40.f });
 }
+
+void Monster::ApplyEffect(StatusEffect type, float duration, float value)
+{
+    if (HasEffect(type))
+        return;
+    effects.push_back({ type, duration, value });
+}
+bool Monster::HasEffect(StatusEffect type)
+{
+    for (const ActiveEffect& effect : effects)
+    {
+        if (effect.type == type)
+            return true;
+    }
+    return false;
+}
+
+void Monster::UpdateEffects(float dt)
+{
+    isStunned = false;
+    mSpeed = baseSpeed;
+
+    for (int i = effects.size() - 1; i >= 0; i--)
+    {
+        effects[i].duration -= dt;
+
+        if (effects[i].duration <= 0)
+        {
+            effects.erase(effects.begin() + i);
+            continue;
+        }
+
+        if (effects[i].type == StatusEffect::Slow)
+            mSpeed = baseSpeed * effects[i].value;
+
+        if (effects[i].type == StatusEffect::Stun)
+            isStunned = true;
+    }
+}
+
 
 /**
  * @brief Renderuje kompletny obiekt potwora (cia³o + interfejs).

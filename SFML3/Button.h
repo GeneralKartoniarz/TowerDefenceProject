@@ -31,8 +31,8 @@ public:
     sf::Vector2f position;
 
     // Definicje kolorów dla ró¿nych stanów interakcji
-    sf::Color normalColor = sf::Color::Blue; // Barwa domyœlna
-    sf::Color hoverColor = sf::Color::Red;   // Barwa po wskazaniu kursorem
+    sf::Color normalColor = sf::Color(114,113,113); // Barwa domyœlna
+    sf::Color hoverColor = sf::Color(89,89,89);   // Barwa po wskazaniu kursorem
 
     // Flaga pomocnicza do obs³ugi zdarzeñ klikniêcia
     bool wasPressed = false;
@@ -51,6 +51,9 @@ public:
 
     // Weryfikuje, czy w bie¿¹cej klatce nast¹pi³a interakcja potwierdzaj¹ca klikniêcie
     bool IsButtonClicked(float mouseX, float mouseY);
+
+    sf::Texture texture;            // Unikalna tekstura przycisku
+    void LoadTexture(const string& path);
 
     // Wyœwietla t³o oraz tekst przycisku w zadanym oknie renderowania
     void Draw(sf::RenderWindow& window);

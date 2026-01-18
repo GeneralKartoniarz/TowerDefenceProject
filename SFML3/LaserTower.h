@@ -21,7 +21,7 @@ public:
      * @param position Wspó³rzêdne œrodka kafelka (sf::Vector2f).
      */
     LaserTower(sf::Vector2f position);
-
+    string path = "inferno";
     // Statyczny koszt zakupu, dostêpny dla logiki sklepu w GameState bez instancji klasy
     static constexpr int COST = 300;
 
@@ -37,8 +37,12 @@ public:
      * @brief Renderuje teksturê wie¿y.
      */
     void Draw(sf::RenderWindow& window) override;
-
+    sf::SoundBuffer shootBuffer;
+    sf::Sound shootSound;
 private:
-    float attackCooldown;   // Nominalny czas oczekiwania miêdzy strza³ami (np. 1.5s)
-    float attackTimer;      // Bie¿¹cy licznik odmierzaj¹cy czas do kolejnego strza³u
+    float heat;
+    float heatMax;
+    float cooldownTime;
+    float cooldownCounter;
+
 };

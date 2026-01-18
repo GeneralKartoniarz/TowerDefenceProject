@@ -12,7 +12,8 @@ BasicMonster::BasicMonster(sf::Vector2f startPos)
     mDamage = 5;      // Obra¿enia zadawane po dotarciu do koñca œcie¿ki
     mGold = 10;       // Nagroda za pokonanie przeciwnika
     mSpeed = 150.f;   // Prêdkoœæ przemieszczania siê po punktach nawigacyjnych
+    baseSpeed = mSpeed;
 
     // Personalizacja wygl¹du modelu potwora
-    shape.setFillColor(sf::Color::Red);
+    normalColor = (sf::Color::Red);
 }

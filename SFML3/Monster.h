@@ -23,12 +23,67 @@ public:
     int mDamage;            // Kara nak³adana na HP gracza po dotarciu do celu
     int mGold;              // Nagroda finansowa dla gracza za eliminacjê jednostki
     float mSpeed;           // Prêdkoœæ przemieszczania siê wyra¿ona w pikselach na sekundê
-
+    sf::Color normalColor;
     // --- Logika nawigacji i statusu ---
     int pathIndex = 0;      // Indeks punktu (waypoint), do którego obecnie zmierza jednostka
     bool reachedEnd = false;// Flaga aktywowana po dotarciu do ostatniego punktu œcie¿ki
     bool isDead = false;    // Flaga eliminacji (HP <= 0) wyzwalaj¹ca usuniêcie z pamiêci
+    enum class StatusEffect
+    {
+        None,
+        Slow,
+        Stun
+    };
+    struct ActiveEffect
+    {
+        StatusEffect type;
+        float duration;
+        float value; 
+    };
+    vector<ActiveEffect> effects;
+    enum class AttackType
+    {
+        Basic,
+        Laser,
+        Explosive
+        // dodaj inne typy jeœli chcesz
+    };
 
+    void TakeDamage(float damage, AttackType attackType)
+    {
+        // jeœli potwór jest odporny na dany typ ataku, nic nie robi
+        if (IsImmuneTo(attackType))
+            return;
+
+        mHP -= damage;
+        if (mHP <= 0.f)
+        {
+            mHP = 0.f;
+            isDead = true;
+        }
+
+        ChangeHpBar();
+    }
+
+    bool IsImmuneTo(AttackType attackType)
+    {
+        // prosty przyk³ad — mo¿na mieæ wektor odpornoœci
+        for (auto& at : immuneTypes)
+            if (at == attackType) return true;
+        return false;
+    }
+
+    void AddImmunity(AttackType attackType)
+    {
+        immuneTypes.push_back(attackType);
+    }
+    vector<AttackType> immuneTypes;
+    float baseSpeed;
+    bool isStunned = false;
+
+    void ApplyEffect(StatusEffect type, float duration, float value);
+    void UpdateEffects(float dt);
+    bool HasEffect(StatusEffect type);
     // --- Komponenty wizualne (Renderable Components) ---
     sf::RectangleShape shape;           // G³ówny korpus potwora
     sf::RectangleShape hpBarBackground; // T³o paska zdrowia (zazwyczaj czerwone/czarne)

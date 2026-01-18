@@ -3,6 +3,7 @@
 #include "Tower.h"
 #include "Monster.h"
 #include "Bullet.h"
+#include <SFML/Audio.hpp>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ class BasicTower : public Tower
 public:
     // Inicjalizuje wie¿ê na okreœlonych wspó³rzêdnych mapy
     BasicTower(sf::Vector2f position);
-
+    string path = "cas";
     // Sta³y koszt zakupu jednostki wykorzystywany przez system ekonomii gry
     static constexpr int COST = 100;
 
@@ -28,10 +29,10 @@ public:
      */
     void Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets) override;
 
-    // Odpowiada za wyœwietlenie grafiki wie¿y oraz opcjonalnych elementów (np. zasiêgu)
+    // Odpowiada za wyœwietlenie grafiki wie¿y oraz opcjonalnych elema entów (np. zasiêgu)
     void Draw(sf::RenderWindow& window) override;
-
+    sf::SoundBuffer shootBuffer;
+    sf::Sound shootSound;
 private:
-    float attackCooldown;   // Minimalny odstêp czasu miêdzy kolejnymi strza³ami
-    float attackTimer;      // Zegar monitoruj¹cy gotowoœæ wie¿y do ataku
+
 };

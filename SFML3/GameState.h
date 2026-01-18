@@ -5,6 +5,8 @@
 #include "Tile.h"
 #include "Tower.h"
 #include "Monster.h"
+#include "Boss.h"
+#include "MusicManager.h"   
 #include "Bullet.h"
 #include <vector>
 #include <memory>
@@ -19,7 +21,7 @@ class GameState : public States
 {
 public:
     // Inicjalizuje sesjê gry z uwzglêdnieniem wybranego poziomu trudnoœci
-    GameState(sf::RenderWindow* windowPtr, int difficulty);
+    GameState(sf::RenderWindow* windowPtr, int difficulty, bool isMuted, bool isSfxMuted);
     ~GameState();
 
     // --- Parametry geometryczne œwiata gry ---
@@ -35,13 +37,14 @@ public:
     int playerGold = 2000;      // Dostêpne fundusze na zakup wie¿
     int playerHp = 200;         // Punkty ¿ycia bazy gracza
     int currentWave = 1;        // Numer bie¿¹cej fali przeciwników
-    int waves = 3;             // Maksymalna liczba fal w scenariuszu
-
+    int waves = 5;             // Maksymalna liczba fal w scenariuszu
+    Boss* currentBoss = nullptr;
     // --- Zarz¹dzanie logik¹ fali i interakcji ---
     int selectedTile;           // Indeks aktualnie podœwietlonego kafelka
-    int selectedTower;          // Typ wybranej wie¿y ze sklepu
     bool isTileSelected = false;
     bool isGamePaused = false;
+    bool isMuted;
+    bool isSfxMuted;
     bool waveActive = false;    // Flaga okreœlaj¹ca, czy trwa faza walki
     int monsterPerWave = 20;    // Bazowa liczba wrogów do zespawnowania
     int monstersSpawnedThisWave = 0;
@@ -63,6 +66,7 @@ public:
     sf::RectangleShape hpBox;                   // T³o wskaŸnika zdrowia
     sf::RectangleShape goldBox;                 // T³o wskaŸnika funduszy
     sf::RectangleShape turnBox;                 // T³o wskaŸnika fali
+    sf::RectangleShape pauseBackground;         // T³o pauzy
 
     sf::Text hpText;                            // Tekstowa reprezentacja punktów ¿ycia
     sf::Text goldText;                          // Tekstowa reprezentacja z³ota
@@ -70,6 +74,16 @@ public:
     sf::Text pauseText;                         // Komunikat wyœwietlany podczas pauzy
 
     Button waveBtn;                             // Przycisk wyzwalaj¹cy kolejn¹ falê
+
+    // --- Muzyka i sfx ---
+    MusicManager musicManager;
+
+    Tower* selectedTowerPtr = nullptr;
+    bool showUpgradePanel = false;
+
+    sf::RectangleShape upgradePanel;
+    sf::Text upgradeText;
+    Button upgradeButton;
 
     // --- Cykl ¿ycia stanu ---
     void EndState() override;                   // Obs³uga czyszczenia stanu przed usuniêciem

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "States.h"
 #include "Button.h"
+#include "MusicManager.h"
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -17,7 +18,7 @@ class MainMenuState : public States
 {
 public:
     // Inicjalizuje widok menu, ³aduje czcionki i konfiguruje uk³ad przycisków
-    MainMenuState(sf::RenderWindow* windowPtr);
+    MainMenuState(sf::RenderWindow* windowPtr, bool isMuted);
     ~MainMenuState();
 
     // Metody cyklu ¿ycia stanu gry
@@ -62,9 +63,17 @@ private:
     Button selectMenuNormal;
     Button selectMenuHard;
 
+    Button muteMusic;
+    Button muteSfx;
+
     // Przycisk nawigacji powrotnej
     Button backToMenu;
 
+    bool isMuted = false;
+    bool isSfxMuted = false;
     // Statyczne elementy tekstowe (np. logo/tytu³ gry)
     sf::Text titleText;
+
+    //Muzyka
+    MusicManager musicManager;
 };

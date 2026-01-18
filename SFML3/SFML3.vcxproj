@@ -130,15 +130,20 @@
   <ItemGroup>
     <ClCompile Include="BasicMonster.cpp" />
     <ClCompile Include="BasicTower.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="EMPtower.cpp" />
     <ClCompile Include="FastMonster.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="HackerTower.cpp" />
     <ClCompile Include="LaserTower.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="MissleTower.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="panelState.cpp" />
     <ClCompile Include="States.cpp" />
     <ClCompile Include="TankMonster.cpp" />
@@ -148,14 +153,19 @@
   <ItemGroup>
     <ClInclude Include="BasicMonster.h" />
     <ClInclude Include="BasicTower.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="EMPtower.h" />
     <ClInclude Include="FastMonster.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="HackerTower.h" />
     <ClInclude Include="LaserTower.h" />
     <ClInclude Include="MainMenuState.h" />
+    <ClInclude Include="MissleTower.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="MusicManager.h" />
     <ClInclude Include="panelState.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="States.h" />
