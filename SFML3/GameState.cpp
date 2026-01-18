@@ -316,12 +316,11 @@ void GameState::Update(float dt)
             //TODO
             if (currentBoss)
             {
-                if (currentBoss->mHP < currentBoss->mMaxHP * 0.7f)
+                if (currentBoss->mHP > currentBoss->mMaxHP * 0.7f)
                 {
-                    currentBoss->resistances[Monster::AttackType::Laser] = 1.f;
-                    cout << "DSAsdaasd";
+                    
                 }
-                else if (currentBoss->mHP < currentBoss->mMaxHP * 0.4f)
+                else if (currentBoss->mHP > currentBoss->mMaxHP * 0.4f)
                 {
                     
                 }

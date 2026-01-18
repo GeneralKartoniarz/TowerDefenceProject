@@ -2,7 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
-#include <unordered_map>
 
 using namespace std;
 
@@ -35,14 +34,6 @@ public:
         Slow,
         Stun
     };
-    enum class AttackType
-    {
-        Physical,
-        Laser,
-        Explosion
-    };
-    unordered_map<AttackType, float> resistances;
-    void TakeDamage(float damage, AttackType type);
     struct ActiveEffect
     {
         StatusEffect type;

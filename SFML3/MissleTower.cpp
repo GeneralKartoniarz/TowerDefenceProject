@@ -3,7 +3,6 @@
 #include "Monster.h"
 #include <cmath>
 #include <string>
-class Monster;
 MissleTower::MissleTower(sf::Vector2f position):shootSound(shootBuffer)
 {
     // £adowanie zasobów graficznych
@@ -64,7 +63,7 @@ void MissleTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector
     if (target)
     {
         RotateToEnemy(target);
-        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 200.f,monsters,Monster::AttackType::Explosion));
+        bullets.push_back(make_unique<Bullet>(tShape.getPosition(), target, 600.f, (tAttack), 200.f,monsters));
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
         shootSound.play();
     }
