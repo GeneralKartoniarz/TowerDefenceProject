@@ -2,7 +2,7 @@
 Boss::Boss(sf::Vector2f startPos): Monster(startPos)
 {
     // Statystyki wytrzyma³oœciowe (3x wy¿sze HP ni¿ BasicMonster)
-    mMaxHP = 12000.f;
+    mMaxHP = 2000;
     mHP = mMaxHP;
     shape.setSize({ 100.f, 100.f });
     shape.setOrigin(shape.getSize() / 2.f); // Centrowanie œrodka ciê¿koœci dla obrotów i kolizji

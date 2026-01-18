@@ -1,9 +1,11 @@
 #include "HackerTower.h"
 #include "Tower.h"
 #include "Monster.h"
+#include <string>
 HackerTower::HackerTower(sf::Vector2f position):shootSound(shootBuffer)
 {
-    LoadTexture("assets/hacker_tower/hacker1.png");
+
+    LoadTexture("assets/hacker_tower/"+path+to_string(level)+".png");
 
     // Konfiguracja parametrów bojowych i ekonomicznych
     tCost = COST;
@@ -50,7 +52,7 @@ void HackerTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector
                 target = monster.get();
         }
     }
-    if (target)
+    if (target && target->mMaxHP<1000)//zalosne wiem
     {
         RotateToEnemy(target);
         target->ApplyEffect(Monster::StatusEffect::Stun, 2.f, .6f);
@@ -58,6 +60,8 @@ void HackerTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector
         attackTimer = 0.f; // Resetowanie licznika prze³adowania
         shootSound.play();
     }
+    LoadTexture("assets/hacker_tower/" + path + to_string(level) + ".png");
+
 }
 
 void HackerTower::Draw(sf::RenderWindow& window)

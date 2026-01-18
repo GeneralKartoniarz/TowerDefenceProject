@@ -17,7 +17,7 @@ class BasicTower : public Tower
 public:
     // Inicjalizuje wie¿ê na okreœlonych wspó³rzêdnych mapy
     BasicTower(sf::Vector2f position);
-
+    string path = "cas";
     // Sta³y koszt zakupu jednostki wykorzystywany przez system ekonomii gry
     static constexpr int COST = 100;
 

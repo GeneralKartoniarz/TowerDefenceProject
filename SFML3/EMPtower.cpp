@@ -3,7 +3,7 @@
 #include "Monster.h"
 EMPtower::EMPtower(sf::Vector2f position):shootSound(shootBuffer)
 {
-    LoadTexture("assets/emp_tower/emp1.png");
+    LoadTexture("assets/emp_tower/" + path + to_string(level) + ".png");
 
     // Konfiguracja parametrów bojowych i ekonomicznych
     tCost = COST;
@@ -24,6 +24,7 @@ EMPtower::EMPtower(sf::Vector2f position):shootSound(shootBuffer)
 }
 void EMPtower::Update(float dt,vector<unique_ptr<Monster>>& monsters,vector<unique_ptr<Bullet>>& bullets)
 {
+    LoadTexture("assets/emp_tower/" + path + to_string(level) + ".png");
     attackTimer += dt;
     if (attackTimer < attackCooldown)
         return;

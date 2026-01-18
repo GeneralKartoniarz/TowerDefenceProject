@@ -21,7 +21,7 @@ public:
      * @param position Wspó³rzêdne œrodka kafelka (sf::Vector2f).
      */
     LaserTower(sf::Vector2f position);
-
+    string path = "inferno";
     // Statyczny koszt zakupu, dostêpny dla logiki sklepu w GameState bez instancji klasy
     static constexpr int COST = 300;
 

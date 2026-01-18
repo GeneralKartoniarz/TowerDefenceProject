@@ -8,7 +8,7 @@ using namespace std;
 BasicTower::BasicTower(sf::Vector2f position) : shootSound(shootBuffer)
 {
     // £adowanie zasobów graficznych
-    LoadTexture("assets/cassual_tower/cas1.png");
+    LoadTexture("assets/cassual_tower/" + path + to_string(level) + ".png");
     // Konfiguracja parametrów bojowych i ekonomicznych
     tCost = COST;
     tAttack = 25.f;
@@ -28,6 +28,7 @@ BasicTower::BasicTower(sf::Vector2f position) : shootSound(shootBuffer)
 
 void BasicTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets)
 {
+    LoadTexture("assets/cassual_tower/" + path + to_string(level) + ".png");
     // Akumulacja czasu od ostatniego strza³u
     attackTimer += dt;
     if (attackTimer < attackCooldown)

@@ -5,6 +5,7 @@
 #include "Tile.h"
 #include "Tower.h"
 #include "Monster.h"
+#include "Boss.h"
 #include "MusicManager.h"   
 #include "Bullet.h"
 #include <vector>
@@ -37,7 +38,7 @@ public:
     int playerHp = 200;         // Punkty ¿ycia bazy gracza
     int currentWave = 1;        // Numer bie¿¹cej fali przeciwników
     int waves = 1;             // Maksymalna liczba fal w scenariuszu
-
+    Boss* currentBoss = nullptr;
     // --- Zarz¹dzanie logik¹ fali i interakcji ---
     int selectedTile;           // Indeks aktualnie podœwietlonego kafelka
     bool isTileSelected = false;

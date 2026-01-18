@@ -295,21 +295,41 @@ void GameState::Update(float dt)
         }
         else {
             musicManager.Play("boss");
-            if (spawnTimer >= spawnDelay && monstersSpawnedThisWave < 1)
+
+            if (spawnTimer >= spawnDelay && monstersSpawnedThisWave < monsterPerWave)
             {
-                monsterPerWave = 1;
                 spawnTimer = 0.f;
+
                 if (!pathPoints.empty())
                 {
-                    monsters.push_back(make_unique<Boss>(pathPoints[0]));
-                    monsters.back()->baseSpeed *= difficulty;
+                    monsterPerWave = 1;
+
+                    auto bossPtr = make_unique<Boss>(pathPoints[0]);
+                    bossPtr->baseSpeed *= difficulty;
+
+                    currentBoss = bossPtr.get(); // zapamiêtanie bossa
+
+                    monsters.push_back(move(bossPtr));
                     monstersSpawnedThisWave++;
                 }
             }
-        }
-            
+            //TODO
+            if (currentBoss)
+            {
+                if (currentBoss->mHP > currentBoss->mMaxHP * 0.7f)
+                {
+                    
+                }
+                else if (currentBoss->mHP > currentBoss->mMaxHP * 0.4f)
+                {
+                    
+                }
+                else
+                {
 
-        
+                }
+            }
+        }
     }
 
     // Przetwarzanie stanów jednostek przeciwnika

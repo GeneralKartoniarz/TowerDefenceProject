@@ -2,10 +2,11 @@
 #include "Bullet.h"
 #include "Monster.h"
 #include <cmath>
+#include <string>
 MissleTower::MissleTower(sf::Vector2f position):shootSound(shootBuffer)
 {
     // £adowanie zasobów graficznych
-    LoadTexture("assets/missle_launcher/miss1.png");
+    LoadTexture("assets/missle_launcher/" + path + to_string(level) + ".png");
 
     // Konfiguracja parametrów bojowych i ekonomicznych
     tCost = COST;
@@ -30,6 +31,7 @@ MissleTower::MissleTower(sf::Vector2f position):shootSound(shootBuffer)
 
 void MissleTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets)
 {
+    LoadTexture("assets/missle_launcher/" + path + to_string(level) + ".png");
     // Akumulacja czasu od ostatniego strza³u
     attackTimer += dt;
     if (attackTimer < attackCooldown)

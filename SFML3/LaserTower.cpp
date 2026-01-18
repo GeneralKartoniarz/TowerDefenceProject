@@ -10,7 +10,7 @@ using namespace std;
  */
 LaserTower::LaserTower(sf::Vector2f position):shootSound(shootBuffer)
 {
-    LoadTexture("assets/laser_tower/inferno1.png");
+    LoadTexture("assets/laser_tower/" + path + to_string(level) + ".png");
     // --- Konfiguracja parametrów bojowych ---
     tCost = COST;
     tAttack = 0.2f;       // Obra¿enia zadawane przez pojedynczy pocisk
@@ -42,6 +42,7 @@ LaserTower::LaserTower(sf::Vector2f position):shootSound(shootBuffer)
  */
 void LaserTower::Update(float dt, vector<unique_ptr<Monster>>& monsters, vector<unique_ptr<Bullet>>& bullets)
 {
+    LoadTexture("assets/laser_tower/" + path + to_string(level) + ".png");
     // Obs³uga licznika prze³adowania (Cooldown)
     attackTimer += dt;
     if (attackTimer < attackCooldown)
