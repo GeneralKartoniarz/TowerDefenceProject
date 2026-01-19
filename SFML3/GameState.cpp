@@ -329,11 +329,11 @@ void GameState::Update(float dt)
             //TODO
             if (currentBoss)
             {
-                if (currentBoss->mHP > currentBoss->mMaxHP * 0.7f)
+                if (currentBoss->mHP < currentBoss->mMaxHP * 0.7f)
                 {
                     currentBoss->AddImmunity(Monster::AttackType::Laser);
                 }
-                else if (currentBoss->mHP > currentBoss->mMaxHP * 0.4f)
+                else if (currentBoss->mHP < currentBoss->mMaxHP * 0.4f)
                 {
                     currentBoss->AddImmunity(Monster::AttackType::Explosive);
                 }
@@ -391,27 +391,29 @@ void GameState::Update(float dt)
     }
 
     // Obs³uga zakupu wie¿ w sklepie
-    buttons[0].text.setString("Normal\nTower");
+    buttons[0].text.setString("Normal\nTower\n" + to_string(BasicTower::COST));
     buttons[0].text.setCharacterSize(20);
     buttons[0].CenterText();
 
-    buttons[1].text.setString("Laser\nTower");
+    buttons[1].text.setString("Laser\nTower\n" + to_string(LaserTower::COST));
     buttons[1].text.setCharacterSize(20);
     buttons[1].CenterText();
 
-    buttons[2].text.setString("EMP\nTower");
+    buttons[2].text.setString("EMP\nTower\n" + to_string(EMPtower::COST));
     buttons[2].text.setCharacterSize(20);
     buttons[2].CenterText();
 
-    buttons[3].text.setString("Hacker\nTower");
+    buttons[3].text.setString("Hacker\nTower\n" + to_string(HackerTower::COST));
     buttons[3].text.setCharacterSize(20);
     buttons[3].CenterText();
 
-    buttons[4].text.setString("Missle\nTower");
+    buttons[4].text.setString("Missle\nTower\n" + to_string(MissleTower::COST));
     buttons[4].text.setCharacterSize(20);
     buttons[4].CenterText();
 
-    buttons[5].text.setString("MOD\nTEMPLATE");
+    buttons[5].text.setString("MOD\nTEMPLATE\n" 
+    // + to_string(BasicTower::COST)
+    );
     buttons[5].text.setCharacterSize(20);
     buttons[5].CenterText();
 
@@ -496,8 +498,6 @@ void GameState::Update(float dt)
 
     for (auto& tower : towers)
     {
-
-
         Tower* temp;
 
         if (tower->IsMouseOver(mouseX, mouseY) &&sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))

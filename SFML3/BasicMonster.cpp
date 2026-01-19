@@ -25,5 +25,5 @@ BasicMonster::BasicMonster(sf::Vector2f startPos)
     baseSpeed = mSpeed;
 
     // Personalizacja wygl¹du modelu potwora
-    normalColor = (sf::Color::Red);
+    normalColor = (sf::Color::White);
 }
